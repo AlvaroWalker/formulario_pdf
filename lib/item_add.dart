@@ -202,7 +202,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           ),
                           Expanded(
                             child: Text(
-                              'R\$ ${valorTotal}',
+                              'R\$ $valorTotal',
                               textScaleFactor: 2,
                               textAlign: TextAlign.end,
                             ),

@@ -21,7 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: title,
-        theme: ThemeData(primarySwatch: Colors.deepOrange),
+        theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+          backgroundColor: Color.fromARGB(255, 210, 210, 210),
+        ),
         home: TelaInicio(),
       );
 }

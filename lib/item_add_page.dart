@@ -5,6 +5,7 @@ import 'api/pdf_api.dart';
 import 'api/pdf_invoice_api.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
+import 'utils.dart';
 
 double valorTotal = 0;
 
@@ -37,10 +38,17 @@ class ItemAddPage extends StatefulWidget {
 }
 
 class _ItemAddPageState extends State<ItemAddPage> {
-  Future<void> showMyDialog(BuildContext context) async {
+  Future<void> showMyDialog(
+      BuildContext context, InvoiceItem item, int lsindex) async {
+    //InvoiceItem item;
+
     String dropdownValue = opcoes[1];
     final TextEditingController _controller1 = TextEditingController();
     final TextEditingController _controller2 = TextEditingController();
+
+    _controller1.text = item.quantity.toString();
+
+    _controller2.text = item.unitPrice.toString();
 
     return await showDialog(
       context: context,
@@ -48,33 +56,11 @@ class _ItemAddPageState extends State<ItemAddPage> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            title: Text('Add Item'),
+            title: Text(item.description),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: opcoes.map((String opcoess) {
-                      return DropdownMenuItem<String>(
-                        value: opcoess,
-                        child: Text(opcoess),
-                      );
-                    }).toList(),
-                  ),
-                  TextField(
+                  TextFormField(
                       controller: _controller1,
                       decoration: InputDecoration(
                         hintText: 'Quantidade',
@@ -96,16 +82,14 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
               TextButton(
                   onPressed: () {
-                    widget.itensImport.add(InvoiceItem(
-                        tipo: '2',
-                        description: dropdownValue,
-                        date: DateTime.now(),
-                        quantity: int.parse(_controller1.text),
-                        vat: 1,
-                        unitPrice: double.parse(_controller2.text)));
-                    Navigator.of(context).pop();
+                    widget.itensImport[lsindex].quantity =
+                        int.parse(_controller1.text);
+                    widget.itensImport[lsindex].unitPrice =
+                        double.parse(_controller2.text);
+                    print(lsindex);
+                    //Navigator.of(context).pop();
                   },
-                  child: Text('Add')),
+                  child: Text('OK')),
             ],
           );
         });
@@ -138,28 +122,34 @@ class _ItemAddPageState extends State<ItemAddPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
-                    child: ListTile(
-                      title: Text(widget.itensImport[index].description),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              'Quantidade: ${widget.itensImport[index].quantity}'),
-                          Text(
-                              'Preço Unitario: ${widget.itensImport[index].unitPrice}'),
-                          Text(
-                              'Preço Total: ${widget.itensImport[index].quantity * widget.itensImport[index].unitPrice}'),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Color.fromRGBO(255, 100, 100, 1),
+                    child: InkWell(
+                      onTap: () async {
+                        showMyDialog(context, widget.itensImport[index], index);
+                        print(index);
+                      },
+                      child: ListTile(
+                        title: Text(widget.itensImport[index].description),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Quantidade: ${widget.itensImport[index].quantity}'),
+                            Text(
+                                'Preço Unitario: R\$ ${widget.itensImport[index].unitPrice}'),
+                            Text(
+                                'Preço Total: R\$ ${widget.itensImport[index].quantity * widget.itensImport[index].unitPrice}'),
+                          ],
                         ),
-                        onPressed: () {
-                          widget.itensImport.removeAt(index);
-                          setState(() {});
-                        },
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Color.fromRGBO(255, 100, 100, 1),
+                          ),
+                          onPressed: () {
+                            widget.itensImport.removeAt(index);
+                            setState(() {});
+                          },
+                        ),
                       ),
                     ),
                   ),
