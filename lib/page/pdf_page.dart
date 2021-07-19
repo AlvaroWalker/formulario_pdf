@@ -56,6 +56,7 @@ class _PdfPageState extends State<PdfPage> {
                       ),
                       items: [
                         InvoiceItem(
+                          tipo: '2',
                           description: 'café',
                           date: DateTime.now(),
                           quantity: 3,
@@ -63,6 +64,7 @@ class _PdfPageState extends State<PdfPage> {
                           unitPrice: 10,
                         ),
                         InvoiceItem(
+                          tipo: '2',
                           description: 'agua',
                           date: DateTime.now(),
                           quantity: 8,
@@ -70,41 +72,7 @@ class _PdfPageState extends State<PdfPage> {
                           unitPrice: 2,
                         ),
                         InvoiceItem(
-                          description: 'laranja',
-                          date: DateTime.now(),
-                          quantity: 3,
-                          vat: 0.0,
-                          unitPrice: 4,
-                        ),
-                        InvoiceItem(
-                          description: 'maça',
-                          date: DateTime.now(),
-                          quantity: 8,
-                          vat: 0.0,
-                          unitPrice: 6,
-                        ),
-                        InvoiceItem(
-                          description: 'manga',
-                          date: DateTime.now(),
-                          quantity: 1,
-                          vat: 0.0,
-                          unitPrice: 8,
-                        ),
-                        InvoiceItem(
-                          description: 'feijao',
-                          date: DateTime.now(),
-                          quantity: 5,
-                          vat: 0.0,
-                          unitPrice: 10,
-                        ),
-                        InvoiceItem(
-                          description: 'limao',
-                          date: DateTime.now(),
-                          quantity: 4,
-                          vat: 0.0,
-                          unitPrice: 5,
-                        ),
-                        InvoiceItem(
+                          tipo: '2',
                           description: 'arroz',
                           date: DateTime.now(),
                           quantity: 10,

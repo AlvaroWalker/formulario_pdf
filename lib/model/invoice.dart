@@ -30,6 +30,7 @@ class InvoiceInfo {
 }
 
 class InvoiceItem {
+  final String tipo;
   final String description;
   final DateTime date;
   final int quantity;
@@ -37,6 +38,7 @@ class InvoiceItem {
   final double unitPrice;
 
   const InvoiceItem({
+    required this.tipo,
     required this.description,
     required this.date,
     required this.quantity,

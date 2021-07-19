@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'item_add_page.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
 import 'model/invoice.dart';
 
-List<String> tipoItem = [
+double valorTotal = 0;
+
+List<String> descricaoServico = [
   "Tomada",
   "Chuveiro",
   "Ar Condicionado",
@@ -21,14 +24,7 @@ List<String> tipoServico = [
   "Conferencia",
 ];
 
-List item = [
-  InvoiceItem(
-      description: 'description',
-      date: DateTime.now(),
-      quantity: 5,
-      vat: 1,
-      unitPrice: 32)
-];
+List itens = [];
 String _selectedValue = '';
 
 class ItemAdd_Page extends StatefulWidget {
@@ -41,12 +37,27 @@ class ItemAdd_Page extends StatefulWidget {
 
 class _ItemAdd_PageState extends State<ItemAdd_Page> {
   @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+  }
+
+  String? dropdownValue;
+  String? dropdownValue2;
+  @override
   Widget build(BuildContext context) {
     final txtControlPrecoUnidade = TextEditingController();
     final txtControlQuantidade = TextEditingController();
 
-    var dropdownValue = tipoItem[0];
-    var dropdownValue2 = tipoItem[0];
+    setState(() {});
+
+    if (itens.length > 0) {
+      valorTotal = itens
+          .map((item) => item.unitPrice * item.quantity)
+          .reduce((item1, item2) => item1 + item2);
+    } else {
+      valorTotal = 0;
+    }
+
     final TextEditingController _controller = new TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -64,18 +75,17 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  filled: true,
+                  //filled: true,
                   labelText: "TIPO DE SERVIÇO",
                 ),
-                value: dropdownValue2,
-                onChanged: (String? Value) {
-                  setState(() {
-                    //dropdownValue = Value;
-                  });
+                value: dropdownValue,
+                onChanged: (value) {
+                  dropdownValue = value.toString();
+                  setState(() {});
                 },
-                items: tipoItem
-                    .map((cityTitle) => DropdownMenuItem(
-                        value: cityTitle, child: Text("$cityTitle")))
+                items: tipoServico
+                    .map((tipo) =>
+                        DropdownMenuItem(value: tipo, child: Text("$tipo")))
                     .toList(),
               ),
             ),
@@ -84,16 +94,16 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  filled: true,
+                  //filled: true,
                   labelText: 'DESCRIÇÃO DO SERVIÇO',
                 ),
-                value: dropdownValue,
-                onChanged: (String? Value) {
+                value: dropdownValue2,
+                onChanged: (String? value) {
                   setState(() {
-                    //dropdownValue = Value;
+                    dropdownValue2 = value.toString();
                   });
                 },
-                items: tipoItem
+                items: descricaoServico
                     .map((cityTitle) => DropdownMenuItem(
                         value: cityTitle, child: Text("$cityTitle")))
                     .toList(),
@@ -102,6 +112,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
+                controller: txtControlPrecoUnidade,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     hintText: 'R\$ ',
                     labelText: 'VALOR UNITARIO:',
@@ -116,6 +128,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 3),
                       child: TextFormField(
+                        controller: txtControlQuantidade,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             labelText: 'QUANTIDADE:',
                             border: OutlineInputBorder()),
@@ -130,14 +144,14 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           padding: EdgeInsets.all(15),
                         ),
                         onPressed: () {
-                          item.add(InvoiceItem(
-                              description: dropdownValue,
+                          itens.add(InvoiceItem(
+                              tipo: dropdownValue.toString(),
+                              description: dropdownValue2.toString(),
                               date: DateTime.now(),
                               quantity: int.parse(txtControlQuantidade.text),
                               vat: 1,
                               unitPrice:
                                   double.parse(txtControlPrecoUnidade.text)));
-                          //Navigator.of(context).pop();
                           setState(() {});
                         },
                         child: Icon(Icons.add)),
@@ -147,31 +161,48 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             ),
             Divider(),
             Text('RESUMO'),
-            Card(
-              child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+            Container(
+              child: Card(
+                child: InkWell(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ItemAddPage(
+                                itensImport: itens,
+                              )),
+                    ).then((value) => setState(() {}));
+                  },
                   child: Column(
-                    children: [
-                      ListView.separated(
-                          itemBuilder: (BuildContext context, int index) {
-                            return Text(item[index].quantity);
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Text('a'),
-                          itemCount: item.length),
+                    children: <Widget>[
+                      Table(
+                        children: [
+                          for (var item in itens)
+                            TableRow(
+                              children: [
+                                Text(item.quantity.toString()),
+                                Text(item.tipo.toString()),
+                                Text(item.description.toString()),
+                                Text('R\$ ${(item.unitPrice * item.quantity)}'),
+                              ],
+                            )
+                        ],
+                      ),
                       Divider(),
                       Row(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Cliente: ${widget.cliente.name}'),
-                              Text('CPF: ${widget.cliente.doc}'),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Cliente: ${widget.cliente.name}'),
+                                Text('CPF: ${widget.cliente.doc}'),
+                              ],
+                            ),
                           ),
                           Expanded(
                             child: Text(
-                              'R\$ 2.325,67',
+                              'R\$ ${valorTotal}',
                               textScaleFactor: 2,
                               textAlign: TextAlign.end,
                             ),
@@ -179,8 +210,10 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                         ],
                       ),
                     ],
-                  )),
-            )
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
