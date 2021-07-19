@@ -6,6 +6,8 @@ import 'api/pdf_invoice_api.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
 
+double valorTotal = 0;
+
 List itens = [];
 var opcoes = [
   'Instalação',
@@ -113,6 +115,13 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.itensImport.length > 0) {
+      valorTotal = widget.itensImport
+          .map((item) => item.unitPrice * item.quantity)
+          .reduce((item1, item2) => item1 + item2);
+    } else {
+      valorTotal = 0;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -121,6 +130,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: Column(
         children: [
+          Text('Total: R\$ $valorTotal'),
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
