@@ -10,39 +10,24 @@ import 'utils.dart';
 double valorTotal = 0;
 
 List itens = [];
-var opcoes = [
-  'Instalação',
-  'Troca',
-  'Limpeza',
-  'Conserto',
-  'Aferição',
-  'Regulagem',
-];
-
-var tipoItem = [
-  "Tomada",
-  "Chuveiro",
-  "Ar Condicionado",
-  "Interruptor",
-  "Compressor",
-  "Bomba",
-  "Quadro de Instalação",
-  "Hidrante"
-];
 
 class ItemAddPage extends StatefulWidget {
   final List itensImport;
-  const ItemAddPage({Key? key, required this.itensImport}) : super(key: key);
+  ItemAddPage({Key? key, required this.itensImport}) : super(key: key);
   @override
   _ItemAddPageState createState() => _ItemAddPageState();
 }
 
 class _ItemAddPageState extends State<ItemAddPage> {
+  void atualiza() {
+    setState(() {});
+  }
+
   Future<void> showMyDialog(
       BuildContext context, InvoiceItem item, int lsindex) async {
-    //InvoiceItem item;
+    InvoiceItem newitem = item;
 
-    String dropdownValue = opcoes[1];
+    //String dropdownValue = opcoes[1];
     final TextEditingController _controller1 = TextEditingController();
     final TextEditingController _controller2 = TextEditingController();
 
@@ -60,16 +45,22 @@ class _ItemAddPageState extends State<ItemAddPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  TextFormField(
-                      controller: _controller1,
-                      decoration: InputDecoration(
-                        hintText: 'Quantidade',
-                      )),
-                  TextField(
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: TextFormField(
+                        controller: _controller1,
+                        decoration: InputDecoration(
+                            labelText: 'Quantidade',
+                            border: OutlineInputBorder())),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: TextFormField(
                       controller: _controller2,
                       decoration: InputDecoration(
-                        hintText: 'Preço',
-                      )),
+                          labelText: 'Preço', border: OutlineInputBorder()),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -82,12 +73,18 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
               TextButton(
                   onPressed: () {
-                    widget.itensImport[lsindex].quantity =
-                        int.parse(_controller1.text);
-                    widget.itensImport[lsindex].unitPrice =
-                        double.parse(_controller2.text);
-                    print(lsindex);
-                    //Navigator.of(context).pop();
+                    widget.itensImport.replaceRange(lsindex, lsindex + 1, [
+                      new InvoiceItem(
+                          tipo: widget.itensImport[lsindex].tipo,
+                          description: widget.itensImport[lsindex].description,
+                          date: widget.itensImport[lsindex].date,
+                          quantity: int.parse(_controller1.text),
+                          vat: widget.itensImport[lsindex].vat,
+                          unitPrice: double.parse(_controller2.text))
+                    ]);
+                    print(_controller1.text);
+                    atualiza();
+                    Navigator.of(context).pop();
                   },
                   child: Text('OK')),
             ],
@@ -114,7 +111,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: Column(
         children: [
-          Text('Total: R\$ $valorTotal'),
+          Text('Total: R\$ ${valorTotal.toStringAsFixed(2)}'),
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
@@ -126,6 +123,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
                       onTap: () async {
                         showMyDialog(context, widget.itensImport[index], index);
                         print(index);
+                        setState(() {});
                       },
                       child: ListTile(
                         title: Text(widget.itensImport[index].description),

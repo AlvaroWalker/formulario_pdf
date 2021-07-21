@@ -183,7 +183,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                 Text(item.quantity.toString()),
                                 Text(item.tipo.toString()),
                                 Text(item.description.toString()),
-                                Text('R\$ ${(item.unitPrice * item.quantity)}'),
+                                Text(
+                                    'R\$ ${(item.unitPrice * item.quantity).toStringAsFixed(2)}'),
                               ],
                             )
                         ],
@@ -202,7 +203,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           ),
                           Expanded(
                             child: Text(
-                              'R\$ $valorTotal',
+                              'R\$ ${valorTotal.toStringAsFixed(2)}',
                               textScaleFactor: 2,
                               textAlign: TextAlign.end,
                             ),
