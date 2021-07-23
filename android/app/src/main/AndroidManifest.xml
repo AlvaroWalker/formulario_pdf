@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.formulario_pdf">
    <application
-        android:label="formulario_pdf"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Moises Eletric"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

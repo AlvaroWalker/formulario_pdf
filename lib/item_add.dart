@@ -163,6 +163,9 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             Text('RESUMO'),
             Container(
               child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
                 child: InkWell(
                   onTap: () async {
                     Navigator.push(
@@ -175,40 +178,70 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                   },
                   child: Column(
                     children: <Widget>[
-                      Table(
-                        children: [
-                          for (var item in itens)
-                            TableRow(
-                              children: [
-                                Text(item.quantity.toString()),
-                                Text(item.tipo.toString()),
-                                Text(item.description.toString()),
-                                Text(
-                                    'R\$ ${(item.unitPrice * item.quantity).toStringAsFixed(2)}'),
-                              ],
-                            )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Table(
+                          columnWidths: {0: FractionColumnWidth(.15)},
+                          //border: TableBorder.all(),
+                          children: [
+                            for (var item in itens)
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(item.quantity.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(item.tipo.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(item.description.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                        'R\$ ${(item.unitPrice * item.quantity).toStringAsFixed(2)}'),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
                       Divider(),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Cliente: ${widget.cliente.name}'),
-                                Text('CPF: ${widget.cliente.doc}'),
-                              ],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child:
+                                        Text('Cliente: ${widget.cliente.name}'),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text('CPF: ${widget.cliente.doc}'),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'R\$ ${valorTotal.toStringAsFixed(2)}',
-                              textScaleFactor: 2,
-                              textAlign: TextAlign.end,
-                            ),
-                          )
-                        ],
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Text(
+                                  'R\$ ${valorTotal.toStringAsFixed(2)}',
+                                  textScaleFactor: 2,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),

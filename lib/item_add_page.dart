@@ -111,7 +111,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: Column(
         children: [
-          Text('Total: R\$ ${valorTotal.toStringAsFixed(2)}'),
+          Text(
+            'Total: R\$ ${valorTotal.toStringAsFixed(2)}',
+            textScaleFactor: 2,
+          ),
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
@@ -119,6 +122,9 @@ class _ItemAddPageState extends State<ItemAddPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                     child: InkWell(
                       onTap: () async {
                         showMyDialog(context, widget.itensImport[index], index);
@@ -154,7 +160,9 @@ class _ItemAddPageState extends State<ItemAddPage> {
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
+                  const Divider(
+                height: 2,
+              ),
             ),
           ),
         ],
