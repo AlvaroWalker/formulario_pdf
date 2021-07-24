@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/tela_itens_enviados.dart';
 
-import 'item_add_page.dart';
+import 'item_list_page.dart';
 import 'tela_cliente.dart';
 
 class TelaInicio extends StatelessWidget {
@@ -60,7 +61,7 @@ class TelaInicio extends StatelessWidget {
                   },
                   child: Text(
                     'ORÇAMENTO',
-                    style: TextStyle(color: Colors.deepOrange),
+                    style: TextStyle(color: Colors.deepOrange, fontSize: 30),
                   ),
                 ),
                 SizedBox(
@@ -74,25 +75,37 @@ class TelaInicio extends StatelessWidget {
                       minimumSize: Size(80, 50)),
                   onPressed: () {},
                   child: Text(
-                    'PEDIDO AO CLIENTE',
-                    style: TextStyle(color: Colors.deepOrange),
+                    'PEDIDO',
+                    style: TextStyle(color: Colors.deepOrange, fontSize: 30),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      onPrimary: Colors.black87,
+                Divider(
+                  thickness: 3,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      //onPrimary: Colors.black87,
                       primary: Colors.white,
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
-                  onPressed: () {},
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TelaItensEnviados()));
+                  },
                   child: Text(
-                    'RECIBO',
-                    style: TextStyle(color: Colors.deepOrange),
+                    'MEUS ENVIOS',
+                    style: TextStyle(color: Colors.white, fontSize: 30),
                   ),
-                )
+                ),
               ],
             ),
           ),

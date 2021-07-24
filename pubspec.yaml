@@ -40,7 +40,12 @@ dependencies:
 
   # format dates for invoice
   intl: ^0.17.0
+
+  # mudar os icones
   flutter_launcher_icons: ^0.9.0
+  
+  # salvar as listas no celular
+  shared_preferences: ^2.0.6
 
 
 dev_dependencies:

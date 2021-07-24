@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'model/customer.dart';
 
-import 'item_add.dart';
+import 'item_add_page.dart';
 
 class TelaCliente extends StatefulWidget {
   const TelaCliente({Key? key}) : super(key: key);
@@ -15,13 +15,13 @@ class _TelaClienteState extends State<TelaCliente> {
   Widget build(BuildContext context) {
     final txtControlCliente = TextEditingController();
     final txtControlDoc = TextEditingController();
-    final txtControl_insEst = TextEditingController();
-    final txtControl_razaoSocial = TextEditingController();
+    final txtControlInscEst = TextEditingController();
+    final txtControlRazaoSocial = TextEditingController();
 
-    final txtControl_end = TextEditingController();
-    final txtControl_bairro = TextEditingController();
-    final txtControl_cidade = TextEditingController();
-    final txtControl_telefone = TextEditingController();
+    final txtControlEnd = TextEditingController();
+    final txtControlBairro = TextEditingController();
+    final txtControlCidade = TextEditingController();
+    final txtControlTelefone = TextEditingController();
     @override
     void dispose() {
       // Clean up the controller when the widget is disposed.
@@ -36,8 +36,8 @@ class _TelaClienteState extends State<TelaCliente> {
         backgroundColor: Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
         elevation: 0, // <-- ELEVATION ZEROED
         title: Text(
-          'ORÇAMENTO',
-          style: TextStyle(color: Colors.black87),
+          'INSIRA OS DADOS DO CLIENTE',
+          style: TextStyle(color: Colors.black54),
         ),
         centerTitle: true,
       ),
@@ -64,6 +64,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlInscEst,
               decoration: InputDecoration(
                   labelText: 'INSC. EST.:', border: OutlineInputBorder()),
             ),
@@ -71,6 +72,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlRazaoSocial,
               decoration: InputDecoration(
                   labelText: 'RAZÃO SOCIAL:', border: OutlineInputBorder()),
             ),
@@ -81,6 +83,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlEnd,
               decoration: InputDecoration(
                   labelText: 'ENDEREÇO:', border: OutlineInputBorder()),
             ),
@@ -88,6 +91,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlBairro,
               decoration: InputDecoration(
                   labelText: 'BAIRRO:', border: OutlineInputBorder()),
             ),
@@ -95,6 +99,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlCidade,
               decoration: InputDecoration(
                   labelText: 'CIDADE:', border: OutlineInputBorder()),
             ),
@@ -102,6 +107,7 @@ class _TelaClienteState extends State<TelaCliente> {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TextFormField(
+              controller: txtControlTelefone,
               decoration: InputDecoration(
                   labelText: 'TELEFONE:', border: OutlineInputBorder()),
             ),
@@ -115,8 +121,14 @@ class _TelaClienteState extends State<TelaCliente> {
           child: Icon(Icons.navigate_next),
           onPressed: () async {
             Customer clientes = new Customer(
-                name: txtControlCliente.text, doc: txtControlDoc.text);
-            print(txtControlCliente.text);
+                name: txtControlCliente.text,
+                doc: txtControlDoc.text,
+                inscEst: txtControlInscEst.text,
+                razaoSocial: txtControlRazaoSocial.text,
+                clienteEndereco: txtControlEnd.text,
+                clienteBairro: txtControlBairro.text,
+                clienteCidade: txtControlCidade.text,
+                clienteTelefone: txtControlTelefone.text);
             Navigator.push(
                 context,
                 MaterialPageRoute(

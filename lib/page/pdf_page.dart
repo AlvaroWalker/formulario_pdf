@@ -60,7 +60,6 @@ class _PdfPageState extends State<PdfPage> {
                           description: 'café',
                           date: DateTime.now(),
                           quantity: 3,
-                          vat: 0.0,
                           unitPrice: 10,
                         ),
                         InvoiceItem(
@@ -68,7 +67,6 @@ class _PdfPageState extends State<PdfPage> {
                           description: 'agua',
                           date: DateTime.now(),
                           quantity: 8,
-                          vat: 0.0,
                           unitPrice: 2,
                         ),
                         InvoiceItem(
@@ -76,7 +74,6 @@ class _PdfPageState extends State<PdfPage> {
                           description: 'arroz',
                           date: DateTime.now(),
                           quantity: 10,
-                          vat: 0.0,
                           unitPrice: 25,
                         ),
                       ],

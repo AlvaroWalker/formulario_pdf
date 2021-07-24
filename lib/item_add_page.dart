@@ -1,208 +1,350 @@
 import 'package:flutter/material.dart';
-import 'package:formulario_pdf/model/invoice.dart';
-
-import 'api/pdf_api.dart';
-import 'api/pdf_invoice_api.dart';
+import 'item_list_page.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
-import 'utils.dart';
+import 'model/invoice.dart';
 
 double valorTotal = 0;
 
-List itens = [];
+List<String> descricaoServico = [
+  "Tomada",
+  "Chuveiro",
+  "Ar Condicionado",
+  "Interruptor",
+  "Compressor",
+  "Bomba",
+  "Quadro de Instalação",
+  "Hidrante"
+];
 
-class ItemAddPage extends StatefulWidget {
-  final List itensImport;
-  ItemAddPage({Key? key, required this.itensImport}) : super(key: key);
+List<String> tipoServico = [
+  "Instalação",
+  "Troca",
+  "Medição",
+  "Conferencia",
+];
+
+int? _radioValue = 0;
+List itens = [];
+String _selectedValue = '';
+
+class ItemAdd_Page extends StatefulWidget {
+  final Customer cliente;
+  const ItemAdd_Page({Key? key, required this.cliente}) : super(key: key);
+
   @override
-  _ItemAddPageState createState() => _ItemAddPageState();
+  _ItemAdd_PageState createState() => _ItemAdd_PageState();
 }
 
-class _ItemAddPageState extends State<ItemAddPage> {
-  void atualiza() {
-    setState(() {});
+class _ItemAdd_PageState extends State<ItemAdd_Page> {
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
   }
 
-  Future<void> showMyDialog(
-      BuildContext context, InvoiceItem item, int lsindex) async {
-    InvoiceItem newitem = item;
-
-    //String dropdownValue = opcoes[1];
-    final TextEditingController _controller1 = TextEditingController();
-    final TextEditingController _controller2 = TextEditingController();
-
-    _controller1.text = item.quantity.toString();
-
-    _controller2.text = item.unitPrice.toString();
-
-    return await showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Text(item.description),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                        controller: _controller1,
-                        decoration: InputDecoration(
-                            labelText: 'Quantidade',
-                            border: OutlineInputBorder())),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _controller2,
-                      decoration: InputDecoration(
-                          labelText: 'Preço', border: OutlineInputBorder()),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancelar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                  onPressed: () {
-                    widget.itensImport.replaceRange(lsindex, lsindex + 1, [
-                      new InvoiceItem(
-                          tipo: widget.itensImport[lsindex].tipo,
-                          description: widget.itensImport[lsindex].description,
-                          date: widget.itensImport[lsindex].date,
-                          quantity: int.parse(_controller1.text),
-                          vat: widget.itensImport[lsindex].vat,
-                          unitPrice: double.parse(_controller2.text))
-                    ]);
-                    print(_controller1.text);
-                    atualiza();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK')),
-            ],
-          );
-        });
-      },
-    );
-  }
-
+  String? dropdownValue;
+  String? dropdownValue2;
   @override
   Widget build(BuildContext context) {
-    if (widget.itensImport.length > 0) {
-      valorTotal = widget.itensImport
+    final txtControlPrecoUnidade = TextEditingController();
+    final txtControlQuantidade = TextEditingController();
+    final txtControlDescricao = TextEditingController();
+
+    setState(() {});
+
+    if (itens.length > 0) {
+      valorTotal = itens
           .map((item) => item.unitPrice * item.quantity)
           .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
     }
+
+    Widget servico() {
+      return Column(children: [
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: DropdownButtonFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              //filled: true,
+              labelText: "TIPO DE SERVIÇO",
+            ),
+            value: dropdownValue,
+            onChanged: (value) {
+              dropdownValue = value.toString();
+              setState(() {});
+            },
+            items: tipoServico
+                .map((tipo) =>
+                    DropdownMenuItem(value: tipo, child: Text("$tipo")))
+                .toList(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: DropdownButtonFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'DESCRIÇÃO DO SERVIÇO',
+            ),
+            value: dropdownValue2,
+            onChanged: (String? value) {
+              setState(() {
+                dropdownValue2 = value.toString();
+              });
+            },
+            items: descricaoServico
+                .map((cityTitle) => DropdownMenuItem(
+                    value: cityTitle, child: Text("$cityTitle")))
+                .toList(),
+          ),
+        ),
+      ]);
+    }
+
+    Widget material() {
+      return Column(children: [
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: TextFormField(
+            readOnly: true,
+            enabled: false,
+
+            //controller: txtControlQuantidade,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+                labelText: 'RELAÇÃO DE MATERIAL',
+                border: OutlineInputBorder()),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: TextFormField(
+            controller: txtControlDescricao,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+                labelText: 'DESCRIÇÃO DO MATERIAL',
+                border: OutlineInputBorder()),
+          ),
+        ),
+      ]);
+    }
+
+    final TextEditingController _controller = new TextEditingController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Radio(
+              value: 0,
+              groupValue: _radioValue,
+              onChanged: (int? value) {
+                _radioValue = value;
+                setState(() {});
+              },
+            ),
+            Text(
+              'SERVIÇO',
+              style: TextStyle(color: Colors.black54),
+            ),
+            Radio(
+              value: 1,
+              groupValue: _radioValue,
+              onChanged: (int? value) {
+                _radioValue = value;
+                setState(() {});
+              },
+            ),
+            Text(
+              'MATERIAIS',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
+        ),
       ),
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
-      body: Column(
-        children: [
-          Text(
-            'Total: R\$ ${valorTotal.toStringAsFixed(2)}',
-            textScaleFactor: 2,
-          ),
-          Flexible(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(8),
-              itemCount: widget.itensImport.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        showMyDialog(context, widget.itensImport[index], index);
-                        print(index);
-                        setState(() {});
-                      },
-                      child: ListTile(
-                        title: Text(widget.itensImport[index].description),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Quantidade: ${widget.itensImport[index].quantity}'),
-                            Text(
-                                'Preço Unitario: R\$ ${widget.itensImport[index].unitPrice}'),
-                            Text(
-                                'Preço Total: R\$ ${widget.itensImport[index].quantity * widget.itensImport[index].unitPrice}'),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Color.fromRGBO(255, 100, 100, 1),
-                          ),
-                          onPressed: () {
-                            widget.itensImport.removeAt(index);
-                            setState(() {});
-                          },
-                        ),
+      body: Container(
+        alignment: Alignment.center,
+        child: ListView(
+          padding: const EdgeInsets.all(10.0),
+          children: [
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 250),
+              firstChild: servico(),
+              secondChild: material(),
+              crossFadeState: _radioValue == 0
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: txtControlPrecoUnidade,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    hintText: 'R\$ ',
+                    labelText: 'VALOR UNITARIO:',
+                    border: OutlineInputBorder()),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3),
+                      child: TextFormField(
+                        controller: txtControlQuantidade,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            labelText: 'QUANTIDADE:',
+                            border: OutlineInputBorder()),
                       ),
                     ),
                   ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(
-                height: 2,
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(right: 3, left: 3),
+                    child: TextFormField(
+                      //controller: txtControlQuantidade,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: 'UNIDADE:', border: OutlineInputBorder()),
+                    ),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 3),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(15),
+                        ),
+                        onPressed: () {
+                          itens.add(InvoiceItem(
+                              tipo: _radioValue == 0
+                                  ? dropdownValue.toString()
+                                  : 'Relação de Material',
+                              description: _radioValue == 0
+                                  ? dropdownValue2.toString()
+                                  : txtControlDescricao.text,
+                              date: DateTime.now(),
+                              quantity: int.parse(txtControlQuantidade.text),
+                              unitPrice:
+                                  double.parse(txtControlPrecoUnidade.text)));
+                          setState(() {});
+                        },
+                        child: Icon(Icons.add)),
+                  )
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          FloatingActionButton(
-            //backgroundColor: Colors.orange,
-            onPressed: () async {
-              final date = DateTime.now();
-              final dueDate = date.add(Duration(days: 7));
-
-              final invoice = Invoice(
-                supplier: Supplier(
-                  name: 'vendedor',
-                  address: 'endereço',
-                  paymentInfo: 'blabla',
+            Divider(),
+            Text('RESUMO'),
+            Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black26),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                customer: Customer(
-                  name: 'comprador',
-                  doc: 'endereço comp',
+                child: InkWell(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ItemAddPage(
+                                itensImport: itens,
+                                cliente: widget.cliente,
+                              )),
+                    ).then((value) => setState(() {}));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Table(
+                          columnWidths: {0: FractionColumnWidth(.15)},
+                          //border: TableBorder.all(),
+                          children: [
+                            for (var item in itens)
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Column(
+                                      children: [
+                                        Text(item.quantity.toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(item.tipo.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(item.description.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                        'R\$ ${(item.unitPrice * item.quantity).toStringAsFixed(2)}'),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: 8, left: 8),
+                                    child:
+                                        Text('Cliente: ${widget.cliente.name}'),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 8, left: 8),
+                                    child: Text('CPF: ${widget.cliente.doc}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 8, top: 8, right: 8),
+                                child: Text(
+                                    'R\$ ${valorTotal.toStringAsFixed(2)}',
+                                    textScaleFactor: 2,
+                                    textAlign: TextAlign.end,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                info: InvoiceInfo(
-                  date: date,
-                  dueDate: dueDate,
-                  description: 'descrição',
-                  number: '${DateTime.now().year}/115',
-                ),
-                items: List.from(widget.itensImport),
-              );
-
-              final pdfFile = await PdfInvoiceApi.generate(invoice);
-
-              PdfApi.openFile(pdfFile);
-            },
-            child: Icon(Icons.pages),
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

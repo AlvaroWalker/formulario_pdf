@@ -89,9 +89,10 @@ class PdfInvoiceApi {
   static Widget buildSupplierAddress(Supplier supplier) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(supplier.name, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(supplier.name.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 1 * PdfPageFormat.mm),
-          Text(supplier.address),
+          Text(supplier.address.toString()),
         ],
       );
 
@@ -109,23 +110,15 @@ class PdfInvoiceApi {
       );
 
   static Widget buildInvoice(Invoice invoice) {
-    final headers = [
-      'descriçaõ',
-      'data',
-      'quantidade',
-      'unitario',
-      'imps',
-      'total'
-    ];
+    final headers = ['descriçaõ', 'data', 'quantidade', 'unitario', 'total'];
     final data = invoice.items.map((item) {
-      final total = item.unitPrice * item.quantity * (1 + item.vat);
+      final total = item.unitPrice * item.quantity;
 
       return [
         item.description,
         Utils.formatDate(item.date),
         '${item.quantity}',
         'R\$ ${item.unitPrice}',
-        '${item.vat} %',
         'R\$ ${total.toStringAsFixed(2)}',
       ];
     }).toList();
@@ -152,9 +145,7 @@ class PdfInvoiceApi {
     final netTotal = invoice.items
         .map((item) => item.unitPrice * item.quantity)
         .reduce((item1, item2) => item1 + item2);
-    final vatPercent = invoice.items.first.vat;
-    final vat = netTotal * vatPercent;
-    final total = netTotal + vat;
+    final total = netTotal;
 
     return Container(
       alignment: Alignment.centerRight,
@@ -171,14 +162,9 @@ class PdfInvoiceApi {
                   value: Utils.formatPrice(netTotal),
                   unite: true,
                 ),
-                buildText(
-                  title: 'tax ${vatPercent * 100} %',
-                  value: Utils.formatPrice(vat),
-                  unite: true,
-                ),
                 Divider(),
                 buildText(
-                  title: 'Total com tax',
+                  title: 'Total',
                   titleStyle: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -203,10 +189,12 @@ class PdfInvoiceApi {
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: 'endereço', value: invoice.supplier.address),
+          buildSimpleText(
+              title: 'endereço', value: invoice.supplier.address.toString()),
           SizedBox(height: 1 * PdfPageFormat.mm),
           buildSimpleText(
-              title: 'met pagamento', value: invoice.supplier.paymentInfo),
+              title: 'met pagamento',
+              value: invoice.supplier.paymentInfo.toString()),
         ],
       );
 
