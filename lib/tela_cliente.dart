@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/model/supplier.dart';
+import 'package:formulario_pdf/variaveis.dart';
 
 import 'model/customer.dart';
 
 import 'item_add_page.dart';
+import 'model/invoice.dart';
 
 class TelaCliente extends StatefulWidget {
-  const TelaCliente({Key? key}) : super(key: key);
+  const TelaCliente({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _TelaClienteState createState() => _TelaClienteState();
@@ -120,7 +125,9 @@ class _TelaClienteState extends State<TelaCliente> {
         child: FloatingActionButton(
           child: Icon(Icons.navigate_next),
           onPressed: () async {
-            Customer clientes = new Customer(
+            int index = listaDeItens!.invoices.length.toInt() - 1;
+
+            listaDeItens?.invoices[index].customer = Customer(
                 name: txtControlCliente.text,
                 doc: txtControlDoc.text,
                 inscEst: txtControlInscEst.text,
@@ -129,12 +136,14 @@ class _TelaClienteState extends State<TelaCliente> {
                 clienteBairro: txtControlBairro.text,
                 clienteCidade: txtControlCidade.text,
                 clienteTelefone: txtControlTelefone.text);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ItemAdd_Page(
-                          cliente: clientes,
-                        )));
+
+            listaDeItens?.invoices[index].items = <InvoiceItem>[];
+            listaDeItens?.invoices[index].supplier = new Supplier(
+                name: 'name', address: 'address', paymentInfo: 'paymentInfo');
+
+            print(listaDeItens?.invoices[0].customer?.name);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ItemAdd_Page()));
           },
         ),
       ),

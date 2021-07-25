@@ -39,6 +39,7 @@ class _PdfPageState extends State<PdfPage> {
                     final dueDate = date.add(Duration(days: 7));
 
                     final invoice = Invoice(
+                      id: 1,
                       supplier: Supplier(
                         name: 'vendedor',
                         address: 'endereço',
@@ -49,8 +50,8 @@ class _PdfPageState extends State<PdfPage> {
                         doc: 'documento',
                       ),
                       info: InvoiceInfo(
-                        date: date,
-                        dueDate: dueDate,
+                        date: date.toString(),
+                        dueDate: dueDate.toString(),
                         description: 'descrição',
                         number: '${DateTime.now().year}/115',
                       ),
@@ -58,30 +59,30 @@ class _PdfPageState extends State<PdfPage> {
                         InvoiceItem(
                           tipo: '2',
                           description: 'café',
-                          date: DateTime.now(),
+                          date: DateTime.now().toString(),
                           quantity: 3,
                           unitPrice: 10,
                         ),
                         InvoiceItem(
                           tipo: '2',
                           description: 'agua',
-                          date: DateTime.now(),
+                          date: DateTime.now().toString(),
                           quantity: 8,
                           unitPrice: 2,
                         ),
                         InvoiceItem(
                           tipo: '2',
                           description: 'arroz',
-                          date: DateTime.now(),
+                          date: DateTime.now().toString(),
                           quantity: 10,
                           unitPrice: 25,
                         ),
                       ],
                     );
 
-                    final pdfFile = await PdfInvoiceApi.generate(invoice);
+                    //final pdfFile = await PdfInvoiceApi.generate(invoice);
 
-                    PdfApi.openFile(pdfFile);
+                    // PdfApi.openFile(pdfFile);
                   },
                 ),
               ],

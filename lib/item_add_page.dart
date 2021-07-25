@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/variaveis.dart';
 import 'item_list_page.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
@@ -25,12 +26,13 @@ List<String> tipoServico = [
 ];
 
 int? _radioValue = 0;
-List itens = [];
+//List itens = [];
 String _selectedValue = '';
 
 class ItemAdd_Page extends StatefulWidget {
-  final Customer cliente;
-  const ItemAdd_Page({Key? key, required this.cliente}) : super(key: key);
+  const ItemAdd_Page({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ItemAdd_PageState createState() => _ItemAdd_PageState();
@@ -51,10 +53,11 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
     final txtControlDescricao = TextEditingController();
 
     setState(() {});
+    int index = listaDeItens!.invoices.length.toInt() - 1;
 
-    if (itens.length > 0) {
-      valorTotal = itens
-          .map((item) => item.unitPrice * item.quantity)
+    if (listaDeItens!.invoices[index].items.length != 0) {
+      valorTotal = listaDeItens!.invoices[index].items
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
           .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
@@ -225,19 +228,23 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(15),
                         ),
-                        onPressed: () {
-                          itens.add(InvoiceItem(
-                              tipo: _radioValue == 0
-                                  ? dropdownValue.toString()
-                                  : 'Relação de Material',
-                              description: _radioValue == 0
-                                  ? dropdownValue2.toString()
-                                  : txtControlDescricao.text,
-                              date: DateTime.now(),
-                              quantity: int.parse(txtControlQuantidade.text),
-                              unitPrice:
-                                  double.parse(txtControlPrecoUnidade.text)));
+                        onPressed: () async {
+                          listaDeItens?.invoices[index].items.add(
+                              new InvoiceItem(
+                                  tipo: _radioValue == 0
+                                      ? dropdownValue.toString()
+                                      : 'Relação de Material',
+                                  description: _radioValue == 0
+                                      ? dropdownValue2.toString()
+                                      : txtControlDescricao.text,
+                                  date: DateTime.now().toString(),
+                                  quantity:
+                                      int.parse(txtControlQuantidade.text),
+                                  unitPrice: double.parse(
+                                      txtControlPrecoUnidade.text)));
                           setState(() {});
+
+                          print(listaDeItens?.toJson().toString());
                         },
                         child: Icon(Icons.add)),
                   )
@@ -254,13 +261,13 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                 ),
                 child: InkWell(
                   onTap: () async {
+                    //print(listaDeItens?.invoices.length);
+
+                    //print(listaDeItens?.toJson().toString());
+
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => ItemAddPage(
-                                itensImport: itens,
-                                cliente: widget.cliente,
-                              )),
+                      MaterialPageRoute(builder: (context) => ItemAddPage()),
                     ).then((value) => setState(() {}));
                   },
                   child: Column(
@@ -271,29 +278,29 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           columnWidths: {0: FractionColumnWidth(.15)},
                           //border: TableBorder.all(),
                           children: [
-                            for (var item in itens)
+                            for (var items
+                                in listaDeItens!.invoices[index].items)
                               TableRow(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(3.0),
                                     child: Column(
                                       children: [
-                                        Text(item.quantity.toString()),
+                                        Text(items.quantity.toString()),
                                       ],
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(3.0),
-                                    child: Text(item.tipo.toString()),
+                                    child: Text(items.tipo.toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(3.0),
-                                    child: Text(item.description.toString()),
+                                    child: Text(items.description.toString()),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(3.0),
-                                    child: Text(
-                                        'R\$ ${(item.unitPrice * item.quantity).toStringAsFixed(2)}'),
+                                    child: Text('R\$ ${(items.unitPrice)}'),
                                   ),
                                 ],
                               ),
@@ -312,13 +319,14 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                   Padding(
                                     padding:
                                         const EdgeInsets.only(top: 8, left: 8),
-                                    child:
-                                        Text('Cliente: ${widget.cliente.name}'),
+                                    child: Text(
+                                        'Cliente: ${listaDeItens?.invoices[0].customer?.name}'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         bottom: 8, left: 8),
-                                    child: Text('CPF: ${widget.cliente.doc}'),
+                                    child: Text(
+                                        'CPF: ${listaDeItens?.invoices[0].customer?.doc}'),
                                   ),
                                 ],
                               ),

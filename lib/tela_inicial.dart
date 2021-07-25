@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/model/invoice.dart';
+import 'package:formulario_pdf/model/invoicelist.dart';
 import 'package:formulario_pdf/tela_itens_enviados.dart';
+import 'package:formulario_pdf/variaveis.dart';
 
 import 'item_list_page.dart';
 import 'tela_cliente.dart';
+
+//InvoiceList? listaDeItens;
 
 class TelaInicio extends StatelessWidget {
   const TelaInicio({Key? key}) : super(key: key);
@@ -56,6 +61,16 @@ class TelaInicio extends StatelessWidget {
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
                   onPressed: () async {
+                    //Invoice novaLista = new Invoice(id: 1, items: <InvoiceItem>[]);
+                    if (listaDeItens == null) {
+                      listaDeItens = InvoiceList(invoices: []);
+                    }
+
+                    listaDeItens!.invoices
+                        .add(new Invoice(id: 1, items: <InvoiceItem>[]));
+
+                    print(listaDeItens?.invoices.length);
+
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => TelaCliente()));
                   },

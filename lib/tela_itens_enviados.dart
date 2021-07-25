@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'variaveis.dart';
+
 int? _radioValue = 0;
 
 class TelaItensEnviados extends StatefulWidget {
@@ -16,27 +18,55 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
       alignment: Alignment.center,
       child: Column(
         children: [
-          Divider(
-            indent: 20,
-            endIndent: 20,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width - 20,
-            height: MediaQuery.of(context).size.height / 15,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black26),
-                borderRadius: BorderRadius.circular(15.0),
+          Flexible(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(8),
+              itemCount: listaDeItens!.invoices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.black26),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        setState(() {});
+                      },
+                      child: ListTile(
+                        title: Text(listaDeItens!.invoices[index].toString()),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Quantidade: ${listaDeItens!.invoices[index]}'),
+                            Text(
+                                'Preço Unitario: R\$ ${listaDeItens!.invoices[index]}'),
+                            // Text(
+                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.deepOrange,
+                          ),
+                          onPressed: () {
+                            listaDeItens!.invoices.removeAt(index);
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(
+                height: 2,
               ),
-              color: Color.fromARGB(0, 0, 0, 0),
-              shadowColor: Color.fromARGB(0, 0, 0, 0),
-              child: Center(child: Text('TOTAL EM ORÇAMENTO: R\$ 15.190,00')),
             ),
-          ),
-          Divider(
-            indent: 20,
-            endIndent: 20,
-          ),
+          )
         ],
       ),
     );

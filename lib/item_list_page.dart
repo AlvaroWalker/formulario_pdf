@@ -1,22 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/model/invoice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/pdf_api.dart';
 import 'api/pdf_invoice_api.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
 import 'utils.dart';
+import 'variaveis.dart';
 
 double valorTotal = 0;
 
 List itens = [];
 
 class ItemAddPage extends StatefulWidget {
-  final List itensImport;
-
-  final Customer cliente;
-  ItemAddPage({Key? key, required this.itensImport, required this.cliente})
-      : super(key: key);
+  ItemAddPage({
+    Key? key,
+  }) : super(key: key);
   @override
   _ItemAddPageState createState() => _ItemAddPageState();
 }
@@ -44,7 +46,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            title: Text(item.description),
+            title: Text(item.description.toString()),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
@@ -76,11 +78,13 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
               TextButton(
                   onPressed: () {
-                    widget.itensImport.replaceRange(lsindex, lsindex + 1, [
+                    listaDeItens!.invoices[0].items
+                        .replaceRange(lsindex, lsindex + 1, [
                       new InvoiceItem(
-                          tipo: widget.itensImport[lsindex].tipo,
-                          description: widget.itensImport[lsindex].description,
-                          date: widget.itensImport[lsindex].date,
+                          tipo: listaDeItens!.invoices[0].items[lsindex].tipo,
+                          description: listaDeItens!
+                              .invoices[0].items[lsindex].description,
+                          date: listaDeItens!.invoices[0].items[lsindex].date,
                           quantity: int.parse(_controller1.text),
                           unitPrice: double.parse(_controller2.text))
                     ]);
@@ -98,10 +102,9 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.itensImport.length > 0) {
-      valorTotal = widget.itensImport
-          .map((item) => item.unitPrice * item.quantity)
-          .reduce((item1, item2) => item1 + item2);
+    int indexo = listaDeItens!.invoices.length.toInt() - 1;
+    if (listaDeItens?.invoices[indexo].items.length != null) {
+      //valorTotal = widget.lista.items!.map((item) => item.unitPrice * item.quantity).reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
     }
@@ -116,7 +119,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
-              itemCount: widget.itensImport.length,
+              itemCount: listaDeItens!.invoices[0].items.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
@@ -126,21 +129,24 @@ class _ItemAddPageState extends State<ItemAddPage> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        showMyDialog(context, widget.itensImport[index], index);
+                        showMyDialog(context,
+                            listaDeItens!.invoices[indexo].items[0], index);
                         //print(index);
                         setState(() {});
                       },
                       child: ListTile(
-                        title: Text(widget.itensImport[index].description),
+                        title: Text(listaDeItens!
+                            .invoices[indexo].items[index].description
+                            .toString()),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Quantidade: ${widget.itensImport[index].quantity}'),
+                                'Quantidade: ${listaDeItens!.invoices[indexo].items[index].quantity}'),
                             Text(
-                                'Preço Unitario: R\$ ${widget.itensImport[index].unitPrice}'),
-                            Text(
-                                'Preço Total: R\$ ${widget.itensImport[index].quantity * widget.itensImport[index].unitPrice}'),
+                                'Preço Unitario: R\$ ${listaDeItens!.invoices[indexo].items[index].unitPrice}'),
+                            // Text(
+                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
                         ),
                         trailing: IconButton(
@@ -149,7 +155,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
                             color: Colors.deepOrange,
                           ),
                           onPressed: () {
-                            widget.itensImport.removeAt(index);
+                            listaDeItens!.invoices[indexo].items
+                                .removeAt(index);
                             setState(() {});
                           },
                         ),
@@ -187,7 +194,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Cliente: ${widget.cliente.name}'),
+                          /*
+                          Text('Cliente: ${widget.lista.items.customer.name}'),
                           Text('CPF/CNPJ: ${widget.cliente.doc}'),
                           Text(
                               'Insc. Estadual: ${widget.cliente.inscEst.toString()}'),
@@ -200,7 +208,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
                           Text(
                               'Estado: ${widget.cliente.clienteEstado.toString()}'),
                           Text(
-                              'Telefone: ${widget.cliente.clienteTelefone.toString()}'),
+                              'Telefone: ${widget.cliente.clienteTelefone.toString()}'),*/
                         ],
                       ),
                     ),
@@ -221,37 +229,45 @@ class _ItemAddPageState extends State<ItemAddPage> {
         children: [
           FloatingActionButton(
             //backgroundColor: Colors.orange,
-            onPressed: () async {
-              final date = DateTime.now();
-              final dueDate = date.add(Duration(days: 7));
+            onPressed: () {
+              salvarPedido();
 
-              final invoice = Invoice(
-                supplier: Supplier(
-                  name: 'vendedor',
-                  address: 'endereço',
-                  paymentInfo: 'blabla',
-                ),
-                customer: Customer(
-                  name: widget.cliente.name,
-                  doc: widget.cliente.doc,
-                ),
-                info: InvoiceInfo(
-                  date: date,
-                  dueDate: dueDate,
-                  description: 'descrição',
-                  number: '${DateTime.now().year}/115',
-                ),
-                items: List.from(widget.itensImport),
-              );
+              //final pdfFile = await PdfInvoiceApi.generate(invoice);
 
-              final pdfFile = await PdfInvoiceApi.generate(invoice);
-
-              PdfApi.openFile(pdfFile);
+              //PdfApi.openFile(pdfFile);
             },
             child: Icon(Icons.pages),
           ),
         ],
       ),
     );
+  }
+
+  void salvarPedido() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final date = DateTime.now();
+    final dueDate = date.add(Duration(days: 7));
+
+    final invoice = Invoice(
+      id: 1,
+      supplier: Supplier(
+        name: 'vendedor',
+        address: 'endereço',
+        paymentInfo: 'blabla',
+      ),
+      customer: Customer(
+        name: 'widget.lista.items.customer.name',
+        doc: 'widget.lista.items.customer.doc',
+      ),
+      info: InvoiceInfo(
+        date: date.toString(),
+        dueDate: dueDate.toString(),
+        description: 'descrição',
+        number: '${DateTime.now().year}/115',
+      ),
+      items: listaDeItens!.invoices[0].items,
+    );
+    print(jsonEncode(invoice.toJson()));
+    //prefs.setString('valores', jsonEncode(invoice.toJson()));
   }
 }
