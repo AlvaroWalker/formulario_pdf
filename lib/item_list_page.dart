@@ -16,9 +16,8 @@ double valorTotal = 0;
 List itens = [];
 
 class ItemAddPage extends StatefulWidget {
-  ItemAddPage({
-    Key? key,
-  }) : super(key: key);
+  final int indexOfItem;
+  ItemAddPage({Key? key, required this.indexOfItem}) : super(key: key);
   @override
   _ItemAddPageState createState() => _ItemAddPageState();
 }
@@ -78,13 +77,17 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
               TextButton(
                   onPressed: () {
-                    listaDeItens!.invoices[0].items
+                    listaDeItens!.invoices[widget.indexOfItem].items
                         .replaceRange(lsindex, lsindex + 1, [
                       new InvoiceItem(
-                          tipo: listaDeItens!.invoices[0].items[lsindex].tipo,
+                          tipo: listaDeItens!
+                              .invoices[widget.indexOfItem].items[lsindex].tipo,
                           description: listaDeItens!
-                              .invoices[0].items[lsindex].description,
-                          date: listaDeItens!.invoices[0].items[lsindex].date,
+                              .invoices[widget.indexOfItem]
+                              .items[lsindex]
+                              .description,
+                          date: listaDeItens!
+                              .invoices[widget.indexOfItem].items[lsindex].date,
                           quantity: int.parse(_controller1.text),
                           unitPrice: double.parse(_controller2.text))
                     ]);
@@ -102,9 +105,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    int indexo = listaDeItens!.invoices.length.toInt() - 1;
-    if (listaDeItens?.invoices[indexo].items.length != null) {
-      //valorTotal = widget.lista.items!.map((item) => item.unitPrice * item.quantity).reduce((item1, item2) => item1 + item2);
+    if (listaDeItens?.invoices[widget.indexOfItem].items.length != null) {
+      valorTotal = listaDeItens!.invoices[widget.indexOfItem].items
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
+          .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
     }
@@ -119,7 +123,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
-              itemCount: listaDeItens!.invoices[0].items.length,
+              itemCount:
+                  listaDeItens!.invoices[widget.indexOfItem].items.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
@@ -129,22 +134,24 @@ class _ItemAddPageState extends State<ItemAddPage> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        showMyDialog(context,
-                            listaDeItens!.invoices[indexo].items[0], index);
+                        showMyDialog(
+                            context,
+                            listaDeItens!.invoices[widget.indexOfItem].items[0],
+                            index);
                         //print(index);
                         setState(() {});
                       },
                       child: ListTile(
-                        title: Text(listaDeItens!
-                            .invoices[indexo].items[index].description
+                        title: Text(listaDeItens!.invoices[widget.indexOfItem]
+                            .items[index].description
                             .toString()),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Quantidade: ${listaDeItens!.invoices[indexo].items[index].quantity}'),
+                                'Quantidade: ${listaDeItens!.invoices[widget.indexOfItem].items[index].quantity}'),
                             Text(
-                                'Preço Unitario: R\$ ${listaDeItens!.invoices[indexo].items[index].unitPrice}'),
+                                'Preço Unitario: R\$ ${listaDeItens!.invoices[widget.indexOfItem].items[index].unitPrice}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
@@ -155,7 +162,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
                             color: Colors.deepOrange,
                           ),
                           onPressed: () {
-                            listaDeItens!.invoices[indexo].items
+                            listaDeItens!.invoices[widget.indexOfItem].items
                                 .removeAt(index);
                             setState(() {});
                           },
@@ -194,21 +201,22 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /*
-                          Text('Cliente: ${widget.lista.items.customer.name}'),
-                          Text('CPF/CNPJ: ${widget.cliente.doc}'),
                           Text(
-                              'Insc. Estadual: ${widget.cliente.inscEst.toString()}'),
+                              'Cliente: ${listaDeItens!.invoices[widget.indexOfItem].customer!.name}'),
                           Text(
-                              'Endereço: ${widget.cliente.clienteEndereco.toString()}'),
+                              'CPF/CNPJ: ${listaDeItens!.invoices[widget.indexOfItem].customer!.doc}'),
                           Text(
-                              'Bairro: ${widget.cliente.clienteBairro.toString()}'),
+                              'Insc. Estadual: ${listaDeItens!.invoices[widget.indexOfItem].customer!.inscEst.toString()}'),
                           Text(
-                              'Cidade: ${widget.cliente.clienteCidade.toString()}'),
+                              'Endereço: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteEndereco.toString()}'),
                           Text(
-                              'Estado: ${widget.cliente.clienteEstado.toString()}'),
+                              'Bairro: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteBairro.toString()}'),
                           Text(
-                              'Telefone: ${widget.cliente.clienteTelefone.toString()}'),*/
+                              'Cidade: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteCidade.toString()}'),
+                          Text(
+                              'Estado: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteEstado.toString()}'),
+                          Text(
+                              'Telefone: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteTelefone.toString()}'),
                         ],
                       ),
                     ),
@@ -230,13 +238,15 @@ class _ItemAddPageState extends State<ItemAddPage> {
           FloatingActionButton(
             //backgroundColor: Colors.orange,
             onPressed: () {
+              listaDeItens!.invoices[widget.indexOfItem].valorTotal =
+                  valorTotal;
               salvarPedido();
 
               //final pdfFile = await PdfInvoiceApi.generate(invoice);
 
               //PdfApi.openFile(pdfFile);
             },
-            child: Icon(Icons.pages),
+            child: Icon(Icons.save),
           ),
         ],
       ),
@@ -245,29 +255,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   void salvarPedido() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final date = DateTime.now();
-    final dueDate = date.add(Duration(days: 7));
 
-    final invoice = Invoice(
-      id: 1,
-      supplier: Supplier(
-        name: 'vendedor',
-        address: 'endereço',
-        paymentInfo: 'blabla',
-      ),
-      customer: Customer(
-        name: 'widget.lista.items.customer.name',
-        doc: 'widget.lista.items.customer.doc',
-      ),
-      info: InvoiceInfo(
-        date: date.toString(),
-        dueDate: dueDate.toString(),
-        description: 'descrição',
-        number: '${DateTime.now().year}/115',
-      ),
-      items: listaDeItens!.invoices[0].items,
-    );
-    print(jsonEncode(invoice.toJson()));
+    print(jsonEncode(listaDeItens!.toJson()));
     //prefs.setString('valores', jsonEncode(invoice.toJson()));
   }
 }

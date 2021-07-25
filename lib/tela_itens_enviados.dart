@@ -12,12 +12,31 @@ class TelaItensEnviados extends StatefulWidget {
 }
 
 class _TelaItensEnviadosState extends State<TelaItensEnviados> {
-  @override
   Widget orcamento() {
     return Container(
       alignment: Alignment.center,
       child: Column(
         children: [
+          Container(
+            width: MediaQuery.of(context).size.width - 20,
+            height: MediaQuery.of(context).size.height / 15,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.black26),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              color: Color.fromARGB(0, 0, 0, 0),
+              shadowColor: Color.fromARGB(0, 0, 0, 0),
+              child: Center(
+                  child: Text(listaDeItens!.invoices.length != 0
+                      ? 'TOTAL EM PEDIDOS: R\$ ${listaDeItens!.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                      : 'NENHUM PEDIDO REGISTRADO')),
+            ),
+          ),
+          Divider(
+            indent: 20,
+            endIndent: 20,
+          ),
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
@@ -31,17 +50,20 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                     ),
                     child: InkWell(
                       onTap: () async {
+                        print(index);
                         setState(() {});
                       },
                       child: ListTile(
-                        title: Text(listaDeItens!.invoices[index].toString()),
+                        title: Text(
+                            'Cliente: ${listaDeItens!.invoices[index].customer?.name}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            //Text('TEXTOOOOOOOOOOOOOOOOOOOOOO'),
                             Text(
-                                'Quantidade: ${listaDeItens!.invoices[index]}'),
+                                'Data: ${listaDeItens!.invoices[index].info?.date}'),
                             Text(
-                                'Preço Unitario: R\$ ${listaDeItens!.invoices[index]}'),
+                                'Valor Total: R\$ ${listaDeItens!.invoices[index].valorTotal}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],

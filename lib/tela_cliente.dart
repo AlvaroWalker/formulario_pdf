@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/model/supplier.dart';
 import 'package:formulario_pdf/variaveis.dart';
+import 'package:intl/intl.dart';
 
 import 'model/customer.dart';
 
@@ -8,9 +9,8 @@ import 'item_add_page.dart';
 import 'model/invoice.dart';
 
 class TelaCliente extends StatefulWidget {
-  const TelaCliente({
-    Key? key,
-  }) : super(key: key);
+  final int id;
+  const TelaCliente({Key? key, required this.id}) : super(key: key);
 
   @override
   _TelaClienteState createState() => _TelaClienteState();
@@ -125,7 +125,8 @@ class _TelaClienteState extends State<TelaCliente> {
         child: FloatingActionButton(
           child: Icon(Icons.navigate_next),
           onPressed: () async {
-            int index = listaDeItens!.invoices.length.toInt() - 1;
+            int index = listaDeItens!.invoices
+                .indexWhere((Invoice element) => element.id == widget.id);
 
             listaDeItens?.invoices[index].customer = Customer(
                 name: txtControlCliente.text,
@@ -138,12 +139,19 @@ class _TelaClienteState extends State<TelaCliente> {
                 clienteTelefone: txtControlTelefone.text);
 
             listaDeItens?.invoices[index].items = <InvoiceItem>[];
-            listaDeItens?.invoices[index].supplier = new Supplier(
+            listaDeItens?.invoices[index].supplier = Supplier(
                 name: 'name', address: 'address', paymentInfo: 'paymentInfo');
+            listaDeItens?.invoices[index].info = InvoiceInfo(
+                description: 'description',
+                number: 'number',
+                date:
+                    DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
+                dueDate: 'dueDate');
 
-            print(listaDeItens?.invoices[0].customer?.name);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ItemAdd_Page()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ItemAdd_Page(id: widget.id)));
           },
         ),
       ),

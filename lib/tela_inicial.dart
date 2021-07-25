@@ -9,6 +9,10 @@ import 'tela_cliente.dart';
 
 //InvoiceList? listaDeItens;
 
+int listSize = 0;
+int novoId = 0;
+bool idRepetido = true;
+
 class TelaInicio extends StatelessWidget {
   const TelaInicio({Key? key}) : super(key: key);
 
@@ -61,18 +65,32 @@ class TelaInicio extends StatelessWidget {
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
                   onPressed: () async {
-                    //Invoice novaLista = new Invoice(id: 1, items: <InvoiceItem>[]);
+                    int indexOfId = 0;
+                    novoId = 0;
                     if (listaDeItens == null) {
                       listaDeItens = InvoiceList(invoices: []);
                     }
 
+                    while (listaDeItens!.invoices
+                        .any((Invoice element) => element.id == novoId)) {
+                      novoId++;
+
+                      print(idRepetido);
+                      idRepetido = true;
+                    }
+
                     listaDeItens!.invoices
-                        .add(new Invoice(id: 1, items: <InvoiceItem>[]));
+                        .add(new Invoice(id: novoId, items: <InvoiceItem>[]));
 
-                    print(listaDeItens?.invoices.length);
+                    indexOfId = listaDeItens!.invoices
+                        .indexWhere((Invoice element) => element.id == novoId);
 
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TelaCliente()));
+                    print(indexOfId.toString() + novoId.toString());
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TelaCliente(id: novoId)));
                   },
                   child: Text(
                     'ORÇAMENTO',
@@ -111,6 +129,9 @@ class TelaInicio extends StatelessWidget {
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
                   onPressed: () async {
+                    if (listaDeItens == null) {
+                      listaDeItens = InvoiceList(invoices: []);
+                    }
                     Navigator.push(
                         context,
                         MaterialPageRoute(

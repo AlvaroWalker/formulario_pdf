@@ -30,9 +30,8 @@ int? _radioValue = 0;
 String _selectedValue = '';
 
 class ItemAdd_Page extends StatefulWidget {
-  const ItemAdd_Page({
-    Key? key,
-  }) : super(key: key);
+  final int id;
+  const ItemAdd_Page({Key? key, required this.id}) : super(key: key);
 
   @override
   _ItemAdd_PageState createState() => _ItemAdd_PageState();
@@ -53,7 +52,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
     final txtControlDescricao = TextEditingController();
 
     setState(() {});
-    int index = listaDeItens!.invoices.length.toInt() - 1;
+    int index = listaDeItens!.invoices
+        .indexWhere((Invoice element) => element.id == widget.id);
 
     if (listaDeItens!.invoices[index].items.length != 0) {
       valorTotal = listaDeItens!.invoices[index].items
@@ -243,8 +243,6 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                   unitPrice: double.parse(
                                       txtControlPrecoUnidade.text)));
                           setState(() {});
-
-                          print(listaDeItens?.toJson().toString());
                         },
                         child: Icon(Icons.add)),
                   )
@@ -267,7 +265,10 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ItemAddPage()),
+                      MaterialPageRoute(
+                          builder: (context) => ItemAddPage(
+                                indexOfItem: index,
+                              )),
                     ).then((value) => setState(() {}));
                   },
                   child: Column(
@@ -320,13 +321,13 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                     padding:
                                         const EdgeInsets.only(top: 8, left: 8),
                                     child: Text(
-                                        'Cliente: ${listaDeItens?.invoices[0].customer?.name}'),
+                                        'Cliente: ${listaDeItens?.invoices[index].customer?.name}'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         bottom: 8, left: 8),
                                     child: Text(
-                                        'CPF: ${listaDeItens?.invoices[0].customer?.doc}'),
+                                        'CPF: ${listaDeItens?.invoices[index].customer?.doc}'),
                                   ),
                                 ],
                               ),

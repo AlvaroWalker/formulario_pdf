@@ -3,6 +3,7 @@ import 'package:formulario_pdf/model/supplier.dart';
 
 class Invoice {
   int id = 0;
+  double valorTotal = 0;
   InvoiceInfo? info;
   Supplier? supplier;
   Customer? customer;
@@ -10,6 +11,7 @@ class Invoice {
 
   Invoice({
     required this.id,
+    this.valorTotal = 0,
     this.info,
     this.supplier,
     this.customer,
