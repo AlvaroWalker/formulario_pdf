@@ -75,7 +75,11 @@ flutter:
     - assets/
     - assets/imagens/telalaranja.jpg
     - assets/imagens/logo.png
+
+
     - assets/orcamentoPag1.png
+    - assets/orcamentoPdfTop.jpg
+    - assets/orcamentoPdfTopPage2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

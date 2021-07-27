@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:formulario_pdf/api/pdf_api.dart';
 import 'package:formulario_pdf/model/customer.dart';
@@ -17,9 +18,19 @@ class PdfInvoiceApi {
         .buffer
         .asUint8List();
 
+    final imagemCabecalho =
+        (await rootBundle.load('assets/orcamentoPdfTop.jpg'))
+            .buffer
+            .asUint8List();
+
+    final imagemCabecalho2 =
+        (await rootBundle.load('assets/orcamentoPdfTopPage2.jpg'))
+            .buffer
+            .asUint8List();
+
     pdf.addPage(MultiPage(
       pageTheme: PageTheme(
-          margin: EdgeInsets.only(left: 70, right: 70, top: 50, bottom: 20),
+          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 70),
           pageFormat: PdfPageFormat.a4,
           buildBackground: (context) {
             return FullPage(
@@ -27,22 +38,35 @@ class PdfInvoiceApi {
           }),
       build: (context) => [
         //SizedBox(height: 1 * PdfPageFormat.cm),
-        buildHeader(invoice),
+        buildHeader(invoice, imagemCabecalho),
         SizedBox(height: .5 * PdfPageFormat.cm),
         //buildTitle(invoice),
-        buildInvoice(invoice),
+        buildInvoice(invoice, imagemCabecalho2, context),
         //Divider(),
         buildTotal(invoice),
       ],
+      header: (context) {
+        if (context.pageNumber >= 2) {
+          return Container(
+              width: PdfPageFormat.a4.width / 4,
+              child: Image(MemoryImage(imagemCabecalho2)));
+        } else {
+          return Container();
+        }
+      },
       footer: (context) => buildFooter(invoice, context),
     ));
 
     return PdfApi.saveDocument(name: 'pdf_gerado.pdf', pdf: pdf);
   }
 
-  static Widget buildHeader(Invoice invoice) => Column(
+  static Widget buildHeader(Invoice invoice, Uint8List imgCabeca) => Column(
         children: [
-          SizedBox(height: 3.9 * PdfPageFormat.cm),
+          //SizedBox(height: 3.9 * PdfPageFormat.cm),
+
+          Container(
+              width: PdfPageFormat.a4.width,
+              child: Image(MemoryImage(imgCabeca))),
 
           Container(
               width: PdfPageFormat.a4.width,
@@ -192,7 +216,8 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildInvoice(Invoice invoice) {
+  static Widget buildInvoice(
+      Invoice invoice, Uint8List imgCabeca2, Context context) {
     final headers = [
       'Qtd.',
       'Und',
@@ -213,7 +238,7 @@ class PdfInvoiceApi {
     }).toList();
 
     return Container(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.topLeft,
       //height: 15,
       decoration: BoxDecoration(
         border: Border.all(color: PdfColor(1, .5, .1), width: .5),
