@@ -17,6 +17,10 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
       alignment: Alignment.center,
       child: Column(
         children: [
+          Divider(
+            indent: 20,
+            endIndent: 20,
+          ),
           Container(
             width: MediaQuery.of(context).size.width - 20,
             height: MediaQuery.of(context).size.height / 15,

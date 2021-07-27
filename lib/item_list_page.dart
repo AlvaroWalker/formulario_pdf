@@ -237,14 +237,15 @@ class _ItemAddPageState extends State<ItemAddPage> {
         children: [
           FloatingActionButton(
             //backgroundColor: Colors.orange,
-            onPressed: () {
+            onPressed: () async {
               listaDeItens!.invoices[widget.indexOfItem].valorTotal =
                   valorTotal;
               salvarPedido();
 
-              //final pdfFile = await PdfInvoiceApi.generate(invoice);
+              final pdfFile = await PdfInvoiceApi.generate(
+                  listaDeItens!.invoices[widget.indexOfItem]);
 
-              //PdfApi.openFile(pdfFile);
+              PdfApi.openFile(pdfFile);
             },
             child: Icon(Icons.save),
           ),
@@ -256,7 +257,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
   void salvarPedido() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    print(jsonEncode(listaDeItens!.toJson()));
-    //prefs.setString('valores', jsonEncode(invoice.toJson()));
+    //print(jsonEncode(listaDeItens!.toJson()));
+    prefs.setString('teste1', jsonEncode(listaDeItens!.toJson()));
   }
 }

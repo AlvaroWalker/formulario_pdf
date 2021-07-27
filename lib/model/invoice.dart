@@ -19,6 +19,7 @@ class Invoice {
   });
   Invoice.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    valorTotal = json['valorTotal'];
     info = json['InvoiceInfo'] != null
         ? new InvoiceInfo.fromJson(json['InvoiceInfo'])
         : null;
@@ -31,7 +32,7 @@ class Invoice {
     if (json['InvoiceItem'] != null) {
       items = <InvoiceItem>[];
       json['InvoiceItem'].forEach((v) {
-        items?.add(new InvoiceItem.fromJson(v));
+        items.add(new InvoiceItem.fromJson(v));
       });
     }
   }
@@ -39,6 +40,7 @@ class Invoice {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['valorTotal'] = this.valorTotal;
     if (this.info != null) {
       data['InvoiceInfo'] = this.info?.toJson();
     }
@@ -48,9 +50,7 @@ class Invoice {
     if (this.customer != null) {
       data['Customer'] = this.customer?.toJson();
     }
-    if (this.items != null) {
-      data['InvoiceItem'] = this.items?.map((v) => v.toJson()).toList();
-    }
+    data['InvoiceItem'] = this.items.map((v) => v.toJson()).toList();
     return data;
   }
 }
