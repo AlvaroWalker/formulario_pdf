@@ -28,6 +28,10 @@ class PdfInvoiceApi {
             .buffer
             .asUint8List();
 
+    final imagemBaixo = (await rootBundle.load('assets/orcamentoBottom.jpg'))
+        .buffer
+        .asUint8List();
+
     pdf.addPage(MultiPage(
       pageTheme: PageTheme(
           margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 70),
@@ -54,7 +58,7 @@ class PdfInvoiceApi {
           return Container();
         }
       },
-      footer: (context) => buildFooter(invoice, context),
+      footer: (context) => buildFooter(invoice, imagemBaixo, context),
     ));
 
     return PdfApi.saveDocument(name: 'pdf_gerado.pdf', pdf: pdf);
@@ -326,11 +330,12 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildFooter(Invoice invoice, Context context) {
+  static Widget buildFooter(
+      Invoice invoice, Uint8List imagem, Context context) {
     if (context.pagesCount == context.pageNumber) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Text(context.pagesCount.toString())],
+        children: [Container(child: Image(MemoryImage(imagem)))],
       );
     } else
       return Text('');
