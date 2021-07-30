@@ -47,6 +47,8 @@ dependencies:
   # salvar as listas no celular
   shared_preferences: ^2.0.6
 
+  google_fonts: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:

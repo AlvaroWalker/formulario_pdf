@@ -35,94 +35,93 @@ class _TelaClienteState extends State<TelaCliente> {
       super.dispose();
     }
 
+    caixaTexto(TextEditingController txt_control, String texto) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+        child: TextFormField(
+          controller: txt_control,
+          obscureText: false,
+          decoration: InputDecoration(
+            labelText: texto,
+            labelStyle: TextStyle(
+              fontFamily: 'Poppins',
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFF7E00),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFF7E00),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+          ),
+          style: TextStyle(
+            fontFamily: 'Poppins',
+          ),
+          textAlign: TextAlign.start,
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       appBar: AppBar(
         backgroundColor: Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
-        elevation: 0, // <-- ELEVATION ZEROED
-        title: Text(
-          'INSIRA OS DADOS DO CLIENTE',
-          style: TextStyle(color: Colors.black54),
-        ),
+        elevation: 0,
         centerTitle: true,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10.0),
         //fit: FlexFit.tight,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlCliente,
-              decoration: InputDecoration(
-                  labelText: 'Cliente:', border: OutlineInputBorder()),
+          Align(
+            alignment: Alignment(-1, 0),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                'INSIRA OS DADOS DO CLIENTE',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlDoc,
-              decoration: InputDecoration(
-                  labelText: 'CPF/CNPJ:', border: OutlineInputBorder()),
-            ),
+          caixaTexto(txtControlCliente, 'Cliente: '),
+          caixaTexto(txtControlDoc, 'CPF/CNPJ: '),
+          caixaTexto(txtControlInscEst, 'INSC. EST.: '),
+          caixaTexto(txtControlRazaoSocial, 'RAZÃO SOCIAL: '),
+          Divider(
+            height: 25,
+            thickness: 1,
+            indent: 25,
+            endIndent: 25,
+            //color: Color(0xFFFF7E00),
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlInscEst,
-              decoration: InputDecoration(
-                  labelText: 'INSC. EST.:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlRazaoSocial,
-              decoration: InputDecoration(
-                  labelText: 'RAZÃO SOCIAL:', border: OutlineInputBorder()),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlEnd,
-              decoration: InputDecoration(
-                  labelText: 'ENDEREÇO:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlBairro,
-              decoration: InputDecoration(
-                  labelText: 'BAIRRO:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlCidade,
-              decoration: InputDecoration(
-                  labelText: 'CIDADE:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlTelefone,
-              decoration: InputDecoration(
-                  labelText: 'TELEFONE:', border: OutlineInputBorder()),
-            ),
-          ),
+          caixaTexto(txtControlEnd, 'ENDEREÇO: '),
+          caixaTexto(txtControlBairro, 'BAIRRO: '),
+          caixaTexto(txtControlCidade, 'CIDADE: '),
+          caixaTexto(txtControlTelefone, 'TELEFONE: '),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Visibility(
-        //visible: MediaQuery.of(context).viewInsets.bottom == 0,
         child: FloatingActionButton(
+          elevation: 8,
           child: Icon(Icons.navigate_next),
           onPressed: () async {
             int index = listaDeItens!.invoices

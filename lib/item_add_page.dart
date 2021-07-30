@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/resumo.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'item_list_page.dart';
 import 'model/customer.dart';
@@ -137,6 +138,16 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
     final TextEditingController _controller = new TextEditingController();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {},
+        backgroundColor: Color(0xFFFF5600),
+        elevation: 8,
+        child: Icon(
+          Icons.navigate_next,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -251,107 +262,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             ),
             Divider(),
             Text('RESUMO'),
-            Container(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black26),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: InkWell(
-                  onTap: () async {
-                    //print(listaDeItens?.invoices.length);
-
-                    //print(listaDeItens?.toJson().toString());
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ItemAddPage(
-                                indexOfItem: index,
-                              )),
-                    ).then((value) => setState(() {}));
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Table(
-                          columnWidths: {0: FractionColumnWidth(.15)},
-                          //border: TableBorder.all(),
-                          children: [
-                            for (var items
-                                in listaDeItens!.invoices[index].items)
-                              TableRow(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Column(
-                                      children: [
-                                        Text(items.quantity.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text(items.tipo.toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text(items.description.toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text('R\$ ${(items.unitPrice)}'),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 8, left: 8),
-                                    child: Text(
-                                        'Cliente: ${listaDeItens?.invoices[index].customer?.name}'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8, left: 8),
-                                    child: Text(
-                                        'CPF: ${listaDeItens?.invoices[index].customer?.doc}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 8, top: 8, right: 8),
-                                child: Text(
-                                    'R\$ ${valorTotal.toStringAsFixed(2)}',
-                                    textScaleFactor: 2,
-                                    textAlign: TextAlign.end,
-                                    style: new TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            ResumoWidget()
           ],
         ),
       ),

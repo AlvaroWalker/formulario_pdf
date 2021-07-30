@@ -9,6 +9,8 @@ import 'package:formulario_pdf/tela_inicial.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'metodo_pag_page.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -18,7 +20,7 @@ Future main() async {
 
   runApp(MyApp());
 
-  listaDeItens = await carregarPedidos();
+  // listaDeItens = await carregarPedidos();
 }
 
 Future<InvoiceList> carregarPedidos() async {
@@ -45,5 +47,6 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromARGB(255, 210, 210, 210),
         ),
         home: TelaInicio(),
+        //home: MetodoPagamentoPage(),
       );
 }
