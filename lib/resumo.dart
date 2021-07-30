@@ -3,9 +3,21 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:formulario_pdf/model/invoicelist.dart';
+
+import 'variaveis.dart';
+
+double valorTotal = 0;
+
+
 
 class ResumoWidget extends StatefulWidget {
-  ResumoWidget({Key? key}) : super(key: key);
+  
+  int index;
+  bool listaVazia;
+  ResumoWidget({Key? key,required this.index,required this.listaVazia}) : super(key: key);
+
+  
 
   @override
   _ResumoWidgetState createState() => _ResumoWidgetState();
@@ -13,7 +25,21 @@ class ResumoWidget extends StatefulWidget {
 
 class _ResumoWidgetState extends State<ResumoWidget> {
   @override
+
+ 
+
   Widget build(BuildContext context) {
+
+     if (listaDeItens?.invoices[widget.index].items.length != null) {
+      valorTotal = listaDeItens.invoices[widget.index].items
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
+          .reduce((item1, item2) => item1 + item2);
+    } else {
+      valorTotal = 0;
+    }
+
+    
+
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Card(
@@ -24,17 +50,11 @@ class _ResumoWidgetState extends State<ResumoWidget> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                primary: false,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                children: [],
-              ),
-            ),
+          children: [Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: criarTabela(),
+                      ),
+            
             
             Padding(
               padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
@@ -47,14 +67,16 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Cliente: GRANJA SANTO AMARO',
+                        'Cliente: ${listaDeItens.invoices[widget.index].customer?.name}',
+                        
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 10,
                         ),
                       ),
                       Text(
-                        'CNPJ: 45.858.999/0001-00',
+                        'CNPJ: ${listaDeItens.invoices[widget.index].customer?.doc}',
+                        
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 10,
@@ -63,7 +85,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                     ],
                   ),
                   Text(
-                    'R\$ 2.325,67',
+                    'R\$ $valorTotal',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
@@ -77,5 +99,51 @@ class _ResumoWidgetState extends State<ResumoWidget> {
         ),
       ),
     );
-  }
+    
+  }Widget criarTabela(){
+    print(listaDeItens.invoices[widget.index].items.length);
+    print('batata');
+    
+    if(widget.listaVazia == true){
+      return Container();
+
+    }else{
+    
+    
+    
+    
+    
+    return Table(
+                          columnWidths: {0: FractionColumnWidth(.15)},
+                          //border: TableBorder.all(),
+                          children: [
+                            for (var items
+                                in listaDeItens.invoices[widget.index].items)
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Column(
+                                      children: [
+                                        Text(items.quantity.toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(items.tipo.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(items.description.toString()),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text('R\$ ${(items.unitPrice)}'),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        );
+                        }}
 }

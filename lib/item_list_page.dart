@@ -116,6 +116,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: Text(
+          'REVISE SEU PEDIDO',
+          textAlign: TextAlign.center,
+        ),
       ),
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: Column(
@@ -136,7 +140,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
                       onTap: () async {
                         showMyDialog(
                             context,
-                            listaDeItens!.invoices[widget.indexOfItem].items[0],
+                            listaDeItens!
+                                .invoices[widget.indexOfItem].items[index],
                             index);
                         //print(index);
                         setState(() {});
@@ -179,8 +184,11 @@ class _ItemAddPageState extends State<ItemAddPage> {
             ),
           ),
           Text(
-            'Total: R\$ ${valorTotal.toStringAsFixed(2)}',
-            textScaleFactor: 2,
+            'TOTAL ORÇADO: R\$ ${valorTotal.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Flexible(
               child: Container(
@@ -232,24 +240,18 @@ class _ItemAddPageState extends State<ItemAddPage> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          FloatingActionButton(
-            //backgroundColor: Colors.orange,
-            onPressed: () async {
-              listaDeItens!.invoices[widget.indexOfItem].valorTotal =
-                  valorTotal;
-              salvarPedido();
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text('SALVAR E ENVIAR'),
+        //backgroundColor: Colors.orange,
+        onPressed: () async {
+          listaDeItens!.invoices[widget.indexOfItem].valorTotal = valorTotal;
+          salvarPedido();
 
-              final pdfFile = await PdfInvoiceApi.generate(
-                  listaDeItens!.invoices[widget.indexOfItem]);
+          final pdfFile = await PdfInvoiceApi.generate(
+              listaDeItens!.invoices[widget.indexOfItem]);
 
-              PdfApi.openFile(pdfFile);
-            },
-            child: Icon(Icons.save),
-          ),
-        ],
+          PdfApi.openFile(pdfFile);
+        },
       ),
     );
   }

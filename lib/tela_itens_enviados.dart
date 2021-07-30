@@ -33,8 +33,8 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               shadowColor: Color.fromARGB(0, 0, 0, 0),
               child: Center(
                   child: Text(listaDeItens!.invoices.length != 0
-                      ? 'TOTAL EM PEDIDOS: R\$ ${listaDeItens!.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
-                      : 'NENHUM PEDIDO REGISTRADO')),
+                      ? 'TOTAL EM ORÇAMENTOS: R\$ ${listaDeItens!.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                      : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
           Divider(

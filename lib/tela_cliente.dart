@@ -35,11 +35,11 @@ class _TelaClienteState extends State<TelaCliente> {
       super.dispose();
     }
 
-    caixaTexto(TextEditingController txt_control, String texto) {
+    caixaTexto(TextEditingController txtControl, String texto) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+        padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
         child: TextFormField(
-          controller: txt_control,
+          controller: txtControl,
           obscureText: false,
           decoration: InputDecoration(
             labelText: texto,
@@ -48,7 +48,7 @@ class _TelaClienteState extends State<TelaCliente> {
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF7E00),
+                //color: Color(0xFFFF7E00),
                 width: 1,
               ),
               borderRadius: BorderRadius.only(

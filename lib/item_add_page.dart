@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formulario_pdf/resumo.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'item_list_page.dart';
+import 'metodo_pag_page.dart';
 import 'model/customer.dart';
 import 'model/supplier.dart';
 import 'model/invoice.dart';
@@ -9,23 +10,149 @@ import 'model/invoice.dart';
 double valorTotal = 0;
 
 List<String> descricaoServico = [
-  "Tomada",
-  "Chuveiro",
-  "Ar Condicionado",
-  "Interruptor",
-  "Compressor",
-  "Bomba",
-  "Quadro de Instalação",
-  "Hidrante"
+  "AR CONDICIONADO",
+  "ATERRAMENTO",
+  "BOMBA DE POÇO",
+  "BOMBA SAPO",
+  "BOMBA HIDRÁULICA",
+  "CABEAMENTO",
+  "CAIXA DE PADRÃO",
+  "CAIXA DE PASSAGEM",
+  "CHUVEIRO ",
+  "COMPRESSOR",
+  "CONTATORA",
+  "CHAVE",
+  "CANELINHA",
+  "TERMINAIS",
+  "FUSÍVEIS",
+  "MOTOR",
+  "MÁQUINA",
+  "TRITURADOR",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA",
+  "POSTE DE PADRÃO COM CAIXA",
+  "POSTE CONCRETO 7m",
+  "POSTE CONCRETO 8m",
+  "POSTE CONCRETO 6m",
+  "POSTE CONCRETO 9m",
+  "POSTE CONCRETO 10m",
+  "POSTE CONCRETO 11m",
+  "SUPER-POSTE",
+  "TRANSFORMADOR",
+  "TURBINA",
+  "COMPRESSOR",
+  "CORRENTE",
+  "ELETRODUTO",
+  "CONTROLADORA",
+  "DISJUNTOR",
+  "QUADRO DE COMANDO",
+  "PAINEL DE COMANDO",
+  "PAINEL",
+  "PORTÃO ELETRÔNICO",
+  "INTERFONE",
+  "SIRENE",
+  "EXAUSTOR",
+  "HIDRANTE",
+  "TOMADA TRIFÁSICA",
+  "TOMADA",
+  "INTERRUPTOR COM TOMADA",
+  "INTERRUPTOR DUPLO COM TOMADA",
+  "INTERRUPTOR 3 TECLAS",
+  "LUMINÁRIA",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA DE SOBREPOR",
+  "LUMINÁRIA DE EMERGÊNCIA",
+  "LAMPADA DE POSTRE",
+  "LUMINÁRIA DICRÓICA",
+  "REFLETOR",
+  "PADRÃO ",
+  "PROJETOR",
+  "PROJETO TÉCNICO",
+  "PROJETO ELÉTROTÉCNICO",
+  "QUADRO DE DISTRIBUIÇÃO INDIVIDUAL",
+  "QUADRO DE MEDIÇÃO AGRUPADO",
+  "REATOR DE POSTE",
+  "REDE BIFÁSICA",
+  "REDE TRIFÁSICA",
+  "REDE MONOFÁSICA",
+  "RELÉ",
+  "RELÉ CÍCLICO",
+  "RELÉ DE TEMPO",
+  "RELÉ FALTA DE FASE",
+  "RELÉ FOTO CÉLULA",
+  "REDE ALTA TENSÃO",
+  "TENSÃO",
+  "CANALETA",
+  "TUBULAÇÃO",
+  "ELETRO CALHA",
+  "TUBULAÇÃO ELÉTRICA",
+  "TUBULAÇÃO HIDRÁULICA",
+  "HIDRANTE",
+  "VENTILADOR PAREDE",
+  "VENTILADOR DE TETO",
+  "CLIMATIZADOR ",
+  "VALETA",
+  "VALA ATERRAMENTO",
+  "PARA-RAIOS",
+  "SPDA",
+  "HASTES",
+  "ROTEADOR",
+  "REDE SEM FIO",
+  "REDE DE INTERNET",
+  "GEORREFENCIADO ",
+  "LOCAL",
 ];
 
 List<String> tipoServico = [
-  "Instalação",
-  "Troca",
-  "Medição",
-  "Conferencia",
+  'AFERIÇÃO',
+  'SERVIÇO',
+  'CARGA DE GÁS',
+  'CONSERTO',
+  'DESLOCAMENTO',
+  'INFRA-ESTRUTURA',
+  'LIMPEZA',
+  'MATERIAL',
+  'MEDIÇÃO',
+  'MONTAGEM',
+  'REGULAGEM',
+  'REMOÇÃO',
+  'REPARO',
+  'SUBSTITUIÇÃO',
+  'PERFURAÇÃO',
+  'APLICAÇÃO',
+  'COBERTURA',
+  'PASSAGEM',
+  'TALISCAMENTO',
+  'VISTORIA',
+  'ACOMPANHAMENTO',
+  'LEVANTAMENTO',
+  'DESENTUPIMENTO',
+  'AMARRAÇÃO',
+  'REBOBINAGEM',
+  'AUTOMATIZAÇÃO',
+  'MUDANÇA',
+  'ADEQUAÇÃO',
+  'FIXAÇÃO',
+  'CONFIGURAÇÃO',
+  'SUPORTE',
+  'CONSULTORIA',
 ];
 
+List<String> unidadeServico = [
+  "Gm.",
+  "Kg.",
+  "Mt.",
+  "BOB.",
+  "UND.",
+  "KM",
+  "KM/RODADO",
+  "SC.",
+  "CX.",
+  "Lt.",
+  "HORA",
+  "M²",
+  "M³",
+];
 int? _radioValue = 0;
 //List itens = [];
 String _selectedValue = '';
@@ -46,6 +173,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
   String? dropdownValue;
   String? dropdownValue2;
+  String? dropdownValue3;
+
   @override
   Widget build(BuildContext context) {
     final txtControlPrecoUnidade = TextEditingController();
@@ -70,7 +199,19 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
           padding: const EdgeInsets.all(3.0),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
               //filled: true,
               labelText: "TIPO DE SERVIÇO",
             ),
@@ -89,7 +230,19 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
           padding: const EdgeInsets.all(3.0),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
               labelText: 'DESCRIÇÃO DO SERVIÇO',
             ),
             value: dropdownValue2,
@@ -118,9 +271,22 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             //controller: txtControlQuantidade,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
-                labelText: 'RELAÇÃO DE MATERIAL',
-                border: OutlineInputBorder()),
+              contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+              labelText: 'RELAÇÃO DE MATERIAL',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
+            ),
           ),
         ),
         Padding(
@@ -128,9 +294,30 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
           child: TextFormField(
             controller: txtControlDescricao,
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
-                labelText: 'DESCRIÇÃO DO MATERIAL',
-                border: OutlineInputBorder()),
+              contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+              labelText: 'DESCRIÇÃO DO MATERIAL',
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  //color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  //color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderSide: BorderSide(
+                  color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+              ),
+            ),
           ),
         ),
       ]);
@@ -139,7 +326,13 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
     final TextEditingController _controller = new TextEditingController();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {},
+        onPressed: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      CondPagamentoWidget(indexOfItem: index)));
+        },
         backgroundColor: Color(0xFFFF5600),
         elevation: 8,
         child: Icon(
@@ -201,9 +394,30 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                 controller: txtControlPrecoUnidade,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                    hintText: 'R\$ ',
-                    labelText: 'VALOR UNITARIO:',
-                    border: OutlineInputBorder()),
+                  hintText: 'R\$ ',
+                  labelText: 'VALOR UNITARIO:',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      //color: Color(0xFFFF7E00),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      //color: Color(0xFFFF7E00),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    borderSide: BorderSide(
+                      color: Color(0xFFFF7E00),
+                      width: 1,
+                    ),
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -217,19 +431,63 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                         controller: txtControlQuantidade,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            labelText: 'QUANTIDADE:',
-                            border: OutlineInputBorder()),
+                          contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+                          labelText: 'QUANTIDADE:',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              //color: Color(0xFFFF7E00),
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              //color: Color(0xFFFF7E00),
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(
+                              color: Color(0xFFFF7E00),
+                              width: 1,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.only(right: 3, left: 3),
-                    child: TextFormField(
-                      //controller: txtControlQuantidade,
-                      keyboardType: TextInputType.number,
+                    padding: const EdgeInsets.all(3),
+                    child: DropdownButtonFormField(
                       decoration: InputDecoration(
-                          labelText: 'UNIDADE:', border: OutlineInputBorder()),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFFFF7E00),
+                            width: 1,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(
+                            //color: Color(0xFFFF7E00),
+                            width: 1,
+                          ),
+                        ),
+                        labelText: 'UNIDADE',
+                      ),
+                      value: dropdownValue3,
+                      onChanged: (String? value) {
+                        setState(() {
+                          dropdownValue3 = value.toString();
+                        });
+                      },
+                      items: unidadeServico
+                          .map((cityTitle) => DropdownMenuItem(
+                              value: cityTitle, child: Text("$cityTitle")))
+                          .toList(),
                     ),
                   )),
                   Padding(
@@ -261,8 +519,22 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               ),
             ),
             Divider(),
-            Text('RESUMO'),
-            ResumoWidget()
+            Align(
+              alignment: Alignment(-0.7, 0),
+              child: Text(
+                'RESUMO',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ResumoWidget(
+              index: index,
+              listaVazia: listaDeItens?.invoices[index].items.length == 0
+                  ? true
+                  : false,
+            )
           ],
         ),
       ),
