@@ -170,13 +170,11 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
   String? dropdownValue;
   String? dropdownValue2;
   String? dropdownValue3;
-
+  final txtControlPrecoUnidade = TextEditingController();
+  final txtControlQuantidade = TextEditingController();
+  final txtControlDescricao = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final txtControlPrecoUnidade = TextEditingController();
-    final txtControlQuantidade = TextEditingController();
-    final txtControlDescricao = TextEditingController();
-
     setState(() {});
     int index = listaDeItens.invoices
         .indexWhere((Invoice element) => element.id == widget.id);
@@ -319,7 +317,6 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
       ]);
     }
 
-    final TextEditingController _controller = new TextEditingController();
     return Scaffold(
       floatingActionButton: Visibility(
         visible: listaDeItens.invoices[index].items.isNotEmpty,

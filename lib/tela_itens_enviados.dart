@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/model/invoicelist.dart';
 
+import 'model/invoice.dart';
 import 'variaveis.dart';
 
 int? _radioValue = 0;
+InvoiceList listaPedidos = InvoiceList(invoices: []);
 
 class TelaItensEnviados extends StatefulWidget {
   const TelaItensEnviados({Key? key}) : super(key: key);
@@ -12,6 +15,15 @@ class TelaItensEnviados extends StatefulWidget {
 }
 
 class _TelaItensEnviadosState extends State<TelaItensEnviados> {
+  void initState() {
+    super.initState();
+    listaDeItens.invoices.forEach((element) {
+      if (element.pedido == true) {
+        listaPedidos.invoices.add(element);
+      }
+    });
+  }
+
   Widget orcamento() {
     return Container(
       alignment: Alignment.center,
@@ -54,7 +66,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        print(index);
+                        //print(index);
                         setState(() {});
                       },
                       child: ListTile(
@@ -63,7 +75,6 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            //Text('TEXTOOOOOOOOOOOOOOOOOOOOOO'),
                             Text(
                                 'Data: ${listaDeItens.invoices[index].info?.date}'),
                             Text(
@@ -117,13 +128,73 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               ),
               color: Color.fromARGB(0, 0, 0, 0),
               shadowColor: Color.fromARGB(0, 0, 0, 0),
-              child: Center(child: Text('TOTAL EM PEDIDOS: R\$ 15.190,00')),
+              child: Center(
+                  child: Text(listaPedidos.invoices.length != 0
+                      ? 'TOTAL EM PEDIDOS: R\$ ${listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                      : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
           Divider(
             indent: 20,
             endIndent: 20,
           ),
+          Flexible(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(8),
+              itemCount: listaPedidos.invoices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.black26),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        //print(index);
+                        setState(() {});
+                      },
+                      child: ListTile(
+                        title: Text(
+                            'Cliente: ${listaPedidos.invoices[index].customer?.name}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Data: ${listaPedidos.invoices[index].info?.date}'),
+                            Text(
+                                'Valor Total: R\$ ${listaPedidos.invoices[index].valorTotal}'),
+                            // Text(
+                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.deepOrange,
+                          ),
+                          onPressed: () {
+                            listaDeItens.invoices.removeAt(listaDeItens.invoices
+                                .indexWhere((Invoice element) =>
+                                    element.id ==
+                                    listaPedidos.invoices[index].id));
+
+                            listaPedidos.invoices.removeAt(index);
+
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(
+                height: 2,
+              ),
+            ),
+          )
         ],
       ),
     );

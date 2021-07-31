@@ -35,10 +35,12 @@ class _TelaClienteState extends State<TelaCliente> {
       super.dispose();
     }
 
-    caixaTexto(TextEditingController txtControl, String texto) {
+    caixaTexto(TextEditingController txtControl, String texto,
+        TextInputType tipoTeclado) {
       return Padding(
         padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
         child: TextFormField(
+          keyboardType: tipoTeclado,
           controller: txtControl,
           obscureText: false,
           decoration: InputDecoration(
@@ -102,10 +104,11 @@ class _TelaClienteState extends State<TelaCliente> {
               ),
             ),
           ),
-          caixaTexto(txtControlCliente, 'Cliente: '),
-          caixaTexto(txtControlDoc, 'CPF/CNPJ: '),
-          caixaTexto(txtControlInscEst, 'INSC. EST.: '),
-          caixaTexto(txtControlRazaoSocial, 'RAZÃO SOCIAL: '),
+          caixaTexto(txtControlCliente, 'Cliente: ', TextInputType.name),
+          caixaTexto(txtControlDoc, 'CPF/CNPJ: ', TextInputType.number),
+          caixaTexto(txtControlInscEst, 'INSC. EST.: ', TextInputType.number),
+          caixaTexto(
+              txtControlRazaoSocial, 'RAZÃO SOCIAL: ', TextInputType.text),
           Divider(
             height: 25,
             thickness: 1,
@@ -113,10 +116,10 @@ class _TelaClienteState extends State<TelaCliente> {
             endIndent: 25,
             //color: Color(0xFFFF7E00),
           ),
-          caixaTexto(txtControlEnd, 'ENDEREÇO: '),
-          caixaTexto(txtControlBairro, 'BAIRRO: '),
-          caixaTexto(txtControlCidade, 'CIDADE: '),
-          caixaTexto(txtControlTelefone, 'TELEFONE: '),
+          caixaTexto(txtControlEnd, 'ENDEREÇO: ', TextInputType.text),
+          caixaTexto(txtControlBairro, 'BAIRRO: ', TextInputType.text),
+          caixaTexto(txtControlCidade, 'CIDADE: ', TextInputType.text),
+          caixaTexto(txtControlTelefone, 'TELEFONE: ', TextInputType.phone),
         ],
       ),
       floatingActionButton: Visibility(

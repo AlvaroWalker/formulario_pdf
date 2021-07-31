@@ -14,6 +14,8 @@ bool criarPedido = false;
 
 List itens = [];
 
+double textSize = .8;
+
 class ItemAddPage extends StatefulWidget {
   final int indexOfItem;
   ItemAddPage({Key? key, required this.indexOfItem}) : super(key: key);
@@ -157,8 +159,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
                                       'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
                                   Text(
                                       'Preço Unitario: R\$ ${listaDeItens.invoices[widget.indexOfItem].items[index].unitPrice}'),
-                                  // Text(
-                                  //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
+                                  Text(
+                                      'Preço Total: R\$ ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity! * listaDeItens.invoices[widget.indexOfItem].items[index].unitPrice!.toDouble()}'),
                                 ],
                               ),
                               trailing: IconButton(
@@ -212,21 +214,33 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              'Cliente: ${listaDeItens.invoices[widget.indexOfItem].customer!.name}'),
+                            'Cliente: ${listaDeItens.invoices[widget.indexOfItem].customer!.name}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'CPF/CNPJ: ${listaDeItens.invoices[widget.indexOfItem].customer!.doc}'),
+                            'CPF/CNPJ: ${listaDeItens.invoices[widget.indexOfItem].customer!.doc}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'Insc. Estadual: ${listaDeItens.invoices[widget.indexOfItem].customer!.inscEst.toString()}'),
+                            'Insc. Estadual: ${listaDeItens.invoices[widget.indexOfItem].customer!.inscEst.toString()}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'Endereço: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteEndereco.toString()}'),
+                            'Endereço: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteEndereco.toString()}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'Bairro: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteBairro.toString()}'),
+                            'Bairro: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteBairro.toString()}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'Cidade: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteCidade.toString()}'),
+                            'Cidade: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteCidade.toString()}',
+                            textScaleFactor: textSize,
+                          ),
                           Text(
-                              'Estado: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteEstado.toString()}'),
-                          Text(
-                              'Telefone: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteTelefone.toString()}'),
+                            'Telefone: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteTelefone.toString()}',
+                            textScaleFactor: textSize,
+                          ),
                         ],
                       ),
                     ),
@@ -257,9 +271,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         label: Text('SALVAR E ENVIAR'),
-        //backgroundColor: Colors.orange,
         onPressed: () async {
           listaDeItens.invoices[widget.indexOfItem].valorTotal = valorTotal;
+
+          listaDeItens.invoices[widget.indexOfItem].pedido = criarPedido;
           salvarPedido();
 
           final pdfFile = await PdfInvoiceApi.generate(

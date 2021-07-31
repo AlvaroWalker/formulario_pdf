@@ -3,6 +3,7 @@ import 'package:formulario_pdf/model/supplier.dart';
 
 class Invoice {
   int id = 0;
+  bool pedido = false;
   double valorTotal = 0;
   InvoiceInfo? info;
   Supplier? supplier;
@@ -11,6 +12,7 @@ class Invoice {
 
   Invoice({
     required this.id,
+    this.pedido = false,
     this.valorTotal = 0,
     this.info,
     this.supplier,
@@ -19,6 +21,7 @@ class Invoice {
   });
   Invoice.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    pedido = json['pedido'];
     valorTotal = json['valorTotal'];
     info = json['InvoiceInfo'] != null
         ? new InvoiceInfo.fromJson(json['InvoiceInfo'])
@@ -40,6 +43,7 @@ class Invoice {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['pedido'] = this.pedido;
     data['valorTotal'] = this.valorTotal;
     if (this.info != null) {
       data['InvoiceInfo'] = this.info?.toJson();
