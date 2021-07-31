@@ -32,8 +32,8 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               color: Color.fromARGB(0, 0, 0, 0),
               shadowColor: Color.fromARGB(0, 0, 0, 0),
               child: Center(
-                  child: Text(listaDeItens!.invoices.length != 0
-                      ? 'TOTAL EM ORÇAMENTOS: R\$ ${listaDeItens!.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                  child: Text(listaDeItens.invoices.length != 0
+                      ? 'TOTAL EM ORÇAMENTOS: R\$ ${listaDeItens.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
                       : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
@@ -44,7 +44,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
-              itemCount: listaDeItens!.invoices.length,
+              itemCount: listaDeItens.invoices.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
@@ -59,15 +59,15 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                       },
                       child: ListTile(
                         title: Text(
-                            'Cliente: ${listaDeItens!.invoices[index].customer?.name}'),
+                            'Cliente: ${listaDeItens.invoices[index].customer?.name}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //Text('TEXTOOOOOOOOOOOOOOOOOOOOOO'),
                             Text(
-                                'Data: ${listaDeItens!.invoices[index].info?.date}'),
+                                'Data: ${listaDeItens.invoices[index].info?.date}'),
                             Text(
-                                'Valor Total: R\$ ${listaDeItens!.invoices[index].valorTotal}'),
+                                'Valor Total: R\$ ${listaDeItens.invoices[index].valorTotal}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
@@ -78,7 +78,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             color: Colors.deepOrange,
                           ),
                           onPressed: () {
-                            listaDeItens!.invoices.removeAt(index);
+                            listaDeItens.invoices.removeAt(index);
                             setState(() {});
                           },
                         ),

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/resumo.dart';
 import 'package:formulario_pdf/variaveis.dart';
-import 'item_list_page.dart';
 import 'metodo_pag_page.dart';
-import 'model/customer.dart';
-import 'model/supplier.dart';
 import 'model/invoice.dart';
 
 double valorTotal = 0;
@@ -155,7 +152,6 @@ List<String> unidadeServico = [
 ];
 int? _radioValue = 0;
 //List itens = [];
-String _selectedValue = '';
 
 class ItemAdd_Page extends StatefulWidget {
   final int id;
@@ -182,11 +178,11 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
     final txtControlDescricao = TextEditingController();
 
     setState(() {});
-    int index = listaDeItens!.invoices
+    int index = listaDeItens.invoices
         .indexWhere((Invoice element) => element.id == widget.id);
 
-    if (listaDeItens!.invoices[index].items.length != 0) {
-      valorTotal = listaDeItens!.invoices[index].items
+    if (listaDeItens.invoices[index].items.length != 0) {
+      valorTotal = listaDeItens.invoices[index].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
           .reduce((item1, item2) => item1 + item2);
     } else {
@@ -325,20 +321,24 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
     final TextEditingController _controller = new TextEditingController();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      CondPagamentoWidget(indexOfItem: index)));
-        },
-        backgroundColor: Color(0xFFFF5600),
-        elevation: 8,
-        child: Icon(
-          Icons.navigate_next,
-          color: Colors.white,
-          size: 24,
+      floatingActionButton: Visibility(
+        visible: listaDeItens.invoices[index].items.isNotEmpty,
+        child: FloatingActionButton(
+          onPressed: () async {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CondPagamentoWidget(indexOfItem: index)))
+                .then((value) => setState(() {}));
+          },
+          backgroundColor: Color(0xFFFF5600),
+          elevation: 8,
+          child: Icon(
+            Icons.navigate_next,
+            color: Colors.white,
+            size: 24,
+          ),
         ),
       ),
       appBar: AppBar(
@@ -378,18 +378,22 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
       body: Container(
         alignment: Alignment.center,
         child: ListView(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(0.0),
           children: [
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 250),
-              firstChild: servico(),
-              secondChild: material(),
-              crossFadeState: _radioValue == 0
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: AnimatedCrossFade(
+                duration: const Duration(milliseconds: 250),
+                firstChild: servico(),
+                secondChild: material(),
+                crossFadeState: _radioValue == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(3.0),
+              padding:
+                  const EdgeInsets.only(left: 13, right: 13, top: 3, bottom: 3),
               child: TextFormField(
                 controller: txtControlPrecoUnidade,
                 keyboardType: TextInputType.number,
@@ -421,7 +425,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(3.0),
+              padding:
+                  const EdgeInsets.only(left: 13, right: 13, top: 3, bottom: 3),
               child: Row(
                 children: [
                   Expanded(
@@ -498,7 +503,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           padding: EdgeInsets.all(15),
                         ),
                         onPressed: () async {
-                          listaDeItens?.invoices[index].items.add(
+                          listaDeItens.invoices[index].items.add(
                               new InvoiceItem(
                                   tipo: _radioValue == 0
                                       ? dropdownValue.toString()
@@ -506,6 +511,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                   description: _radioValue == 0
                                       ? dropdownValue2.toString()
                                       : txtControlDescricao.text,
+                                  unidade: dropdownValue3,
                                   date: DateTime.now().toString(),
                                   quantity:
                                       int.parse(txtControlQuantidade.text),
@@ -531,9 +537,6 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             ),
             ResumoWidget(
               index: index,
-              listaVazia: listaDeItens?.invoices[index].items.length == 0
-                  ? true
-                  : false,
             )
           ],
         ),

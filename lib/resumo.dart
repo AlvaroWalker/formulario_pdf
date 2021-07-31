@@ -2,8 +2,8 @@
 //import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:formulario_pdf/model/invoicelist.dart';
+//import 'package:google_fonts/google_fonts.dart';
+//import 'package:formulario_pdf/model/invoicelist.dart';
 
 import 'variaveis.dart';
 
@@ -13,9 +13,8 @@ double valorTotal = 0;
 
 class ResumoWidget extends StatefulWidget {
   
-  int index;
-  bool listaVazia;
-  ResumoWidget({Key? key,required this.index,required this.listaVazia}) : super(key: key);
+  final int index;
+  ResumoWidget({Key? key,required this.index}) : super(key: key);
 
   
 
@@ -30,7 +29,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
 
   Widget build(BuildContext context) {
 
-     if (listaDeItens?.invoices[widget.index].items.length != null) {
+     if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.index].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
           .reduce((item1, item2) => item1 + item2);
@@ -50,17 +49,16 @@ class _ResumoWidgetState extends State<ResumoWidget> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          children: [Padding(
+          children: [
+            Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: criarTabela(),
                       ),
-            
-            
             Padding(
               padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -100,19 +98,14 @@ class _ResumoWidgetState extends State<ResumoWidget> {
       ),
     );
     
-  }Widget criarTabela(){
-    print(listaDeItens.invoices[widget.index].items.length);
-    print('batata');
+  }
+  Widget criarTabela(){
     
-    if(widget.listaVazia == true){
-      return Container();
 
-    }else{
     
+    if(listaDeItens.invoices[widget.index].items.isNotEmpty){
     
-    
-    
-    
+   
     return Table(
                           columnWidths: {0: FractionColumnWidth(.15)},
                           //border: TableBorder.all(),
@@ -145,5 +138,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                               ),
                           ],
                         );
-                        }}
+                        }return Text('LISTA VAZIA');
+                        }
+                        
 }

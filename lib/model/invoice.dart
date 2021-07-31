@@ -87,6 +87,7 @@ class InvoiceInfo {
 class InvoiceItem {
   String? tipo;
   String? description;
+  String? unidade;
   String? date;
   int? quantity;
   double? unitPrice;
@@ -94,6 +95,7 @@ class InvoiceItem {
   InvoiceItem({
     required this.tipo,
     required this.description,
+    required this.unidade,
     required this.date,
     required this.quantity,
     required this.unitPrice,
@@ -101,6 +103,7 @@ class InvoiceItem {
   InvoiceItem.fromJson(Map<String, dynamic> json) {
     tipo = json['tipo'];
     description = json['description'];
+    unidade = json['unidade'];
     date = json['date'];
     quantity = json['quantity'];
     unitPrice = json['unitPrice'];
@@ -110,6 +113,7 @@ class InvoiceItem {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['tipo'] = this.tipo;
     data['description'] = this.description;
+    data['unidade'] = this.unidade;
     data['date'] = this.date;
     data['quantity'] = this.quantity;
     data['unitPrice'] = this.unitPrice;

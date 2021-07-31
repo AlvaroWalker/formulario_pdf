@@ -4,7 +4,6 @@ import 'package:formulario_pdf/model/invoicelist.dart';
 import 'package:formulario_pdf/tela_itens_enviados.dart';
 import 'package:formulario_pdf/variaveis.dart';
 
-import 'item_list_page.dart';
 import 'tela_cliente.dart';
 
 //InvoiceList? listaDeItens;
@@ -71,7 +70,7 @@ class TelaInicio extends StatelessWidget {
                       listaDeItens = InvoiceList(invoices: []);
                     }
 
-                    while (listaDeItens!.invoices
+                    while (listaDeItens.invoices
                         .any((Invoice element) => element.id == novoId)) {
                       novoId++;
 
@@ -79,10 +78,10 @@ class TelaInicio extends StatelessWidget {
                       idRepetido = true;
                     }
 
-                    listaDeItens!.invoices
+                    listaDeItens.invoices
                         .add(new Invoice(id: novoId, items: <InvoiceItem>[]));
 
-                    indexOfId = listaDeItens!.invoices
+                    indexOfId = listaDeItens.invoices
                         .indexWhere((Invoice element) => element.id == novoId);
 
                     print(indexOfId.toString() + novoId.toString());

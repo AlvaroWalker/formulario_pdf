@@ -6,12 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/pdf_api.dart';
 import 'api/pdf_invoice_api.dart';
-import 'model/customer.dart';
-import 'model/supplier.dart';
-import 'utils.dart';
 import 'variaveis.dart';
 
 double valorTotal = 0;
+
+bool criarPedido = false;
 
 List itens = [];
 
@@ -29,8 +28,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   Future<void> showMyDialog(
       BuildContext context, InvoiceItem item, int lsindex) async {
-    InvoiceItem newitem = item;
-
     //String dropdownValue = opcoes[1];
     final TextEditingController _controller1 = TextEditingController();
     final TextEditingController _controller2 = TextEditingController();
@@ -77,16 +74,16 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
               TextButton(
                   onPressed: () {
-                    listaDeItens!.invoices[widget.indexOfItem].items
+                    listaDeItens.invoices[widget.indexOfItem].items
                         .replaceRange(lsindex, lsindex + 1, [
                       new InvoiceItem(
-                          tipo: listaDeItens!
+                          tipo: listaDeItens
                               .invoices[widget.indexOfItem].items[lsindex].tipo,
-                          description: listaDeItens!
-                              .invoices[widget.indexOfItem]
-                              .items[lsindex]
-                              .description,
-                          date: listaDeItens!
+                          description: listaDeItens.invoices[widget.indexOfItem]
+                              .items[lsindex].description,
+                          unidade: listaDeItens.invoices[widget.indexOfItem]
+                              .items[lsindex].unidade,
+                          date: listaDeItens
                               .invoices[widget.indexOfItem].items[lsindex].date,
                           quantity: int.parse(_controller1.text),
                           unitPrice: double.parse(_controller2.text))
@@ -105,8 +102,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (listaDeItens?.invoices[widget.indexOfItem].items.length != null) {
-      valorTotal = listaDeItens!.invoices[widget.indexOfItem].items
+    if (listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty) {
+      valorTotal = listaDeItens.invoices[widget.indexOfItem].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
           .reduce((item1, item2) => item1 + item2);
     } else {
@@ -125,63 +122,68 @@ class _ItemAddPageState extends State<ItemAddPage> {
       body: Column(
         children: [
           Flexible(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(8),
-              itemCount:
-                  listaDeItens!.invoices[widget.indexOfItem].items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black26),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        showMyDialog(
-                            context,
-                            listaDeItens!
-                                .invoices[widget.indexOfItem].items[index],
-                            index);
-                        //print(index);
-                        setState(() {});
-                      },
-                      child: ListTile(
-                        title: Text(listaDeItens!.invoices[widget.indexOfItem]
-                            .items[index].description
-                            .toString()),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Quantidade: ${listaDeItens!.invoices[widget.indexOfItem].items[index].quantity}'),
-                            Text(
-                                'Preço Unitario: R\$ ${listaDeItens!.invoices[widget.indexOfItem].items[index].unitPrice}'),
-                            // Text(
-                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.deepOrange,
+            child: listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty
+                ? ListView.separated(
+                    padding: const EdgeInsets.all(8),
+                    itemCount:
+                        listaDeItens.invoices[widget.indexOfItem].items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.black26),
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          onPressed: () {
-                            listaDeItens!.invoices[widget.indexOfItem].items
-                                .removeAt(index);
-                            setState(() {});
-                          },
+                          child: InkWell(
+                            onTap: () async {
+                              showMyDialog(
+                                  context,
+                                  listaDeItens.invoices[widget.indexOfItem]
+                                      .items[index],
+                                  index);
+                              //print(index);
+                              setState(() {});
+                            },
+                            child: ListTile(
+                              title: Text(listaDeItens
+                                  .invoices[widget.indexOfItem]
+                                  .items[index]
+                                  .description
+                                  .toString()),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
+                                  Text(
+                                      'Preço Unitario: R\$ ${listaDeItens.invoices[widget.indexOfItem].items[index].unitPrice}'),
+                                  // Text(
+                                  //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.deepOrange,
+                                ),
+                                onPressed: () {
+                                  listaDeItens
+                                      .invoices[widget.indexOfItem].items
+                                      .removeAt(index);
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(
+                      height: 2,
                     ),
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(
-                height: 2,
-              ),
-            ),
+                  )
+                : Container(),
           ),
           Text(
             'TOTAL ORÇADO: R\$ ${valorTotal.toStringAsFixed(2)}',
@@ -210,21 +212,21 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              'Cliente: ${listaDeItens!.invoices[widget.indexOfItem].customer!.name}'),
+                              'Cliente: ${listaDeItens.invoices[widget.indexOfItem].customer!.name}'),
                           Text(
-                              'CPF/CNPJ: ${listaDeItens!.invoices[widget.indexOfItem].customer!.doc}'),
+                              'CPF/CNPJ: ${listaDeItens.invoices[widget.indexOfItem].customer!.doc}'),
                           Text(
-                              'Insc. Estadual: ${listaDeItens!.invoices[widget.indexOfItem].customer!.inscEst.toString()}'),
+                              'Insc. Estadual: ${listaDeItens.invoices[widget.indexOfItem].customer!.inscEst.toString()}'),
                           Text(
-                              'Endereço: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteEndereco.toString()}'),
+                              'Endereço: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteEndereco.toString()}'),
                           Text(
-                              'Bairro: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteBairro.toString()}'),
+                              'Bairro: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteBairro.toString()}'),
                           Text(
-                              'Cidade: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteCidade.toString()}'),
+                              'Cidade: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteCidade.toString()}'),
                           Text(
-                              'Estado: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteEstado.toString()}'),
+                              'Estado: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteEstado.toString()}'),
                           Text(
-                              'Telefone: ${listaDeItens!.invoices[widget.indexOfItem].customer!.clienteTelefone.toString()}'),
+                              'Telefone: ${listaDeItens.invoices[widget.indexOfItem].customer!.clienteTelefone.toString()}'),
                         ],
                       ),
                     ),
@@ -237,6 +239,19 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
             ),
           )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Checkbox(
+                  value: criarPedido,
+                  onChanged: (value) {
+                    setState(() {
+                      criarPedido = !criarPedido;
+                    });
+                  }),
+              Text('ANEXAR PEDIDO AO ORÇAMENTO')
+            ],
+          )
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -244,11 +259,11 @@ class _ItemAddPageState extends State<ItemAddPage> {
         label: Text('SALVAR E ENVIAR'),
         //backgroundColor: Colors.orange,
         onPressed: () async {
-          listaDeItens!.invoices[widget.indexOfItem].valorTotal = valorTotal;
+          listaDeItens.invoices[widget.indexOfItem].valorTotal = valorTotal;
           salvarPedido();
 
           final pdfFile = await PdfInvoiceApi.generate(
-              listaDeItens!.invoices[widget.indexOfItem]);
+              listaDeItens.invoices[widget.indexOfItem]);
 
           PdfApi.openFile(pdfFile);
         },
@@ -260,6 +275,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     //print(jsonEncode(listaDeItens!.toJson()));
-    prefs.setString('teste1', jsonEncode(listaDeItens!.toJson()));
+    prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
   }
 }

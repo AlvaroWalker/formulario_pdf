@@ -3,10 +3,7 @@
 //import '../flutter_flow/flutter_flow_theme.dart';
 //import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:formulario_pdf/tela_itens_enviados.dart';
-import 'package:formulario_pdf/variaveis.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'item_list_page.dart';
 import 'resumo.dart';
@@ -55,13 +52,13 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
       ),
       backgroundColor: Color(0xFFCDCDCD),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ItemAddPage(
                         indexOfItem: widget.indexOfItem,
-                      )));
+                      ))).then((value) => setState(() {}));
         },
         //backgroundColor: Color(0xFFFF0000),
         elevation: 8,
@@ -71,110 +68,111 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
           size: 24,
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFFF7E00),
-                      width: 1,
+      body: ListView(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF7E00),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide(
-                      //color: Color(0xFFFF7E00),
-                      width: 1,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(
+                        //color: Color(0xFFFF7E00),
+                        width: 1,
+                      ),
                     ),
+                    labelText: 'CONDIÇÃO DE PAGAMENTO',
                   ),
-                  labelText: 'CONDIÇÃO DE PAGAMENTO',
+                  value: dropDownValue,
+                  onChanged: (String? value) {
+                    setState(() {
+                      dropDownValue = value.toString();
+                    });
+                  },
+                  items: condicaoPagamento
+                      .map((cityTitle) => DropdownMenuItem(
+                          value: cityTitle, child: Text("$cityTitle")))
+                      .toList(),
                 ),
-                value: dropDownValue,
-                onChanged: (String? value) {
-                  setState(() {
-                    dropDownValue = value.toString();
-                  });
-                },
-                items: condicaoPagamento
-                    .map((cityTitle) => DropdownMenuItem(
-                        value: cityTitle, child: Text("$cityTitle")))
-                    .toList(),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: TextFormField(
-                controller: textController,
-                obscureText: false,
-                decoration: InputDecoration(
-                  hintText: 'OBSERVAÇOES GERAIS',
-                  hintStyle: TextStyle(
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: TextFormField(
+                  controller: textController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    hintText: 'OBSERVAÇOES GERAIS',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  style: TextStyle(
                     fontFamily: 'Poppins',
                   ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                ),
-                maxLines: 10,
-                //maxLength: 10,
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            Divider(
-              height: 30,
-              thickness: 2,
-              indent: 20,
-              endIndent: 20,
-            ),
-            Align(
-              alignment: Alignment(-0.7, 0),
-              child: Text(
-                'RESUMO',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w600,
+                  maxLines: 10,
+                  //maxLength: 10,
+                  keyboardType: TextInputType.multiline,
                 ),
               ),
-            ),
-            ResumoWidget(
-              index: widget.indexOfItem,
-              listaVazia: true,
-            )
-          ],
-        ),
+              Divider(
+                height: 30,
+                thickness: 2,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Align(
+                alignment: Alignment(-0.7, 0),
+                child: Text(
+                  'RESUMO',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              ResumoWidget(
+                index: widget.indexOfItem,
+              )
+            ],
+          )
+        ],
       ),
     );
   }

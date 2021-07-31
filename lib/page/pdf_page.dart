@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formulario_pdf/api/pdf_api.dart';
-import 'package:formulario_pdf/api/pdf_invoice_api.dart';
 import 'package:formulario_pdf/main.dart';
 import 'package:formulario_pdf/model/customer.dart';
 import 'package:formulario_pdf/model/invoice.dart';
@@ -55,29 +53,7 @@ class _PdfPageState extends State<PdfPage> {
                         description: 'descrição',
                         number: '${DateTime.now().year}/115',
                       ),
-                      items: [
-                        InvoiceItem(
-                          tipo: '2',
-                          description: 'café',
-                          date: DateTime.now().toString(),
-                          quantity: 3,
-                          unitPrice: 10,
-                        ),
-                        InvoiceItem(
-                          tipo: '2',
-                          description: 'agua',
-                          date: DateTime.now().toString(),
-                          quantity: 8,
-                          unitPrice: 2,
-                        ),
-                        InvoiceItem(
-                          tipo: '2',
-                          description: 'arroz',
-                          date: DateTime.now().toString(),
-                          quantity: 10,
-                          unitPrice: 25,
-                        ),
-                      ],
+                      items: [],
                     );
 
                     //final pdfFile = await PdfInvoiceApi.generate(invoice);

@@ -124,10 +124,10 @@ class _TelaClienteState extends State<TelaCliente> {
           elevation: 8,
           child: Icon(Icons.navigate_next),
           onPressed: () async {
-            int index = listaDeItens!.invoices
+            int index = listaDeItens.invoices
                 .indexWhere((Invoice element) => element.id == widget.id);
 
-            listaDeItens?.invoices[index].customer = Customer(
+            listaDeItens.invoices[index].customer = Customer(
                 name: txtControlCliente.text,
                 doc: txtControlDoc.text,
                 inscEst: txtControlInscEst.text,
@@ -137,10 +137,10 @@ class _TelaClienteState extends State<TelaCliente> {
                 clienteCidade: txtControlCidade.text,
                 clienteTelefone: txtControlTelefone.text);
 
-            listaDeItens?.invoices[index].items = <InvoiceItem>[];
-            listaDeItens?.invoices[index].supplier = Supplier(
+            listaDeItens.invoices[index].items = <InvoiceItem>[];
+            listaDeItens.invoices[index].supplier = Supplier(
                 name: 'name', address: 'address', paymentInfo: 'paymentInfo');
-            listaDeItens?.invoices[index].info = InvoiceInfo(
+            listaDeItens.invoices[index].info = InvoiceInfo(
                 description: 'description',
                 number: 'number',
                 date:

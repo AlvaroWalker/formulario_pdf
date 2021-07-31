@@ -235,7 +235,7 @@ class PdfInvoiceApi {
 
       return [
         //   Utils.formatDate(item.date),
-        '${item.quantity}', 'Und', item.tipo, item.description,
+        '${item.quantity}', item.unidade, item.tipo, item.description,
         'R\$ ${item.unitPrice!.toStringAsFixed(2)}',
         'R\$ ${total.toStringAsFixed(2)}',
       ];
