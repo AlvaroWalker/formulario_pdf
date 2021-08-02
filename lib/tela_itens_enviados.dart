@@ -131,7 +131,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               child: Center(
                   child: Text(listaPedidos.invoices.length != 0
                       ? 'TOTAL EM PEDIDOS: R\$ ${listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
-                      : 'NENHUM ORÇAMENTO REGISTRADO')),
+                      : 'NENHUM PEDIDO REGISTRADO')),
             ),
           ),
           Divider(

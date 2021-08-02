@@ -9,14 +9,9 @@ import 'variaveis.dart';
 
 double valorTotal = 0;
 
-
-
 class ResumoWidget extends StatefulWidget {
-  
   final int index;
-  ResumoWidget({Key? key,required this.index}) : super(key: key);
-
-  
+  ResumoWidget({Key? key, required this.index}) : super(key: key);
 
   @override
   _ResumoWidgetState createState() => _ResumoWidgetState();
@@ -24,20 +19,15 @@ class ResumoWidget extends StatefulWidget {
 
 class _ResumoWidgetState extends State<ResumoWidget> {
   @override
-
- 
-
   Widget build(BuildContext context) {
-
-     if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
+    if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.index].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
           .reduce((item1, item2) => item1 + item2);
+      valorTotal.toStringAsFixed(2);
     } else {
       valorTotal = 0;
     }
-
-    
 
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -51,9 +41,9 @@ class _ResumoWidgetState extends State<ResumoWidget> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: criarTabela(),
-                      ),
+              padding: const EdgeInsets.only(top: 10),
+              child: criarTabela(),
+            ),
             Padding(
               padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
               child: Row(
@@ -66,7 +56,6 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                     children: [
                       Text(
                         'Cliente: ${listaDeItens.invoices[widget.index].customer?.name}',
-                        
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 10,
@@ -74,7 +63,6 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                       ),
                       Text(
                         'CNPJ: ${listaDeItens.invoices[widget.index].customer?.doc}',
-                        
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 10,
@@ -97,48 +85,42 @@ class _ResumoWidgetState extends State<ResumoWidget> {
         ),
       ),
     );
-    
   }
-  Widget criarTabela(){
-    
 
-    
-    if(listaDeItens.invoices[widget.index].items.isNotEmpty){
-    
-   
-    return Table(
-                          columnWidths: {0: FractionColumnWidth(.15)},
-                          //border: TableBorder.all(),
-                          children: [
-                            for (var items
-                                in listaDeItens.invoices[widget.index].items)
-                              TableRow(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Column(
-                                      children: [
-                                        Text(items.quantity.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text(items.tipo.toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text(items.description.toString()),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Text('R\$ ${(items.unitPrice)}'),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        );
-                        }return Text('LISTA VAZIA');
-                        }
-                        
+  Widget criarTabela() {
+    if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
+      return Table(
+        columnWidths: {0: FractionColumnWidth(.15)},
+        //border: TableBorder.all(),
+        children: [
+          for (var items in listaDeItens.invoices[widget.index].items)
+            TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Column(
+                    children: [
+                      Text(items.quantity.toString()),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Text(items.tipo.toString()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Text(items.description.toString()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Text('R\$ ${(items.unitPrice)}'),
+                ),
+              ],
+            ),
+        ],
+      );
+    }
+    return Text('LISTA VAZIA');
+  }
 }

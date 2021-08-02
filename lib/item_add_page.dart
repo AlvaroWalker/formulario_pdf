@@ -212,7 +212,9 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             value: dropdownValue,
             onChanged: (value) {
               dropdownValue = value.toString();
-              setState(() {});
+              setState(() {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              });
             },
             items: tipoServico
                 .map((tipo) =>
@@ -243,6 +245,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             onChanged: (String? value) {
               setState(() {
                 dropdownValue2 = value.toString();
+
+                FocusScope.of(context).requestFocus(new FocusNode());
               });
             },
             items: descricaoServico
@@ -349,7 +353,9 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               groupValue: _radioValue,
               onChanged: (int? value) {
                 _radioValue = value;
-                setState(() {});
+                setState(() {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                });
               },
             ),
             Text(
@@ -361,7 +367,9 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
               groupValue: _radioValue,
               onChanged: (int? value) {
                 _radioValue = value;
-                setState(() {});
+                setState(() {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                });
               },
             ),
             Text(
@@ -484,6 +492,8 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                       onChanged: (String? value) {
                         setState(() {
                           dropdownValue3 = value.toString();
+
+                          FocusScope.of(context).requestFocus(new FocusNode());
                         });
                       },
                       items: unidadeServico
@@ -512,8 +522,19 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                                   date: DateTime.now().toString(),
                                   quantity:
                                       int.parse(txtControlQuantidade.text),
-                                  unitPrice: double.parse(
-                                      txtControlPrecoUnidade.text)));
+                                  unitPrice: (_radioValue == 1 &&
+                                          txtControlPrecoUnidade.text.isEmpty)
+                                      ? 0
+                                      : double.parse(
+                                          txtControlPrecoUnidade.text)));
+
+                          dropdownValue = null;
+                          dropdownValue2 = null;
+                          dropdownValue3 = null;
+                          txtControlDescricao.clear();
+                          txtControlPrecoUnidade.clear();
+                          txtControlQuantidade.clear();
+                          FocusScope.of(context).requestFocus(new FocusNode());
                           setState(() {});
                         },
                         child: Icon(Icons.add)),

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:formulario_pdf/gerando_pdf_pag.dart';
 import 'package:formulario_pdf/model/invoice.dart';
+import 'package:formulario_pdf/tela_inicial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/pdf_api.dart';
@@ -116,7 +118,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'REVISE SEU PEDIDO',
+          'REVISE SEU ORÇAMENTO',
           textAlign: TextAlign.center,
         ),
       ),
@@ -277,10 +279,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
           listaDeItens.invoices[widget.indexOfItem].pedido = criarPedido;
           salvarPedido();
 
-          final pdfFile = await PdfInvoiceApi.generate(
-              listaDeItens.invoices[widget.indexOfItem]);
-
-          PdfApi.openFile(pdfFile);
+          //PdfApi.openFile(pdfFile);
         },
       ),
     );
@@ -291,5 +290,33 @@ class _ItemAddPageState extends State<ItemAddPage> {
 
     //print(jsonEncode(listaDeItens!.toJson()));
     prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
+
+    //showWaitDialog();
+
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PaginaGerandoPdf(index: widget.indexOfItem)))
+        .then((value) => setState(() {}));
+  }
+
+  showWaitDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Gerando PDF'),
+              ],
+            ),
+          ),
+          actions: <Widget>[],
+        );
+      },
+    );
   }
 }

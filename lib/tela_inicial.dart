@@ -4,6 +4,7 @@ import 'package:formulario_pdf/model/invoicelist.dart';
 import 'package:formulario_pdf/tela_itens_enviados.dart';
 import 'package:formulario_pdf/variaveis.dart';
 
+import 'api/pdf_api.dart';
 import 'tela_cliente.dart';
 
 //InvoiceList? listaDeItens;
@@ -27,6 +28,12 @@ class _TelaInicioState extends State<TelaInicio> {
     if (listaDeItens.invoices.isNotEmpty) {
       if (listaDeItens.invoices[idNovoPedido].customer?.name == null) {
         listaDeItens.invoices.removeAt(idNovoPedido);
+      }
+
+      if (pdfVisualizado == false && pdfGeneratedFile != null) {
+        PdfApi.openFile(pdfGeneratedFile);
+        pdfGeneratedFile = null;
+        pdfVisualizado = true;
       }
     }
 
@@ -121,7 +128,37 @@ class _TelaInicioState extends State<TelaInicio> {
                       primary: Colors.white,
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
-                  onPressed: () {},
+                  onPressed: () {
+                    int indexOfId = 0;
+                    novoId = 0;
+                    if (listaDeItens.invoices.isEmpty) {
+                      listaDeItens = InvoiceList(invoices: []);
+                    }
+
+                    while (listaDeItens.invoices
+                        .any((Invoice element) => element.id == novoId)) {
+                      novoId++;
+
+                      print(idRepetido);
+                      idRepetido = true;
+                    }
+
+                    listaDeItens.invoices
+                        .add(new Invoice(id: novoId, items: <InvoiceItem>[]));
+
+                    indexOfId = listaDeItens.invoices
+                        .indexWhere((Invoice element) => element.id == novoId);
+
+                    print(indexOfId.toString() + novoId.toString());
+
+                    idNovoPedido = indexOfId;
+
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TelaCliente(id: novoId)))
+                        .then((value) => setState(() {}));
+                  },
                   child: Text(
                     'PEDIDO',
                     style: TextStyle(color: Colors.deepOrange, fontSize: 30),

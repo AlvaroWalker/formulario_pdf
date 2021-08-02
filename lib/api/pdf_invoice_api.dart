@@ -253,8 +253,8 @@ class PdfInvoiceApi {
       child: Table.fromTextArray(
         headers: headers,
         data: data,
-        border: TableBorder.symmetric(
-          inside: BorderSide(width: 1, color: PdfColor(1, .5, .1)),
+        border: TableBorder(
+          verticalInside: BorderSide(width: 1, color: PdfColor(1, .5, .1)),
         ),
         headerStyle: TextStyle(
             fontWeight: FontWeight.bold, color: PdfColors.white, fontSize: 8),
@@ -265,8 +265,8 @@ class PdfInvoiceApi {
               topLeft: Radius.circular(5) //         <--- border radius here
               ),
         ),
-        cellHeight: 10,
-        cellStyle: pw.TextStyle(fontSize: 8),
+        cellHeight: 7,
+        cellStyle: pw.TextStyle(fontSize: 5),
         columnWidths: {
           0: FlexColumnWidth(2),
           1: FlexColumnWidth(2),
