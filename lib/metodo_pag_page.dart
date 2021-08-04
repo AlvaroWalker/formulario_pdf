@@ -3,6 +3,8 @@
 //import '../flutter_flow/flutter_flow_theme.dart';
 //import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:formulario_pdf/variaveis.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'item_list_page.dart';
@@ -19,10 +21,12 @@ List<String> condicaoPagamento = [
   "A COMBINAR",
 ];
 
+final txtControlPrazo = TextEditingController();
+
 String? dropDownValue;
 
 class CondPagamentoWidget extends StatefulWidget {
-  int indexOfItem;
+  final int indexOfItem;
   CondPagamentoWidget({Key? key, required this.indexOfItem}) : super(key: key);
 
   @override
@@ -53,14 +57,21 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
       backgroundColor: Color(0xFFCDCDCD),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          listaDeItens.invoices[widget.indexOfItem].metPagamento =
+              dropDownValue!.toUpperCase();
+
+          listaDeItens.invoices[widget.indexOfItem].observacoesPedido =
+              textController!.text;
+          listaDeItens.invoices[widget.indexOfItem].prazoServico =
+              txtControlPrazo.text;
+
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ItemAddPage(
+                  builder: (context) => ItemListPage(
                         indexOfItem: widget.indexOfItem,
                       ))).then((value) => setState(() {}));
         },
-        //backgroundColor: Color(0xFFFF0000),
         elevation: 8,
         child: Icon(
           Icons.navigate_next,
@@ -104,6 +115,38 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                       .map((cityTitle) => DropdownMenuItem(
                           value: cityTitle, child: Text("$cityTitle")))
                       .toList(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  inputFormatters: [UpperCaseTextFormatter()],
+                  controller: txtControlPrazo,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+                    labelText: 'PRAZO DE EXECUÇÃO',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        //color: Color(0xFFFF7E00),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        //color: Color(0xFFFF7E00),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF7E00),
+                        width: 1,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Padding(
@@ -174,6 +217,17 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
           )
         ],
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

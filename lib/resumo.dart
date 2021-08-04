@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 //import 'package:formulario_pdf/model/invoicelist.dart';
 
+import 'package:money2/money2.dart';
+
 import 'variaveis.dart';
+
+final real = Currency.create('Real', 2,
+    symbol: 'R\$', invertSeparators: true, pattern: 'S #.##0,00');
 
 double valorTotal = 0;
 
@@ -22,9 +27,9 @@ class _ResumoWidgetState extends State<ResumoWidget> {
   Widget build(BuildContext context) {
     if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.index].items
-          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
           .reduce((item1, item2) => item1 + item2);
-      valorTotal.toStringAsFixed(2);
+      //valorTotal.toStringAsFixed(2);
     } else {
       valorTotal = 0;
     }
@@ -50,28 +55,38 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cliente: ${listaDeItens.invoices[widget.index].customer?.name}',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 10,
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Cliente: ${listaDeItens.invoices[widget.index].customer?.name}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'CNPJ: ${listaDeItens.invoices[widget.index].customer?.doc}',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 10,
-                        ),
-                      )
-                    ],
+                        Text(
+                          'CNPJ: ${listaDeItens.invoices[widget.index].customer?.doc}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 10,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Text(
-                    'R\$ $valorTotal',
+                    //'R\$ $valorTotal',
+
+                    Money.from(valorTotal, real).toString(),
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
@@ -90,32 +105,98 @@ class _ResumoWidgetState extends State<ResumoWidget> {
   Widget criarTabela() {
     if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
       return Table(
-        columnWidths: {0: FractionColumnWidth(.15)},
+        columnWidths: {0: FractionColumnWidth(.1), 3: FractionColumnWidth(.2)},
         //border: TableBorder.all(),
         children: [
           for (var items in listaDeItens.invoices[widget.index].items)
             TableRow(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Column(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(items.quantity.toString()),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text(items.tipo.toString()),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text(items.description.toString()),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text('R\$ ${(items.unitPrice)}'),
-                ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Text(
+                            items.quantity.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Text(
+                          items.tipo.toString(),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 10,
+                          ),
+                        ),
+                      ))
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                        child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Text(
+                              items.description.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 10,
+                              ),
+                            )),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: items.unitPrice!.toDouble() != 0
+                            ? Text(
+                                Money.from(
+                                        (items.unitPrice!.toDouble() *
+                                            items.quantity!.toDouble()),
+                                        real)
+                                    .toString(),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 10,
+                                ),
+                              )
+                            : Text('MATERIAL',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 10,
+                                )),
+                      ))
+                    ]),
               ],
             ),
         ],

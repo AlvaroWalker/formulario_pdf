@@ -1,4 +1,6 @@
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:formulario_pdf/resumo.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'metodo_pag_page.dart';
@@ -7,140 +9,140 @@ import 'model/invoice.dart';
 double valorTotal = 0;
 
 List<String> descricaoServico = [
-  "AR CONDICIONADO",
+  "AR CONDICIONADO",
   "ATERRAMENTO",
-  "BOMBA DE POÇO",
-  "BOMBA SAPO",
-  "BOMBA HIDRÁULICA",
+  "BOMBA DE POÇO",
+  "BOMBA HIDRÁULICA",
+  "BOMBA SAPO",
   "CABEAMENTO",
-  "CAIXA DE PADRÃO",
-  "CAIXA DE PASSAGEM",
-  "CHUVEIRO ",
+  "CAIXA DE PADRÃO",
+  "CAIXA DE PASSAGEM",
+  "CANALETA",
+  "CANELINHA",
+  "CHAVE",
+  "CHUVEIRO ",
+  "CLIMATIZADOR ",
+  "COMPRESSOR",
   "COMPRESSOR",
   "CONTATORA",
-  "CHAVE",
-  "CANELINHA",
-  "TERMINAIS",
-  "FUSÍVEIS",
-  "MOTOR",
-  "MÁQUINA",
-  "TRITURADOR",
-  "LUMINÁRIA DE EMBUTIR",
-  "LUMINÁRIA",
-  "POSTE DE PADRÃO COM CAIXA",
-  "POSTE CONCRETO 7m",
-  "POSTE CONCRETO 8m",
-  "POSTE CONCRETO 6m",
-  "POSTE CONCRETO 9m",
-  "POSTE CONCRETO 10m",
-  "POSTE CONCRETO 11m",
-  "SUPER-POSTE",
-  "TRANSFORMADOR",
-  "TURBINA",
-  "COMPRESSOR",
-  "CORRENTE",
-  "ELETRODUTO",
   "CONTROLADORA",
+  "CORRENTE",
   "DISJUNTOR",
-  "QUADRO DE COMANDO",
-  "PAINEL DE COMANDO",
-  "PAINEL",
-  "PORTÃO ELETRÔNICO",
-  "INTERFONE",
-  "SIRENE",
+  "ELETRO CALHA",
+  "ELETRODUTO",
   "EXAUSTOR",
-  "HIDRANTE",
-  "TOMADA TRIFÁSICA",
-  "TOMADA",
-  "INTERRUPTOR COM TOMADA",
-  "INTERRUPTOR DUPLO COM TOMADA",
-  "INTERRUPTOR 3 TECLAS",
-  "LUMINÁRIA",
-  "LUMINÁRIA DE EMBUTIR",
-  "LUMINÁRIA DE SOBREPOR",
-  "LUMINÁRIA DE EMERGÊNCIA",
-  "LAMPADA DE POSTRE",
-  "LUMINÁRIA DICRÓICA",
-  "REFLETOR",
-  "PADRÃO ",
-  "PROJETOR",
-  "PROJETO TÉCNICO",
-  "PROJETO ELÉTROTÉCNICO",
-  "QUADRO DE DISTRIBUIÇÃO INDIVIDUAL",
-  "QUADRO DE MEDIÇÃO AGRUPADO",
-  "REATOR DE POSTE",
-  "REDE BIFÁSICA",
-  "REDE TRIFÁSICA",
-  "REDE MONOFÁSICA",
-  "RELÉ",
-  "RELÉ CÍCLICO",
-  "RELÉ DE TEMPO",
-  "RELÉ FALTA DE FASE",
-  "RELÉ FOTO CÉLULA",
-  "REDE ALTA TENSÃO",
-  "TENSÃO",
-  "CANALETA",
-  "TUBULAÇÃO",
-  "ELETRO CALHA",
-  "TUBULAÇÃO ELÉTRICA",
-  "TUBULAÇÃO HIDRÁULICA",
-  "HIDRANTE",
-  "VENTILADOR PAREDE",
-  "VENTILADOR DE TETO",
-  "CLIMATIZADOR ",
-  "VALETA",
-  "VALA ATERRAMENTO",
-  "PARA-RAIOS",
-  "SPDA",
+  "FUSÍVEIS",
+  "GEORREFENCIADO ",
   "HASTES",
-  "ROTEADOR",
-  "REDE SEM FIO",
-  "REDE DE INTERNET",
-  "GEORREFENCIADO ",
+  "HIDRANTE",
+  "HIDRANTE",
+  "INTERFONE",
+  "INTERRUPTOR 3 TECLAS",
+  "INTERRUPTOR COM TOMADA",
+  "INTERRUPTOR DUPLO COM TOMADA",
+  "LAMPADA DE POSTRE",
   "LOCAL",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA DE EMERGÊNCIA",
+  "LUMINÁRIA DE SOBREPOR",
+  "LUMINÁRIA DICRÓICA",
+  "LUMINÁRIA",
+  "LUMINÁRIA",
+  "MÁQUINA",
+  "MOTOR",
+  "PADRÃO ",
+  "PAINEL DE COMANDO",
+  "PAINEL",
+  "PARA-RAIOS",
+  "PORTÃO ELETRÔNICO",
+  "POSTE CONCRETO 10m",
+  "POSTE CONCRETO 11m",
+  "POSTE CONCRETO 6m",
+  "POSTE CONCRETO 7m",
+  "POSTE CONCRETO 8m",
+  "POSTE CONCRETO 9m",
+  "POSTE DE PADRÃO COM CAIXA",
+  "PROJETO ELÉTROTÉCNICO",
+  "PROJETO TÉCNICO",
+  "PROJETOR",
+  "QUADRO DE COMANDO",
+  "QUADRO DE DISTRIBUIÇÃO INDIVIDUAL",
+  "QUADRO DE MEDIÇÃO AGRUPADO",
+  "REATOR DE POSTE",
+  "REDE ALTA TENSÃO",
+  "REDE BIFÁSICA",
+  "REDE DE INTERNET",
+  "REDE MONOFÁSICA",
+  "REDE SEM FIO",
+  "REDE TRIFÁSICA",
+  "REFLETOR",
+  "RELÉ CÍCLICO",
+  "RELÉ DE TEMPO",
+  "RELÉ FALTA DE FASE",
+  "RELÉ FOTO CÉLULA",
+  "RELÉ",
+  "ROTEADOR",
+  "SIRENE",
+  "SPDA",
+  "SUPER-POSTE",
+  "TENSÃO",
+  "TERMINAIS",
+  "TOMADA TRIFÁSICA",
+  "TOMADA",
+  "TRANSFORMADOR",
+  "TRITURADOR",
+  "TUBULAÇÃO ELÉTRICA",
+  "TUBULAÇÃO HIDRÁULICA",
+  "TUBULAÇÃO",
+  "TURBINA",
+  "VALA ATERRAMENTO",
+  "VALETA",
+  "VENTILADOR DE TETO",
+  "VENTILADOR PAREDE",
 ];
 
 List<String> tipoServico = [
+  'ACOMPANHAMENTO',
+  'ADEQUAÇÃO',
   'AFERIÇÃO',
-  'SERVIÇO',
-  'CARGA DE GÁS',
+  'AMARRAÇÃO',
+  'APLICAÇÃO',
+  'AUTOMATIZAÇÃO',
+  'CARGA DE GÁS',
+  'COBERTURA',
+  'CONFIGURAÇÃO',
   'CONSERTO',
+  'CONSULTORIA',
+  'DESENTUPIMENTO',
   'DESLOCAMENTO',
+  'FIXAÇÃO',
   'INFRA-ESTRUTURA',
+  'LEVANTAMENTO',
   'LIMPEZA',
   'MATERIAL',
   'MEDIÇÃO',
   'MONTAGEM',
+  'MUDANÇA',
+  'PASSAGEM',
+  'PERFURAÇÃO',
+  'REBOBINAGEM',
   'REGULAGEM',
   'REMOÇÃO',
   'REPARO',
+  'SERVIÇO',
   'SUBSTITUIÇÃO',
-  'PERFURAÇÃO',
-  'APLICAÇÃO',
-  'COBERTURA',
-  'PASSAGEM',
+  'SUPORTE',
   'TALISCAMENTO',
   'VISTORIA',
-  'ACOMPANHAMENTO',
-  'LEVANTAMENTO',
-  'DESENTUPIMENTO',
-  'AMARRAÇÃO',
-  'REBOBINAGEM',
-  'AUTOMATIZAÇÃO',
-  'MUDANÇA',
-  'ADEQUAÇÃO',
-  'FIXAÇÃO',
-  'CONFIGURAÇÃO',
-  'SUPORTE',
-  'CONSULTORIA',
 ];
 
 List<String> unidadeServico = [
   "Gm.",
   "Kg.",
-  "Mt.",
+  "MT",
   "BOB.",
-  "UND.",
+  "UND",
   "KM",
   "KM/RODADO",
   "SC.",
@@ -153,15 +155,17 @@ List<String> unidadeServico = [
 int? _radioValue = 0;
 //List itens = [];
 
-class ItemAdd_Page extends StatefulWidget {
-  final int id;
-  const ItemAdd_Page({Key? key, required this.id}) : super(key: key);
+class ItemAddPage extends StatefulWidget {
+  final int? id;
+  final Invoice? orcamentoEditar;
+  const ItemAddPage({Key? key, this.id, this.orcamentoEditar})
+      : super(key: key);
 
   @override
-  _ItemAdd_PageState createState() => _ItemAdd_PageState();
+  _ItemAddPageState createState() => _ItemAddPageState();
 }
 
-class _ItemAdd_PageState extends State<ItemAdd_Page> {
+class _ItemAddPageState extends State<ItemAddPage> {
   @override
   void setState(VoidCallback fn) {
     super.setState(fn);
@@ -169,9 +173,10 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
   String? dropdownValue;
   String? dropdownValue2;
-  String? dropdownValue3;
-  final txtControlPrecoUnidade = TextEditingController();
+  String? dropdownValue3 = unidadeServico[4];
+  final txtControlPrecoUnidade = MoneyMaskedTextController();
   final txtControlQuantidade = TextEditingController();
+  final txtControlTipo = TextEditingController();
   final txtControlDescricao = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -181,7 +186,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
 
     if (listaDeItens.invoices[index].items.length != 0) {
       valorTotal = listaDeItens.invoices[index].items
-          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
           .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
@@ -191,73 +196,104 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
       return Column(children: [
         Padding(
           padding: const EdgeInsets.all(3.0),
-          child: DropdownButtonFormField(
+          child: TextFormField(
+            inputFormatters: [UpperCaseTextFormatter()],
+            controller: txtControlTipo,
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
+              suffixIcon: PopupMenuButton(
+                  icon: Icon(Icons.arrow_drop_down),
+                  onSelected: (value) {
+                    txtControlTipo.text = value.toString();
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+
+                  //value: dropdownValue2,
+
+                  itemBuilder: (context) {
+                    return tipoServico
+                        .map((cityTitle) => PopupMenuItem<String>(
+                            value: cityTitle, child: Text("$cityTitle")))
+                        .toList();
+                  }),
+              contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+              labelText: 'TIPO DE SERVIÇO',
+              border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
+                  //color: Color(0xFFFF7E00),
                   width: 1,
                 ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              border: OutlineInputBorder(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  //color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 borderSide: BorderSide(
                   color: Color(0xFFFF7E00),
                   width: 1,
                 ),
               ),
-              //filled: true,
-              labelText: "TIPO DE SERVIÇO",
             ),
-            value: dropdownValue,
-            onChanged: (value) {
-              dropdownValue = value.toString();
-              setState(() {
-                FocusScope.of(context).requestFocus(new FocusNode());
-              });
-            },
-            items: tipoServico
-                .map((tipo) =>
-                    DropdownMenuItem(value: tipo, child: Text("$tipo")))
-                .toList(),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(3.0),
-          child: DropdownButtonFormField(
+          child: TextFormField(
+            inputFormatters: [UpperCaseTextFormatter()],
+            controller: txtControlDescricao,
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
+              suffixIcon: PopupMenuButton(
+                  icon: Icon(Icons.arrow_drop_down),
+                  onSelected: (value) {
+                    txtControlDescricao.text = value.toString();
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+
+                  //value: dropdownValue2,
+
+                  itemBuilder: (context) {
+                    return descricaoServico
+                        .map((cityTitle) => PopupMenuItem<String>(
+                            value: cityTitle, child: Text("$cityTitle")))
+                        .toList();
+                  }),
+              contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
+              labelText: 'DESCRIÇÃO DO SERVIÇO',
+              border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
+                  //color: Color(0xFFFF7E00),
                   width: 1,
                 ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              border: OutlineInputBorder(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  //color: Color(0xFFFF7E00),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 borderSide: BorderSide(
                   color: Color(0xFFFF7E00),
                   width: 1,
                 ),
               ),
-              labelText: 'DESCRIÇÃO DO SERVIÇO',
             ),
-            value: dropdownValue2,
-            onChanged: (String? value) {
-              setState(() {
-                dropdownValue2 = value.toString();
-
-                FocusScope.of(context).requestFocus(new FocusNode());
-              });
-            },
-            items: descricaoServico
-                .map((cityTitle) => DropdownMenuItem(
-                    value: cityTitle, child: Text("$cityTitle")))
-                .toList(),
           ),
         ),
       ]);
     }
 
+//
+//
+//
     Widget material() {
       return Column(children: [
         Padding(
@@ -291,6 +327,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
           padding: const EdgeInsets.all(3.0),
           child: TextFormField(
             controller: txtControlDescricao,
+            inputFormatters: [UpperCaseTextFormatter()],
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
               labelText: 'DESCRIÇÃO DO MATERIAL',
@@ -321,6 +358,9 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
       ]);
     }
 
+//
+//
+//
     return Scaffold(
       floatingActionButton: Visibility(
         visible: listaDeItens.invoices[index].items.isNotEmpty,
@@ -333,7 +373,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                             CondPagamentoWidget(indexOfItem: index)))
                 .then((value) => setState(() {}));
           },
-          backgroundColor: Color(0xFFFF5600),
+          //backgroundColor: Color(0xFFFF5600),
           elevation: 8,
           child: Icon(
             Icons.navigate_next,
@@ -360,6 +400,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             ),
             Text(
               'SERVIÇO',
+              textScaleFactor: .7,
               style: TextStyle(color: Colors.black54),
             ),
             Radio(
@@ -374,6 +415,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
             ),
             Text(
               'MATERIAIS',
+              textScaleFactor: .7,
               style: TextStyle(color: Colors.black54),
             ),
           ],
@@ -403,7 +445,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                 controller: txtControlPrecoUnidade,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'R\$ ',
+                  prefixText: 'R\$ ',
                   labelText: 'VALOR UNITARIO:',
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -510,30 +552,64 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           padding: EdgeInsets.all(15),
                         ),
                         onPressed: () async {
-                          listaDeItens.invoices[index].items.add(
-                              new InvoiceItem(
-                                  tipo: _radioValue == 0
-                                      ? dropdownValue.toString()
-                                      : 'Relação de Material',
-                                  description: _radioValue == 0
-                                      ? dropdownValue2.toString()
-                                      : txtControlDescricao.text,
-                                  unidade: dropdownValue3,
-                                  date: DateTime.now().toString(),
-                                  quantity:
-                                      int.parse(txtControlQuantidade.text),
-                                  unitPrice: (_radioValue == 1 &&
-                                          txtControlPrecoUnidade.text.isEmpty)
-                                      ? 0
-                                      : double.parse(
-                                          txtControlPrecoUnidade.text)));
+                          if (_radioValue == 0) {
+                            if (txtControlTipo.text.isNotEmpty &&
+                                txtControlDescricao.text.isNotEmpty) {
+                              listaDeItens.invoices[index].items.add(
+                                  new InvoiceItem(
+                                      tipo: _radioValue == 0
+                                          ? txtControlTipo.text
+                                              .toString()
+                                              .toUpperCase()
+                                          : 'REL. DE MATERIAL',
+                                      description: _radioValue == 0
+                                          ? txtControlDescricao.text
+                                              .toUpperCase()
+                                          : txtControlDescricao.text
+                                              .toUpperCase(),
+                                      unidade: dropdownValue3,
+                                      date: DateTime.now()
+                                          .toString()
+                                          .toUpperCase(),
+                                      quantity: double.parse(
+                                          txtControlQuantidade.text),
+                                      unitPrice: (_radioValue == 1 &&
+                                              txtControlPrecoUnidade
+                                                  .text.isEmpty)
+                                          ? 0
+                                          : txtControlPrecoUnidade
+                                              .numberValue));
+                            }
+                          } else {
+                            listaDeItens.invoices[index].items.add(
+                                new InvoiceItem(
+                                    tipo: _radioValue == 0
+                                        ? txtControlTipo.text
+                                            .toString()
+                                            .toUpperCase()
+                                        : 'REL. DE MATERIAL',
+                                    description: _radioValue == 0
+                                        ? txtControlDescricao.text.toUpperCase()
+                                        : txtControlDescricao.text
+                                            .toUpperCase(),
+                                    unidade: dropdownValue3,
+                                    date:
+                                        DateTime.now().toString().toUpperCase(),
+                                    quantity:
+                                        double.parse(txtControlQuantidade.text),
+                                    unitPrice: (_radioValue == 1 &&
+                                            txtControlPrecoUnidade.text.isEmpty)
+                                        ? 0
+                                        : txtControlPrecoUnidade.numberValue));
+                          }
 
                           dropdownValue = null;
                           dropdownValue2 = null;
-                          dropdownValue3 = null;
+                          dropdownValue3 = unidadeServico[4];
                           txtControlDescricao.clear();
                           txtControlPrecoUnidade.clear();
                           txtControlQuantidade.clear();
+                          txtControlTipo.clear();
                           FocusScope.of(context).requestFocus(new FocusNode());
                           setState(() {});
                         },
@@ -559,6 +635,17 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

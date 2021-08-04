@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+10
+version: 2.0.1+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -30,10 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # create pdf document
-  pdf: ^3.1.0
+  pdf: ^3.4.2
 
   # save file
-  path_provider: ^2.0.1
+  path_provider: ^2.0.2
 
   # open pdf document
   open_file: ^3.1.0
@@ -42,12 +42,23 @@ dependencies:
   intl: ^0.17.0
 
   # mudar os icones
-  flutter_launcher_icons: ^0.9.0
+  flutter_launcher_icons: ^0.9.1
   
   # salvar as listas no celular
   shared_preferences: ^2.0.6
 
+  # mask values
+  extended_masked_text: ^2.2.1
+
+  # mask currency
+  money2: ^2.2.1
+
+  # PADRAO CAMPOS BR
+  brasil_fields: ^1.1.4
+
   google_fonts: ^2.1.0
+
+  pdf_merger: ^0.0.6
 
 
 dev_dependencies:
@@ -56,7 +67,7 @@ dev_dependencies:
 
 flutter_icons:
   android: "launcher_icon"
-  ios: true
+  ios: false
   image_path: "assets/icon/icon.png"
   adaptive_icon_background: "assets/icon/background.png"
   adaptive_icon_foreground: "assets/icon/foreground.png"
@@ -78,8 +89,16 @@ flutter:
     - assets/imagens/telalaranja.jpg
     - assets/imagens/logo.png
     - assets/imagens/splash.jpg
+    - assets/imagens/menu.jpg
 
-    - assets/orcamentoPag1.png
+    #imagens PDF
+    - assets/pdf/orcamento/orcamento_top.jpg
+    - assets/pdf/orcamento/orcamento_bottom.jpg
+
+    - assets/pdf/pedido/pedido_top.jpg
+    - assets/pdf/pedido/pedido_bottom.jpg
+
+    - assets/orcamentoPag1.jpg
     - assets/orcamentoPdfTop.jpg
     - assets/orcamentoPdfTopPage2.jpg
 

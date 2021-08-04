@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:formulario_pdf/model/supplier.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +9,16 @@ import 'model/customer.dart';
 
 import 'item_add_page.dart';
 import 'model/invoice.dart';
+
+var txtControlCliente = TextEditingController();
+var txtControlDoc = TextEditingController();
+var txtControlInscEst = TextEditingController();
+var txtControlRazaoSocial = TextEditingController();
+
+var txtControlEnd = TextEditingController();
+var txtControlBairro = TextEditingController();
+var txtControlCidade = TextEditingController();
+var txtControlTelefone = TextEditingController();
 
 class TelaCliente extends StatefulWidget {
   final int id;
@@ -18,28 +30,16 @@ class TelaCliente extends StatefulWidget {
 
 class _TelaClienteState extends State<TelaCliente> {
   Widget build(BuildContext context) {
-    final txtControlCliente = TextEditingController();
-    final txtControlDoc = TextEditingController();
-    final txtControlInscEst = TextEditingController();
-    final txtControlRazaoSocial = TextEditingController();
-
-    final txtControlEnd = TextEditingController();
-    final txtControlBairro = TextEditingController();
-    final txtControlCidade = TextEditingController();
-    final txtControlTelefone = TextEditingController();
     @override
-    void dispose() {
-      // Clean up the controller when the widget is disposed.
-      txtControlCliente.dispose();
-      txtControlDoc.dispose();
-      super.dispose();
-    }
-
     caixaTexto(TextEditingController txtControl, String texto,
-        TextInputType tipoTeclado) {
+        TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
       return Padding(
         padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
         child: TextFormField(
+          inputFormatters: formatadorTexto,
+          onChanged: (text) {
+            setState(() {});
+          },
           keyboardType: tipoTeclado,
           controller: txtControl,
           obscureText: false,
@@ -104,11 +104,14 @@ class _TelaClienteState extends State<TelaCliente> {
               ),
             ),
           ),
-          caixaTexto(txtControlCliente, 'Cliente: ', TextInputType.name),
-          caixaTexto(txtControlDoc, 'CPF/CNPJ: ', TextInputType.number),
-          caixaTexto(txtControlInscEst, 'INSC. EST.: ', TextInputType.number),
-          caixaTexto(
-              txtControlRazaoSocial, 'RAZÃO SOCIAL: ', TextInputType.text),
+          caixaTexto(txtControlCliente, 'Cliente: ', TextInputType.name,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlDoc, 'CPF/CNPJ: ', TextInputType.number,
+              [FilteringTextInputFormatter.digitsOnly, CpfOuCnpjFormatter()]),
+          caixaTexto(txtControlInscEst, 'INSC. EST.: ', TextInputType.number,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlRazaoSocial, 'RAZÃO SOCIAL: ',
+              TextInputType.text, [UpperCaseTextFormatter()]),
           Divider(
             height: 25,
             thickness: 1,
@@ -116,28 +119,35 @@ class _TelaClienteState extends State<TelaCliente> {
             endIndent: 25,
             //color: Color(0xFFFF7E00),
           ),
-          caixaTexto(txtControlEnd, 'ENDEREÇO: ', TextInputType.text),
-          caixaTexto(txtControlBairro, 'BAIRRO: ', TextInputType.text),
-          caixaTexto(txtControlCidade, 'CIDADE: ', TextInputType.text),
-          caixaTexto(txtControlTelefone, 'TELEFONE: ', TextInputType.phone),
+          caixaTexto(txtControlEnd, 'ENDEREÇO: ', TextInputType.text,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlBairro, 'BAIRRO: ', TextInputType.text,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlCidade, 'CIDADE: ', TextInputType.text,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlTelefone, 'TELEFONE: ', TextInputType.phone, [
+            FilteringTextInputFormatter.digitsOnly,
+            TelefoneInputFormatter()
+          ]),
         ],
       ),
       floatingActionButton: Visibility(
+        visible: txtControlCliente.text.isNotEmpty,
         child: FloatingActionButton(
           elevation: 8,
           child: Icon(Icons.navigate_next),
-          onPressed: () async {
+          onPressed: () {
             int index = listaDeItens.invoices
                 .indexWhere((Invoice element) => element.id == widget.id);
 
             listaDeItens.invoices[index].customer = Customer(
-                name: txtControlCliente.text,
+                name: txtControlCliente.text.toUpperCase(),
                 doc: txtControlDoc.text,
                 inscEst: txtControlInscEst.text,
-                razaoSocial: txtControlRazaoSocial.text,
-                clienteEndereco: txtControlEnd.text,
-                clienteBairro: txtControlBairro.text,
-                clienteCidade: txtControlCidade.text,
+                razaoSocial: txtControlRazaoSocial.text.toUpperCase(),
+                clienteEndereco: txtControlEnd.text.toUpperCase(),
+                clienteBairro: txtControlBairro.text.toUpperCase(),
+                clienteCidade: txtControlCidade.text.toUpperCase(),
                 clienteTelefone: txtControlTelefone.text);
 
             listaDeItens.invoices[index].items = <InvoiceItem>[];
@@ -153,10 +163,21 @@ class _TelaClienteState extends State<TelaCliente> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemAdd_Page(id: widget.id)));
+                    builder: (context) => ItemAddPage(id: widget.id)));
           },
         ),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

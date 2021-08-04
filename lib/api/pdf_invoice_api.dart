@@ -1,25 +1,49 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:formulario_pdf/api/pdf_api.dart';
 import 'package:formulario_pdf/model/customer.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/supplier.dart';
 import 'package:formulario_pdf/utils.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
+import 'package:path_provider/path_provider.dart';
+
+import 'package:pdf_merger/pdf_merger.dart';
+
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
     final pdf = Document();
+    final pdf2 = Document();
 
-    final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.png'))
+    final pdfF = Document();
+
+    final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
         .buffer
         .asUint8List();
 
-    final imagemCabecalho =
-        (await rootBundle.load('assets/orcamentoPdfTop.jpg'))
+    final orcamentoTopImage =
+        (await rootBundle.load('assets/pdf/orcamento/orcamento_top.jpg'))
+            .buffer
+            .asUint8List();
+
+    final orcamentoBottomImage =
+        (await rootBundle.load('assets/pdf/orcamento/orcamento_bottom.jpg'))
+            .buffer
+            .asUint8List();
+
+    final pedidoTopImage =
+        (await rootBundle.load('assets/pdf/pedido/pedido_top.jpg'))
+            .buffer
+            .asUint8List();
+
+    final pedidoBottomImage =
+        (await rootBundle.load('assets/pdf/pedido/pedido_bottom.jpg'))
             .buffer
             .asUint8List();
 
@@ -28,29 +52,26 @@ class PdfInvoiceApi {
             .buffer
             .asUint8List();
 
-    final imagemBaixo = (await rootBundle.load('assets/orcamentoBottom.jpg'))
-        .buffer
-        .asUint8List();
-
     pdf.addPage(MultiPage(
       pageTheme: PageTheme(
-          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 70),
+          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 20),
           pageFormat: PdfPageFormat.a4,
-          buildBackground: (context) {
+          buildBackground: (Context context) {
             return FullPage(
                 ignoreMargins: true, child: Image(MemoryImage(imagemFundo)));
           }),
-      build: (context) => [
+      build: (Context context1) => [
         //SizedBox(height: 1 * PdfPageFormat.cm),
-        buildHeader(invoice, imagemCabecalho),
+        buildHeader(invoice, orcamentoTopImage),
         SizedBox(height: .5 * PdfPageFormat.cm),
         //buildTitle(invoice),
-        buildInvoice(invoice, imagemCabecalho2, context),
+        buildInvoice(invoice, imagemCabecalho2, context1),
         //Divider(),
-        buildTotal(invoice),
+        buildTotal(invoice, false),
+        //buildObsText(invoice),
       ],
       header: (context) {
-        if (context.pageNumber >= 2) {
+        if (pdf.document.pdfPageList.pages.length > 9) {
           return Container(
               width: PdfPageFormat.a4.width / 4,
               child: Image(MemoryImage(imagemCabecalho2)));
@@ -58,19 +79,57 @@ class PdfInvoiceApi {
           return Container();
         }
       },
-      footer: (context) => buildFooter(invoice, imagemBaixo, context),
+      footer: (context) {
+        return buildFooter(invoice, orcamentoBottomImage, context);
+      },
     ));
 
-    return PdfApi.saveDocument(name: 'pdf_gerado.pdf', pdf: pdf);
+    if (invoice.pedido) {
+      pdf2.addPage(MultiPage(
+        pageTheme: PageTheme(
+            margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 20),
+            pageFormat: PdfPageFormat.a4,
+            buildBackground: (Context context1) {
+              return FullPage(
+                  ignoreMargins: true, child: Image(MemoryImage(imagemFundo)));
+            }),
+        build: (Context context1) => [
+          //SizedBox(height: 1 * PdfPageFormat.cm),
+          buildHeader(invoice, pedidoTopImage),
+          SizedBox(height: .5 * PdfPageFormat.cm),
+          //buildTitle(invoice),
+          buildInvoice(invoice, imagemCabecalho2, context1),
+          //Divider(),
+          buildTotal(invoice, true),
+          //buildObsText(invoice),
+        ],
+        header: (Context context1) {
+          if (context1.pageNumber > 9) {
+            return Container(
+                width: PdfPageFormat.a4.width / 4,
+                child: Image(MemoryImage(imagemCabecalho2)));
+          } else {
+            return Container();
+          }
+        },
+        footer: (Context context1) =>
+            buildFooter2(invoice, pedidoBottomImage, context1),
+      ));
+    }
+
+    //PdfMerger.mergeMultiplePDF(paths: [], outputDirPath: outputDirPath)
+    return PdfApi.saveDocument(
+        name: 'pdf_gerado.pdf', name2: 'pdf_gerado2.pdf', pdf: pdf, pdf2: pdf2);
   }
 
   static Widget buildHeader(Invoice invoice, Uint8List imgCabeca) => Column(
         children: [
           //SizedBox(height: 3.9 * PdfPageFormat.cm),
-
           Container(
               width: PdfPageFormat.a4.width,
               child: Image(MemoryImage(imgCabeca))),
+
+          SizedBox(height: 1 * PdfPageFormat.cm),
 
           Container(
               width: PdfPageFormat.a4.width,
@@ -105,7 +164,8 @@ class PdfInvoiceApi {
             ),
             Flexible(
               flex: 4,
-              child: itemCabecalho('Data: 26/07/2021'),
+              child: itemCabecalho(
+                  'Data: ' + DateFormat('dd/MM/yyyy').format(DateTime.now())),
             ),
           ]),
           SizedBox(height: 1),
@@ -235,9 +295,14 @@ class PdfInvoiceApi {
 
       return [
         //   Utils.formatDate(item.date),
-        '${item.quantity}', item.unidade, item.tipo, item.description,
-        'R\$ ${item.unitPrice!.toStringAsFixed(2)}',
-        'R\$ ${total.toStringAsFixed(2)}',
+        '${item.quantity}',
+        item.unidade,
+        item.tipo,
+        item.description,
+        item.unitPrice != 0
+            ? '${Utils.formatarValor(item.unitPrice!)}'
+            : 'MATERIAL',
+        total != 0 ? '${Utils.formatarValor(total)}' : 'MATERIAL',
       ];
     }).toList();
 
@@ -265,8 +330,8 @@ class PdfInvoiceApi {
               topLeft: Radius.circular(5) //         <--- border radius here
               ),
         ),
-        cellHeight: 7,
-        cellStyle: pw.TextStyle(fontSize: 5),
+        cellHeight: 5,
+        cellStyle: TextStyle(fontSize: 7),
         columnWidths: {
           0: FlexColumnWidth(2),
           1: FlexColumnWidth(2),
@@ -276,58 +341,126 @@ class PdfInvoiceApi {
           5: FlexColumnWidth(5),
         },
         cellAlignments: {
-          0: Alignment.center,
-          1: Alignment.center,
-          2: Alignment.center,
-          3: Alignment.center,
-          4: Alignment.center,
-          5: Alignment.center,
+          0: Alignment.centerLeft,
+          1: Alignment.centerLeft,
+          2: Alignment.centerLeft,
+          3: Alignment.centerLeft,
+          4: Alignment.centerLeft,
+          5: Alignment.centerLeft,
         },
       ),
     );
   }
 
-  static Widget buildTotal(Invoice invoice) {
+  static Widget buildTotal(Invoice invoice, bool pedid) {
     final netTotal = invoice.items
         .map((item) => item.unitPrice! * item.quantity!.toInt())
         .reduce((item1, item2) => item1 + item2);
     final total = netTotal;
 
-    return Container(
-      alignment: Alignment.centerRight,
-      child: Row(
-        children: [
-          Spacer(flex: 6),
-          Expanded(
-            flex: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 10),
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: PdfColor(1, .5, .1), width: .5),
-                      borderRadius: BorderRadius.all(Radius.circular(
-                              5.0) //         <--- border radius here
-                          ),
-                    ),
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: buildText(
-                          title: 'Total: ',
-                          titleStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          value: Utils.formatPrice(total),
-                          unite: true,
-                        ))),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    if (!pedid) {
+      return Container(
+        alignment: Alignment.topCenter,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 4,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        height: 50,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: PdfColor.fromHex('FDF0E7'),
+                          border:
+                              Border.all(color: PdfColor(1, .5, .1), width: .5),
+                          borderRadius: BorderRadius.all(Radius.circular(
+                                  5.0) //         <--- border radius here
+                              ),
+                        ),
+                        child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                                'Observações: ${invoice.observacoesPedido}',
+                                style: TextStyle(fontSize: 6))),
+                      ),
+                    ])),
+            Spacer(flex: 2),
+            Expanded(
+              flex: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Container(
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: PdfColor(1, .5, .1), width: .5),
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                5.0) //         <--- border radius here
+                            ),
+                      ),
+                      child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: buildText(
+                            title: 'Total: ',
+                            titleStyle: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            value: Utils.formatarValor(total),
+                            unite: true,
+                          ))),
+                  Container(
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: PdfColor(1, .5, .1), width: .5),
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                5.0) //         <--- border radius here
+                            ),
+                      ),
+                      child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: buildText(
+                            title: 'Cond. Pag.: ',
+                            titleStyle: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            value: invoice.metPagamento,
+                            unite: true,
+                          )))
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  static Widget buildObsText(Invoice invoice) {
+    return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+      Container(
+          alignment: Alignment.topLeft,
+          height: 50,
+          width: 200,
+          decoration: BoxDecoration(
+            color: PdfColor.fromHex('FDF0E7'),
+            border: Border.all(color: PdfColor(1, .5, .1), width: .5),
+            borderRadius: BorderRadius.all(
+                Radius.circular(5.0) //         <--- border radius here
+                ),
+          ))
+    ]);
   }
 
   static Widget buildFooter(
@@ -336,6 +469,57 @@ class PdfInvoiceApi {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [Container(child: Image(MemoryImage(imagem)))],
+      );
+    } else
+      return Text('');
+  }
+
+  static Widget buildFooter2(
+      Invoice invoice, Uint8List imagem, Context context) {
+    if (context.pagesCount == context.pageNumber) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+              alignment: pw.Alignment.center,
+              height: 250,
+              child: Stack(alignment: Alignment.center, children: [
+                Image(MemoryImage(imagem)),
+                Align(
+                    alignment: Alignment(.9, .097),
+                    child: Text(invoice.prazoServico,
+                        textScaleFactor: .55, textAlign: TextAlign.right)),
+                Align(
+                    alignment: Alignment(.9, -.05),
+                    child: Text(invoice.metPagamento,
+                        textScaleFactor: .55, textAlign: TextAlign.right)),
+                Align(
+                    alignment: Alignment(.9, -.2),
+                    child: Text(Utils.formatarValor(invoice.valorTotal),
+                        textScaleFactor: .55,
+                        textAlign: TextAlign.right,
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                Align(
+                    alignment: Alignment(.9, -.75),
+                    child: Container(
+                      width: 180,
+                      height: 25,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(invoice.customer!.name,
+                                textScaleFactor: .8,
+                                style:
+                                    pw.TextStyle(color: PdfColor(.5, .5, .5))),
+                            Text(invoice.customer!.doc,
+                                textScaleFactor: .7,
+                                style: pw.TextStyle(
+                                    color: PdfColor(.5, .5, .5),
+                                    fontWeight: FontWeight.bold)),
+                          ]),
+                    ))
+              ]))
+        ],
       );
     } else
       return Text('');

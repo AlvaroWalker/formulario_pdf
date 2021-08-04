@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/gerando_pdf_pag.dart';
 import 'package:formulario_pdf/model/invoice.dart';
-import 'package:formulario_pdf/tela_inicial.dart';
+import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api/pdf_api.dart';
-import 'api/pdf_invoice_api.dart';
 import 'variaveis.dart';
+
+final real = Currency.create('Real', 2,
+    symbol: 'R\$', invertSeparators: true, pattern: 'S #.##0,00');
 
 double valorTotal = 0;
 
@@ -18,14 +20,14 @@ List itens = [];
 
 double textSize = .8;
 
-class ItemAddPage extends StatefulWidget {
+class ItemListPage extends StatefulWidget {
   final int indexOfItem;
-  ItemAddPage({Key? key, required this.indexOfItem}) : super(key: key);
+  ItemListPage({Key? key, required this.indexOfItem}) : super(key: key);
   @override
-  _ItemAddPageState createState() => _ItemAddPageState();
+  _ItemListPageState createState() => _ItemListPageState();
 }
 
-class _ItemAddPageState extends State<ItemAddPage> {
+class _ItemListPageState extends State<ItemListPage> {
   void atualiza() {
     setState(() {});
   }
@@ -34,7 +36,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
       BuildContext context, InvoiceItem item, int lsindex) async {
     //String dropdownValue = opcoes[1];
     final TextEditingController _controller1 = TextEditingController();
-    final TextEditingController _controller2 = TextEditingController();
+    final MoneyMaskedTextController _controller2 = MoneyMaskedTextController();
 
     _controller1.text = item.quantity.toString();
 
@@ -46,7 +48,12 @@ class _ItemAddPageState extends State<ItemAddPage> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            title: Text(item.description.toString()),
+            title: Column(
+              children: [
+                Text(item.tipo.toString()),
+                Text(item.description.toString()),
+              ],
+            ),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
@@ -54,6 +61,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
                         controller: _controller1,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             labelText: 'Quantidade',
                             border: OutlineInputBorder())),
@@ -61,9 +69,12 @@ class _ItemAddPageState extends State<ItemAddPage> {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: _controller2,
                       decoration: InputDecoration(
-                          labelText: 'Preço', border: OutlineInputBorder()),
+                          prefixText: 'R\$ ',
+                          labelText: 'Preço',
+                          border: OutlineInputBorder()),
                     ),
                   ),
                 ],
@@ -89,10 +100,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
                               .items[lsindex].unidade,
                           date: listaDeItens
                               .invoices[widget.indexOfItem].items[lsindex].date,
-                          quantity: int.parse(_controller1.text),
-                          unitPrice: double.parse(_controller2.text))
+                          quantity: double.parse(_controller1.text),
+                          unitPrice: _controller2.numberValue)
                     ]);
-                    print(_controller1.text);
+                    //print(_controller1.text);
                     atualiza();
                     Navigator.of(context).pop();
                   },
@@ -108,7 +119,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
   Widget build(BuildContext context) {
     if (listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.indexOfItem].items
-          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toInt())
+          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
           .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
@@ -149,20 +160,56 @@ class _ItemAddPageState extends State<ItemAddPage> {
                               setState(() {});
                             },
                             child: ListTile(
-                              title: Text(listaDeItens
-                                  .invoices[widget.indexOfItem]
-                                  .items[index]
-                                  .description
-                                  .toString()),
+                              title: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(listaDeItens.invoices[widget.indexOfItem]
+                                      .items[index].tipo
+                                      .toString()),
+                                  Text(listaDeItens.invoices[widget.indexOfItem]
+                                      .items[index].description
+                                      .toString()),
+                                ],
+                              ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                       'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
                                   Text(
-                                      'Preço Unitario: R\$ ${listaDeItens.invoices[widget.indexOfItem].items[index].unitPrice}'),
-                                  Text(
-                                      'Preço Total: R\$ ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity! * listaDeItens.invoices[widget.indexOfItem].items[index].unitPrice!.toDouble()}'),
+                                    listaDeItens.invoices[widget.indexOfItem]
+                                                .items[index].unitPrice! !=
+                                            0
+                                        ? Money.from(
+                                                listaDeItens
+                                                    .invoices[
+                                                        widget.indexOfItem]
+                                                    .items[index]
+                                                    .unitPrice!
+                                                    .toDouble(),
+                                                real)
+                                            .toString()
+                                        : '',
+                                  ),
+                                  Text(listaDeItens.invoices[widget.indexOfItem]
+                                              .items[index].unitPrice! !=
+                                          0
+                                      ? Money.from(
+                                              listaDeItens
+                                                      .invoices[
+                                                          widget.indexOfItem]
+                                                      .items[index]
+                                                      .quantity! *
+                                                  listaDeItens
+                                                      .invoices[
+                                                          widget.indexOfItem]
+                                                      .items[index]
+                                                      .unitPrice!
+                                                      .toDouble(),
+                                              real)
+                                          .toString()
+                                      : ''),
                                 ],
                               ),
                               trailing: IconButton(
@@ -190,7 +237,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
                 : Container(),
           ),
           Text(
-            'TOTAL ORÇADO: R\$ ${valorTotal.toStringAsFixed(2)}',
+            'TOTAL ORÇADO:  ${Money.from(valorTotal, real).toString()}',
             style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.bold,
@@ -292,6 +339,11 @@ class _ItemAddPageState extends State<ItemAddPage> {
     prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
 
     //showWaitDialog();
+
+    //final pdfFile =
+    //    await PdfInvoiceApi.generate(listaDeItens.invoices[widget.indexOfItem]);
+
+    //PdfApi.openFile(pdfFile);
 
     Navigator.push(
             context,

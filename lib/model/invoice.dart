@@ -5,6 +5,9 @@ class Invoice {
   int id = 0;
   bool pedido = false;
   double valorTotal = 0;
+  String metPagamento = '';
+  String observacoesPedido = '';
+  String prazoServico = '';
   InvoiceInfo? info;
   Supplier? supplier;
   Customer? customer;
@@ -14,6 +17,9 @@ class Invoice {
     required this.id,
     this.pedido = false,
     this.valorTotal = 0,
+    this.metPagamento = '',
+    this.observacoesPedido = '',
+    this.prazoServico = '',
     this.info,
     this.supplier,
     this.customer,
@@ -23,6 +29,9 @@ class Invoice {
     id = json['id'];
     pedido = json['pedido'];
     valorTotal = json['valorTotal'];
+
+    metPagamento = json['metPagamento'];
+    prazoServico = json['prazoServico'];
     info = json['InvoiceInfo'] != null
         ? new InvoiceInfo.fromJson(json['InvoiceInfo'])
         : null;
@@ -45,6 +54,8 @@ class Invoice {
     data['id'] = this.id;
     data['pedido'] = this.pedido;
     data['valorTotal'] = this.valorTotal;
+    data['metPagamento'] = this.metPagamento;
+    data['prazoServico'] = this.prazoServico;
     if (this.info != null) {
       data['InvoiceInfo'] = this.info?.toJson();
     }
@@ -93,7 +104,7 @@ class InvoiceItem {
   String? description;
   String? unidade;
   String? date;
-  int? quantity;
+  double? quantity;
   double? unitPrice;
 
   InvoiceItem({

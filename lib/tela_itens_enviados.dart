@@ -1,6 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:formulario_pdf/model/invoicelist.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:formulario_pdf/item_list_page.dart';
+import 'package:formulario_pdf/model/invoicelist.dart';
+import 'package:formulario_pdf/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'item_add_page.dart';
 import 'model/invoice.dart';
 import 'variaveis.dart';
 
@@ -45,7 +51,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               shadowColor: Color.fromARGB(0, 0, 0, 0),
               child: Center(
                   child: Text(listaDeItens.invoices.length != 0
-                      ? 'TOTAL EM ORÇAMENTOS: R\$ ${listaDeItens.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                      ? 'TOTAL EM ORÇAMENTOS: ${Utils.formatarValor(listaDeItens.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
                       : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
@@ -66,7 +72,18 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        //print(index);
+                        pdfVisualizado = false;
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ItemAddPage(
+                                      id: listaDeItens.invoices.indexWhere(
+                                          (Invoice element) =>
+                                              element.id ==
+                                              listaDeItens.invoices[index].id),
+                                      orcamentoEditar:
+                                          listaDeItens.invoices[index],
+                                    )));
                         setState(() {});
                       },
                       child: ListTile(
@@ -78,7 +95,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             Text(
                                 'Data: ${listaDeItens.invoices[index].info?.date}'),
                             Text(
-                                'Valor Total: R\$ ${listaDeItens.invoices[index].valorTotal}'),
+                                'Valor Total: ${Utils.formatarValor(listaDeItens.invoices[index].valorTotal)}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
@@ -86,10 +103,18 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         trailing: IconButton(
                           icon: Icon(
                             Icons.delete,
-                            color: Colors.deepOrange,
+                            //color: Colors.deepOrange,
                           ),
                           onPressed: () {
                             listaDeItens.invoices.removeAt(index);
+                            listaPedidos.invoices.clear();
+                            listaDeItens.invoices.forEach((element) {
+                              if (element.pedido == true) {
+                                listaPedidos.invoices.add(element);
+                              }
+                            });
+
+                            salvarPedido();
                             setState(() {});
                           },
                         ),
@@ -110,6 +135,12 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
   }
 
   Widget pedido() {
+    listaPedidos.invoices.clear();
+    listaDeItens.invoices.forEach((element) {
+      if (element.pedido == true) {
+        listaPedidos.invoices.add(element);
+      }
+    });
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -130,7 +161,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               shadowColor: Color.fromARGB(0, 0, 0, 0),
               child: Center(
                   child: Text(listaPedidos.invoices.length != 0
-                      ? 'TOTAL EM PEDIDOS: R\$ ${listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2)}'
+                      ? 'TOTAL EM PEDIDOS: ${Utils.formatarValor(listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
                       : 'NENHUM PEDIDO REGISTRADO')),
             ),
           ),
@@ -163,7 +194,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             Text(
                                 'Data: ${listaPedidos.invoices[index].info?.date}'),
                             Text(
-                                'Valor Total: R\$ ${listaPedidos.invoices[index].valorTotal}'),
+                                'Valor Total: ${Utils.formatarValor(listaPedidos.invoices[index].valorTotal)}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
@@ -181,7 +212,16 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
                             listaPedidos.invoices.removeAt(index);
 
-                            setState(() {});
+                            listaPedidos.invoices.clear();
+                            listaDeItens.invoices.forEach((element) {
+                              if (element.pedido == true) {
+                                listaPedidos.invoices.add(element);
+                              }
+                            });
+
+                            setState(() {
+                              salvarPedido();
+                            });
                           },
                         ),
                       ),
@@ -202,54 +242,58 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.transparent,
+      backgroundColor: Color.fromARGB(255, 210, 210, 210),
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
             elevation: 0,
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Radio(
-                  value: 0,
-                  groupValue: _radioValue,
-                  onChanged: (int? value) {
-                    _radioValue = value;
-                    setState(() {});
-                  },
+            backgroundColor: Colors.transparent,
+            bottom: const TabBar(
+              tabs: [
+                Tab(
+                  text: 'ORÇAMENTOS',
                 ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'ORÇAMENTOS\nGERADOS',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 15),
-                  ),
-                ),
-                Radio(
-                  value: 1,
-                  groupValue: _radioValue,
-                  onChanged: (int? value) {
-                    _radioValue = value;
-                    setState(() {});
-                  },
-                ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'PEDIDOS\nGERADOS',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 15),
-                  ),
+                Tab(
+                  text: 'PEDIDOS',
                 ),
               ],
-            )),
-        backgroundColor: Color.fromARGB(255, 210, 210, 210),
-        body: AnimatedCrossFade(
+            ),
+            title: const Text(''),
+          ),
+          body: TabBarView(
+            children: [
+              orcamento(),
+              pedido(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void salvarPedido() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    //print(jsonEncode(listaDeItens!.toJson()));
+    prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
+
+    //showWaitDialog();
+
+    //final pdfFile =
+    //    await PdfInvoiceApi.generate(listaDeItens.invoices[widget.indexOfItem]);
+
+    //PdfApi.openFile(pdfFile);
+  }
+}
+  
+
+/*
+AnimatedCrossFade(
           duration: const Duration(milliseconds: 250),
           firstChild: orcamento(),
           secondChild: pedido(),
           crossFadeState: _radioValue == 0
               ? CrossFadeState.showFirst
               : CrossFadeState.showSecond,
-        ));
-  }
-}
+        )*/

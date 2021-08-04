@@ -29,13 +29,8 @@ class _TelaInicioState extends State<TelaInicio> {
       if (listaDeItens.invoices[idNovoPedido].customer?.name == null) {
         listaDeItens.invoices.removeAt(idNovoPedido);
       }
-
-      if (pdfVisualizado == false && pdfGeneratedFile != null) {
-        PdfApi.openFile(pdfGeneratedFile);
-        pdfGeneratedFile = null;
-        pdfVisualizado = true;
-      }
     }
+    abrirPdf();
 
     return Stack(
       // <-- STACK AS THE SCAFFOLD PARENT
@@ -43,8 +38,8 @@ class _TelaInicioState extends State<TelaInicio> {
         Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(
-                  'assets/imagens/telalaranja.jpg'), // <-- BACKGROUND IMAGE
+              image:
+                  AssetImage('assets/imagens/menu.jpg'), // <-- BACKGROUND IMAGE
               fit: BoxFit.cover,
             ),
           ),
@@ -65,7 +60,7 @@ class _TelaInicioState extends State<TelaInicio> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: 75,
+                  height: 200,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
@@ -80,9 +75,9 @@ class _TelaInicioState extends State<TelaInicio> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       onPrimary: Colors.black87,
-                      primary: Colors.white,
+                      primary: Colors.grey,
                       shape: StadiumBorder(),
-                      minimumSize: Size(80, 50)),
+                      minimumSize: Size(70, 50)),
                   onPressed: () {
                     int indexOfId = 0;
                     novoId = 0;
@@ -116,16 +111,18 @@ class _TelaInicioState extends State<TelaInicio> {
                   },
                   child: Text(
                     'ORÇAMENTO',
-                    style: TextStyle(color: Colors.deepOrange, fontSize: 30),
+                    style: TextStyle(
+                        //color: Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 30),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       onPrimary: Colors.black87,
-                      primary: Colors.white,
+                      primary: Colors.grey,
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
                   onPressed: () {
@@ -161,11 +158,11 @@ class _TelaInicioState extends State<TelaInicio> {
                   },
                   child: Text(
                     'PEDIDO',
-                    style: TextStyle(color: Colors.deepOrange, fontSize: 30),
+                    style: TextStyle(fontSize: 30),
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 Divider(
                   thickness: 3,
@@ -201,5 +198,13 @@ class _TelaInicioState extends State<TelaInicio> {
         ),
       ],
     );
+  }
+
+  abrirPdf() async {
+    if (pdfGeneratedFile != null) {
+      await PdfApi.openFile(pdfGeneratedFile);
+      pdfGeneratedFile = null;
+      pdfVisualizado = true;
+    }
   }
 }
