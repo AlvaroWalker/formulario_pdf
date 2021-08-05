@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/invoicelist.dart';
 import 'package:formulario_pdf/tela_itens_enviados.dart';
 import 'package:formulario_pdf/variaveis.dart';
 
-import 'api/pdf_api.dart';
 import 'tela_cliente.dart';
 
 //InvoiceList? listaDeItens;
@@ -26,18 +23,9 @@ class TelaInicio extends StatefulWidget {
 
 class _TelaInicioState extends State<TelaInicio> {
   @override
-  @override
   Widget build(BuildContext context) {
-    if (listaDeItens.invoices.isNotEmpty) {
-      if (listaDeItens.invoices[idNovoPedido].customer?.name == null) {
-        listaDeItens.invoices.removeAt(idNovoPedido);
-      }
-    }
-    if (pdfGeneratedFile != null) {
-      PdfApi.openFile(pdfGeneratedFile);
-      pdfGeneratedFile = null;
-    }
-
+    listaDeItens.invoices
+        .removeWhere((element) => element.customer?.name == null);
     return Stack(
       // <-- STACK AS THE SCAFFOLD PARENT
       children: [
@@ -67,13 +55,6 @@ class _TelaInicioState extends State<TelaInicio> {
               children: [
                 Container(
                   height: 200,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/imagens/logo.png'), // <-- BACKGROUND IMAGE
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
                 ),
                 SizedBox(
                   height: 100,
@@ -84,7 +65,7 @@ class _TelaInicioState extends State<TelaInicio> {
                       primary: Colors.grey,
                       shape: StadiumBorder(),
                       minimumSize: Size(70, 50)),
-                  onPressed: () {
+                  onPressed: () async {
                     int indexOfId = 0;
                     novoId = 0;
                     if (listaDeItens.invoices.isEmpty) {
@@ -109,13 +90,13 @@ class _TelaInicioState extends State<TelaInicio> {
 
                     idNovoPedido = indexOfId;
 
-                    Navigator.push(
+                    await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TelaCliente(
                                   id: novoId,
                                   editing: false,
-                                ))).then((value) => setState(() {}));
+                                ))).then((value) => null);
                   },
                   child: Text(
                     'ORÇAMENTO',
@@ -133,7 +114,7 @@ class _TelaInicioState extends State<TelaInicio> {
                       primary: Colors.grey,
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
-                  onPressed: () {
+                  onPressed: () async {
                     int indexOfId = 0;
                     novoId = 0;
                     if (listaDeItens.invoices.isEmpty) {
@@ -158,13 +139,13 @@ class _TelaInicioState extends State<TelaInicio> {
 
                     idNovoPedido = indexOfId;
 
-                    Navigator.push(
+                    await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TelaCliente(
                                   id: novoId,
                                   editing: false,
-                                ))).then((value) => setState(() {}));
+                                )));
                   },
                   child: Text(
                     'PEDIDO',
@@ -191,8 +172,10 @@ class _TelaInicioState extends State<TelaInicio> {
                     if (listaDeItens.invoices.isEmpty) {
                       listaDeItens = InvoiceList(invoices: []);
                     }
+                    listaDeItens.invoices.removeWhere(
+                        (element) => element.customer?.name == null);
 
-                    Navigator.push(
+                    await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TelaItensEnviados()));
@@ -208,14 +191,5 @@ class _TelaInicioState extends State<TelaInicio> {
         ),
       ],
     );
-  }
-
-  abrirPdf() async {
-    print(pdfGeneratedFile);
-    if (pdfGeneratedFile != null) {
-      await PdfApi.openFile(pdfGeneratedFile);
-      pdfGeneratedFile = null;
-      pdfVisualizado = true;
-    }
   }
 }

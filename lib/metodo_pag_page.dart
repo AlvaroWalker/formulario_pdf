@@ -87,24 +87,9 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF7E00),
-                        width: 1,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      borderSide: BorderSide(
-                        //color: Color(0xFFFF7E00),
-                        width: 1,
-                      ),
-                    ),
-                    labelText: 'CONDIÇÃO DE PAGAMENTO',
-                  ),
+                  decoration: InputDecoration(labelText: 'METODO DE PAGAMENTO'),
                   value: dropDownValue,
                   onChanged: (String? value) {
                     setState(() {
@@ -118,39 +103,18 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: TextFormField(
                   inputFormatters: [UpperCaseTextFormatter()],
                   controller: txtControlPrazo,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
                     labelText: 'PRAZO DE EXECUÇÃO',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        //color: Color(0xFFFF7E00),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        //color: Color(0xFFFF7E00),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF7E00),
-                        width: 1,
-                      ),
-                    ),
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: TextFormField(
                   controller: textController,
                   obscureText: false,

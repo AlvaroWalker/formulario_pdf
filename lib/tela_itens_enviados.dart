@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:formulario_pdf/item_list_page.dart';
 import 'package:formulario_pdf/model/invoicelist.dart';
+import 'package:formulario_pdf/theme/custom_theme.dart';
 import 'package:formulario_pdf/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +10,6 @@ import 'item_add_page.dart';
 import 'model/invoice.dart';
 import 'variaveis.dart';
 
-int? _radioValue = 0;
 InvoiceList listaPedidos = InvoiceList(invoices: []);
 
 class TelaItensEnviados extends StatefulWidget {
@@ -182,7 +181,17 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        //print(index);
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ItemAddPage(
+                                      id: listaDeItens.invoices.indexWhere(
+                                          (Invoice element) =>
+                                              element.id ==
+                                              listaDeItens.invoices[index].id),
+                                      orcamentoEditar:
+                                          listaDeItens.invoices[index],
+                                    )));
                         setState(() {});
                       },
                       child: ListTile(
@@ -247,9 +256,12 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            foregroundColor: CustomTheme.lightTheme.accentColor,
             elevation: 0,
             backgroundColor: Colors.transparent,
-            bottom: const TabBar(
+            bottom: TabBar(
+              indicatorColor: CustomTheme.lightTheme.accentColor,
+              labelColor: CustomTheme.lightTheme.accentColor,
               tabs: [
                 Tab(
                   text: 'ORÇAMENTOS',

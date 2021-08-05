@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'api/pdf_api.dart';
 import 'api/pdf_invoice_api.dart';
 import 'variaveis.dart';
 
@@ -62,9 +63,12 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
     final pdfFile =
         await PdfInvoiceApi.generate(listaDeItens.invoices[widget.index]);
 
+    await PdfApi.openFile(pdfFile)
+        .then((value) => Navigator.popUntil(context, (route) => route.isFirst));
+
     pdfGeneratedFile = pdfFile;
     //pdfVisualizado = false;
 
-    Navigator.popUntil(context, (route) => route.isFirst);
+    //Navigator.popUntil(context, (route) => route.isFirst);
   }
 }

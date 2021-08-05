@@ -7,6 +7,8 @@ import 'package:formulario_pdf/tela_inicial.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'theme/custom_theme.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -42,11 +44,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: title,
-        theme: ThemeData(
-          //primaryColor: Color(0xFFFFD000),
-          primarySwatch: Colors.orange,
-          backgroundColor: Color.fromARGB(255, 210, 210, 210),
-        ),
+        theme: CustomTheme.lightTheme,
         home: TelaInicio(),
         //home: MetodoPagamentoPage(),
       );

@@ -45,36 +45,7 @@ class _TelaClienteState extends State<TelaCliente> {
           keyboardType: tipoTeclado,
           controller: txtControl,
           obscureText: false,
-          decoration: InputDecoration(
-            labelText: texto,
-            labelStyle: TextStyle(
-              fontFamily: 'Poppins',
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                //color: Color(0xFFFF7E00),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF7E00),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-          ),
+          decoration: InputDecoration(labelText: texto),
           style: TextStyle(
             fontFamily: 'Poppins',
           ),

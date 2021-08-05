@@ -217,27 +217,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
                   }),
               contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
               labelText: 'TIPO DE SERVIÇO',
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-              ),
             ),
           ),
         ),
@@ -264,27 +243,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
                   }),
               contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
               labelText: 'DESCRIÇÃO DO SERVIÇO',
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-              ),
             ),
           ),
         ),
@@ -447,27 +405,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
                 decoration: InputDecoration(
                   prefixText: 'R\$ ',
                   labelText: 'VALOR UNITARIO:',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      //color: Color(0xFFFF7E00),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      //color: Color(0xFFFF7E00),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide(
-                      color: Color(0xFFFF7E00),
-                      width: 1,
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -485,27 +422,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
                           labelText: 'QUANTIDADE:',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              //color: Color(0xFFFF7E00),
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              //color: Color(0xFFFF7E00),
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            borderSide: BorderSide(
-                              color: Color(0xFFFF7E00),
-                              width: 1,
-                            ),
-                          ),
                         ),
                       ),
                     ),
@@ -515,19 +431,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
                     padding: const EdgeInsets.all(3),
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFFF7E00),
-                            width: 1,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(
-                            //color: Color(0xFFFF7E00),
-                            width: 1,
-                          ),
-                        ),
                         labelText: 'UNIDADE',
                       ),
                       value: dropdownValue3,
