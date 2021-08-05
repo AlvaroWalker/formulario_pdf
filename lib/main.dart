@@ -7,8 +7,6 @@ import 'package:formulario_pdf/tela_inicial.dart';
 import 'package:formulario_pdf/variaveis.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:money2/money2.dart';
-
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([

@@ -4,6 +4,7 @@ import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/gerando_pdf_pag.dart';
 import 'package:formulario_pdf/model/invoice.dart';
+import 'package:formulario_pdf/tela_cliente.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -295,7 +296,17 @@ class _ItemListPageState extends State<ItemListPage> {
                     ),
                     Flexible(
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TelaCliente(
+                                            id: listaDeItens
+                                                .invoices[widget.indexOfItem]
+                                                .id,
+                                            editing: true,
+                                          ))).then((value) => null);
+                            },
                             icon: Icon(Icons.mode_edit_outline_outlined)))
                   ],
                 ),

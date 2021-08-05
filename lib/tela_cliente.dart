@@ -22,7 +22,9 @@ var txtControlTelefone = TextEditingController();
 
 class TelaCliente extends StatefulWidget {
   final int id;
-  const TelaCliente({Key? key, required this.id}) : super(key: key);
+  final bool? editing;
+  const TelaCliente({Key? key, required this.id, this.editing})
+      : super(key: key);
 
   @override
   _TelaClienteState createState() => _TelaClienteState();
@@ -136,7 +138,7 @@ class _TelaClienteState extends State<TelaCliente> {
         child: FloatingActionButton(
           elevation: 8,
           child: Icon(Icons.navigate_next),
-          onPressed: () {
+          onPressed: () async {
             int index = listaDeItens.invoices
                 .indexWhere((Invoice element) => element.id == widget.id);
 
@@ -149,21 +151,25 @@ class _TelaClienteState extends State<TelaCliente> {
                 clienteBairro: txtControlBairro.text.toUpperCase(),
                 clienteCidade: txtControlCidade.text.toUpperCase(),
                 clienteTelefone: txtControlTelefone.text);
+            if (widget.editing == true) {
+              Navigator.pop(context);
+            } else {
+              listaDeItens.invoices[index].items = <InvoiceItem>[];
+              listaDeItens.invoices[index].supplier = Supplier(
+                  name: 'name', address: 'address', paymentInfo: 'paymentInfo');
+              listaDeItens.invoices[index].info = InvoiceInfo(
+                  description: 'description',
+                  number: 'number',
+                  date: DateFormat('dd-MM-yyyy')
+                      .format(DateTime.now())
+                      .toString(),
+                  dueDate: 'dueDate');
 
-            listaDeItens.invoices[index].items = <InvoiceItem>[];
-            listaDeItens.invoices[index].supplier = Supplier(
-                name: 'name', address: 'address', paymentInfo: 'paymentInfo');
-            listaDeItens.invoices[index].info = InvoiceInfo(
-                description: 'description',
-                number: 'number',
-                date:
-                    DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
-                dueDate: 'dueDate');
-
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ItemAddPage(id: widget.id)));
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ItemAddPage(id: widget.id)));
+            }
           },
         ),
       ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
+
 import 'package:flutter/services.dart';
 import 'package:formulario_pdf/api/pdf_api.dart';
 import 'package:formulario_pdf/model/customer.dart';
@@ -12,16 +12,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
-import 'package:path_provider/path_provider.dart';
-
-import 'package:pdf_merger/pdf_merger.dart';
-
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
     final pdf = Document();
     final pdf2 = Document();
-
-    final pdfF = Document();
 
     final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
         .buffer
@@ -54,7 +48,7 @@ class PdfInvoiceApi {
 
     pdf.addPage(MultiPage(
       pageTheme: PageTheme(
-          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 20),
+          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 10),
           pageFormat: PdfPageFormat.a4,
           buildBackground: (Context context) {
             return FullPage(
@@ -335,9 +329,9 @@ class PdfInvoiceApi {
         columnWidths: {
           0: FlexColumnWidth(2),
           1: FlexColumnWidth(2),
-          2: FlexColumnWidth(5),
-          3: FlexColumnWidth(15),
-          4: FlexColumnWidth(5),
+          2: FlexColumnWidth(6),
+          3: FlexColumnWidth(14),
+          4: FlexColumnWidth(4),
           5: FlexColumnWidth(5),
         },
         cellAlignments: {

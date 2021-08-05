@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/invoicelist.dart';
@@ -24,13 +26,17 @@ class TelaInicio extends StatefulWidget {
 
 class _TelaInicioState extends State<TelaInicio> {
   @override
+  @override
   Widget build(BuildContext context) {
     if (listaDeItens.invoices.isNotEmpty) {
       if (listaDeItens.invoices[idNovoPedido].customer?.name == null) {
         listaDeItens.invoices.removeAt(idNovoPedido);
       }
     }
-    abrirPdf();
+    if (pdfGeneratedFile != null) {
+      PdfApi.openFile(pdfGeneratedFile);
+      pdfGeneratedFile = null;
+    }
 
     return Stack(
       // <-- STACK AS THE SCAFFOLD PARENT
@@ -104,10 +110,12 @@ class _TelaInicioState extends State<TelaInicio> {
                     idNovoPedido = indexOfId;
 
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TelaCliente(id: novoId)))
-                        .then((value) => setState(() {}));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TelaCliente(
+                                  id: novoId,
+                                  editing: false,
+                                ))).then((value) => setState(() {}));
                   },
                   child: Text(
                     'ORÇAMENTO',
@@ -151,10 +159,12 @@ class _TelaInicioState extends State<TelaInicio> {
                     idNovoPedido = indexOfId;
 
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TelaCliente(id: novoId)))
-                        .then((value) => setState(() {}));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TelaCliente(
+                                  id: novoId,
+                                  editing: false,
+                                ))).then((value) => setState(() {}));
                   },
                   child: Text(
                     'PEDIDO',
@@ -201,6 +211,7 @@ class _TelaInicioState extends State<TelaInicio> {
   }
 
   abrirPdf() async {
+    print(pdfGeneratedFile);
     if (pdfGeneratedFile != null) {
       await PdfApi.openFile(pdfGeneratedFile);
       pdfGeneratedFile = null;
