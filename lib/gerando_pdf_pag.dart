@@ -67,8 +67,5 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
         .then((value) => Navigator.popUntil(context, (route) => route.isFirst));
 
     pdfGeneratedFile = pdfFile;
-    //pdfVisualizado = false;
-
-    //Navigator.popUntil(context, (route) => route.isFirst);
   }
 }

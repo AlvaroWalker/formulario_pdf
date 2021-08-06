@@ -25,6 +25,8 @@ final txtControlPrazo = TextEditingController();
 
 String? dropDownValue;
 
+final txtControlObs = TextEditingController();
+
 class CondPagamentoWidget extends StatefulWidget {
   final int indexOfItem;
   CondPagamentoWidget({Key? key, required this.indexOfItem}) : super(key: key);
@@ -40,11 +42,21 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (listaDeItens.invoices[widget.indexOfItem].metPagamento != '') {
+      dropDownValue = listaDeItens.invoices[widget.indexOfItem].metPagamento;
+    }
+    if (listaDeItens.invoices[widget.indexOfItem].observacoesPedido != '') {
+      txtControlObs.text =
+          listaDeItens.invoices[widget.indexOfItem].observacoesPedido;
+    }
+    if (listaDeItens.invoices[widget.indexOfItem].prazoServico != '') {
+      txtControlPrazo.text =
+          listaDeItens.invoices[widget.indexOfItem].prazoServico;
+    }
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -61,7 +73,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
               dropDownValue!.toUpperCase();
 
           listaDeItens.invoices[widget.indexOfItem].observacoesPedido =
-              textController!.text;
+              txtControlObs.text;
           listaDeItens.invoices[widget.indexOfItem].prazoServico =
               txtControlPrazo.text;
 
@@ -116,43 +128,14 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
               Padding(
                 padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: TextFormField(
-                  controller: textController,
+                  controller: txtControlObs,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'OBSERVAÇOES GERAIS',
-                    hintStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                  ),
+                  style: TextStyle(),
                   maxLines: 10,
                   //maxLength: 10,
                   keyboardType: TextInputType.multiline,
@@ -168,10 +151,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                 alignment: Alignment(-0.7, 0),
                 child: Text(
                   'RESUMO',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(),
                 ),
               ),
               ResumoWidget(

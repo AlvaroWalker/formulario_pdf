@@ -304,6 +304,9 @@ class _ItemListPageState extends State<ItemListPage> {
                                             id: listaDeItens
                                                 .invoices[widget.indexOfItem]
                                                 .id,
+                                            clienteEdit: listaDeItens
+                                                .invoices[widget.indexOfItem]
+                                                .customer,
                                             editing: true,
                                           ))).then((value) => null);
                             },
@@ -346,15 +349,8 @@ class _ItemListPageState extends State<ItemListPage> {
   void salvarPedido() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    //print(jsonEncode(listaDeItens!.toJson()));
+    print(jsonEncode(listaDeItens.toJson()));
     prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
-
-    //showWaitDialog();
-
-    //final pdfFile =
-    //    await PdfInvoiceApi.generate(listaDeItens.invoices[widget.indexOfItem]);
-
-    //PdfApi.openFile(pdfFile);
 
     Navigator.push(
             context,

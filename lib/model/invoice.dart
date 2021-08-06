@@ -30,6 +30,8 @@ class Invoice {
     pedido = json['pedido'];
     valorTotal = json['valorTotal'];
 
+    observacoesPedido = json['observacoesPedido'];
+
     metPagamento = json['metPagamento'];
     prazoServico = json['prazoServico'];
     info = json['InvoiceInfo'] != null
@@ -55,6 +57,7 @@ class Invoice {
     data['pedido'] = this.pedido;
     data['valorTotal'] = this.valorTotal;
     data['metPagamento'] = this.metPagamento;
+    data['observacoesPedido'] = this.observacoesPedido;
     data['prazoServico'] = this.prazoServico;
     if (this.info != null) {
       data['InvoiceInfo'] = this.info?.toJson();

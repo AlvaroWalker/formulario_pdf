@@ -23,7 +23,9 @@ var txtControlTelefone = TextEditingController();
 class TelaCliente extends StatefulWidget {
   final int id;
   final bool? editing;
-  const TelaCliente({Key? key, required this.id, this.editing})
+  final Customer? clienteEdit;
+  const TelaCliente(
+      {Key? key, required this.id, this.editing, this.clienteEdit})
       : super(key: key);
 
   @override
@@ -32,6 +34,17 @@ class TelaCliente extends StatefulWidget {
 
 class _TelaClienteState extends State<TelaCliente> {
   Widget build(BuildContext context) {
+    if (widget.clienteEdit != null) {
+      txtControlCliente.text = widget.clienteEdit!.name;
+      txtControlDoc.text = widget.clienteEdit!.doc;
+      txtControlInscEst.text = widget.clienteEdit!.inscEst!;
+      txtControlRazaoSocial.text = widget.clienteEdit!.razaoSocial!;
+
+      txtControlEnd.text = widget.clienteEdit!.clienteEndereco!;
+      txtControlBairro.text = widget.clienteEdit!.clienteBairro!;
+      txtControlCidade.text = widget.clienteEdit!.clienteCidade!;
+      txtControlTelefone.text = widget.clienteEdit!.clienteTelefone!;
+    }
     @override
     caixaTexto(TextEditingController txtControl, String texto,
         TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
