@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/invoicelist.dart';
 import 'package:formulario_pdf/tela_itens_enviados.dart';
@@ -51,7 +52,7 @@ class _TelaInicioState extends State<TelaInicio> {
             padding: EdgeInsets.all(25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
                   height: 200,
@@ -61,48 +62,20 @@ class _TelaInicioState extends State<TelaInicio> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      onPrimary: Colors.black87,
-                      primary: Colors.grey,
-                      shape: StadiumBorder(),
-                      minimumSize: Size(70, 50)),
+                    elevation: 4,
+                    fixedSize: Size(MediaQuery.of(context).size.width * .6, 55),
+                    onPrimary: Colors.black87,
+                    primary: Color.fromARGB(255, 255, 255, 255),
+                    shape: StadiumBorder(),
+                  ),
                   onPressed: () async {
-                    int indexOfId = 0;
-                    novoId = 0;
-                    if (listaDeItens.invoices.isEmpty) {
-                      listaDeItens = InvoiceList(invoices: []);
-                    }
-
-                    while (listaDeItens.invoices
-                        .any((Invoice element) => element.id == novoId)) {
-                      novoId++;
-
-                      print(idRepetido);
-                      idRepetido = true;
-                    }
-
-                    listaDeItens.invoices
-                        .add(new Invoice(id: novoId, items: <InvoiceItem>[]));
-
-                    indexOfId = listaDeItens.invoices
-                        .indexWhere((Invoice element) => element.id == novoId);
-
-                    print(indexOfId.toString() + novoId.toString());
-
-                    idNovoPedido = indexOfId;
-
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TelaCliente(
-                                  id: novoId,
-                                  editing: false,
-                                ))).then((value) => null);
+                    botaoOrcamento();
                   },
                   child: Text(
                     'ORÇAMENTO',
                     style: TextStyle(
                         //color: Color.fromARGB(255, 255, 255, 255),
-                        fontSize: 30),
+                        fontSize: 20),
                   ),
                 ),
                 SizedBox(
@@ -110,11 +83,14 @@ class _TelaInicioState extends State<TelaInicio> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                      elevation: 4,
+                      fixedSize:
+                          Size(MediaQuery.of(context).size.width * .6, 55),
                       onPrimary: Colors.black87,
-                      primary: Colors.grey,
+                      primary: Color.fromARGB(255, 255, 255, 255),
                       shape: StadiumBorder(),
                       minimumSize: Size(80, 50)),
-                  onPressed: () async {
+                  onPressed: () {
                     int indexOfId = 0;
                     novoId = 0;
                     if (listaDeItens.invoices.isEmpty) {
@@ -130,7 +106,7 @@ class _TelaInicioState extends State<TelaInicio> {
                     }
 
                     listaDeItens.invoices
-                        .add(new Invoice(id: novoId, items: <InvoiceItem>[]));
+                        .add(Invoice(id: novoId, items: <InvoiceItem>[]));
 
                     indexOfId = listaDeItens.invoices
                         .indexWhere((Invoice element) => element.id == novoId);
@@ -139,17 +115,22 @@ class _TelaInicioState extends State<TelaInicio> {
 
                     idNovoPedido = indexOfId;
 
-                    await Navigator.push(
+                    print(listaDeItens.invoices
+                        .indexWhere((Invoice element) => element.id == novoId));
+
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TelaCliente(
-                                  id: novoId,
-                                  editing: false,
-                                )));
+                                id: novoId,
+                                editing: false,
+                                indexOfId: listaDeItens.invoices.indexWhere(
+                                    (Invoice element) =>
+                                        element.id == novoId))));
                   },
                   child: Text(
                     'PEDIDO',
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
                 SizedBox(
@@ -157,16 +138,23 @@ class _TelaInicioState extends State<TelaInicio> {
                 ),
                 Divider(
                   thickness: 3,
-                  color: Colors.white,
+                  color: Colors.transparent,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      //elevation: 4,
+                      shadowColor: Colors.transparent,
+                      fixedSize:
+                          Size(MediaQuery.of(context).size.width * .6, 55),
+
                       //onPrimary: Colors.black87,
-                      primary: Colors.white,
-                      shape: StadiumBorder(),
+                      primary: Color.fromARGB(0, 0, 0, 0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(color: Colors.white, width: 2)),
                       minimumSize: Size(80, 50)),
                   onPressed: () async {
                     if (listaDeItens.invoices.isEmpty) {
@@ -182,7 +170,7 @@ class _TelaInicioState extends State<TelaInicio> {
                   },
                   child: Text(
                     'MEUS ENVIOS',
-                    style: TextStyle(color: Colors.white, fontSize: 30),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
               ],
@@ -192,4 +180,41 @@ class _TelaInicioState extends State<TelaInicio> {
       ],
     );
   }
+
+  botaoOrcamento() async {
+    int indexOfId = 0;
+    novoId = 0;
+    if (listaDeItens.invoices.isEmpty) {
+      listaDeItens = InvoiceList(invoices: []);
+    }
+
+    while (
+        listaDeItens.invoices.any((Invoice element) => element.id == novoId)) {
+      novoId++;
+
+      print(idRepetido);
+      idRepetido = true;
+    }
+
+    listaDeItens.invoices.add(new Invoice(id: novoId, items: <InvoiceItem>[]));
+
+    indexOfId = listaDeItens.invoices
+        .indexWhere((Invoice element) => element.id == novoId);
+
+    print(indexOfId.toString() + novoId.toString());
+
+    idNovoPedido = indexOfId;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TelaCliente(
+                  id: novoId,
+                  editing: false,
+                  indexOfId: listaDeItens.invoices
+                      .indexWhere((Invoice element) => element.id == novoId),
+                ))).then((value) => null);
+  }
+
+  botaoPedido() async {}
 }

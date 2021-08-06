@@ -6,6 +6,7 @@ import 'package:formulario_pdf/api/pdf_api.dart';
 import 'package:formulario_pdf/model/customer.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/supplier.dart';
+import 'package:formulario_pdf/theme/custom_theme.dart';
 import 'package:formulario_pdf/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -217,7 +218,7 @@ class PdfInvoiceApi {
             alignment: Alignment.centerLeft,
             height: 15,
             decoration: BoxDecoration(
-              border: Border.all(color: PdfColor(1, .5, .1), width: .5),
+              border: Border.all(color: corPdf, width: .5),
               borderRadius: BorderRadius.all(
                   Radius.circular(5.0) //         <--- border radius here
                   ),
@@ -304,7 +305,7 @@ class PdfInvoiceApi {
       alignment: Alignment.topLeft,
       //height: 15,
       decoration: BoxDecoration(
-        border: Border.all(color: PdfColor(1, .5, .1), width: .5),
+        border: Border.all(color: corPdf, width: .5),
         borderRadius: BorderRadius.all(
             Radius.circular(5.0) //         <--- border radius here
             ),
@@ -313,12 +314,12 @@ class PdfInvoiceApi {
         headers: headers,
         data: data,
         border: TableBorder(
-          verticalInside: BorderSide(width: 1, color: PdfColor(1, .5, .1)),
+          verticalInside: BorderSide(width: 1, color: corPdf),
         ),
         headerStyle: TextStyle(
             fontWeight: FontWeight.bold, color: PdfColors.white, fontSize: 8),
         headerDecoration: BoxDecoration(
-          color: PdfColor(1, .6, .2),
+          color: PdfColor.fromHex('666666'),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(5),
               topLeft: Radius.circular(5) //         <--- border radius here
@@ -370,9 +371,8 @@ class PdfInvoiceApi {
                         height: 50,
                         width: 200,
                         decoration: BoxDecoration(
-                          color: PdfColor.fromHex('FDF0E7'),
-                          border:
-                              Border.all(color: PdfColor(1, .5, .1), width: .5),
+                          color: corPdfClara,
+                          border: Border.all(color: corPdf, width: .5),
                           borderRadius: BorderRadius.all(Radius.circular(
                                   5.0) //         <--- border radius here
                               ),
@@ -394,8 +394,7 @@ class PdfInvoiceApi {
                   SizedBox(height: 10),
                   Container(
                       decoration: BoxDecoration(
-                        border:
-                            Border.all(color: PdfColor(1, .5, .1), width: .5),
+                        border: Border.all(color: corPdf, width: .5),
                         borderRadius: BorderRadius.all(Radius.circular(
                                 5.0) //         <--- border radius here
                             ),
@@ -413,8 +412,7 @@ class PdfInvoiceApi {
                           ))),
                   Container(
                       decoration: BoxDecoration(
-                        border:
-                            Border.all(color: PdfColor(1, .5, .1), width: .5),
+                        border: Border.all(color: corPdf, width: .5),
                         borderRadius: BorderRadius.all(Radius.circular(
                                 5.0) //         <--- border radius here
                             ),

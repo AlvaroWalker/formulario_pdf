@@ -216,7 +216,7 @@ class _ItemListPageState extends State<ItemListPage> {
                               trailing: IconButton(
                                 icon: Icon(
                                   Icons.delete,
-                                  color: Colors.deepOrange,
+                                  //color: Colors.deepOrange,
                                 ),
                                 onPressed: () {
                                   listaDeItens
@@ -308,6 +308,7 @@ class _ItemListPageState extends State<ItemListPage> {
                                                 .invoices[widget.indexOfItem]
                                                 .customer,
                                             editing: true,
+                                            indexOfId: widget.indexOfItem,
                                           ))).then((value) => null);
                             },
                             icon: Icon(Icons.mode_edit_outline_outlined)))

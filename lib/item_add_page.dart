@@ -306,7 +306,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
+                  //color: Color(0xFFFF7E00),
                   width: 1,
                 ),
               ),

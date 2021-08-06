@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
 
 import '../material_color_generator.dart';
+
+PdfColor corPdf = PdfColor.fromHex('#808080');
+PdfColor corPdfClara = PdfColor.fromHex('#666666');
 
 final ThemeData tema = ThemeData(
   primarySwatch: generateMaterialColor(Palette.primary),
 );
 
 class Palette {
-  static const Color primary = Color(0xFFFF3200);
+  static const Color primary = Color(0xFFeead0e);
 }
 
 class CustomTheme {

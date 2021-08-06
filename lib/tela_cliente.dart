@@ -10,22 +10,27 @@ import 'model/customer.dart';
 import 'item_add_page.dart';
 import 'model/invoice.dart';
 
-var txtControlCliente = TextEditingController();
-var txtControlDoc = TextEditingController();
-var txtControlInscEst = TextEditingController();
-var txtControlRazaoSocial = TextEditingController();
+final txtControlCliente = TextEditingController();
+final txtControlDoc = TextEditingController();
+final txtControlInscEst = TextEditingController();
+final txtControlRazaoSocial = TextEditingController();
 
-var txtControlEnd = TextEditingController();
-var txtControlBairro = TextEditingController();
-var txtControlCidade = TextEditingController();
-var txtControlTelefone = TextEditingController();
+final txtControlEnd = TextEditingController();
+final txtControlBairro = TextEditingController();
+final txtControlCidade = TextEditingController();
+final txtControlTelefone = TextEditingController();
 
 class TelaCliente extends StatefulWidget {
   final int id;
+  final int indexOfId;
   final bool? editing;
   final Customer? clienteEdit;
   const TelaCliente(
-      {Key? key, required this.id, this.editing, this.clienteEdit})
+      {Key? key,
+      required this.id,
+      this.editing,
+      this.clienteEdit,
+      required this.indexOfId})
       : super(key: key);
 
   @override
@@ -34,6 +39,13 @@ class TelaCliente extends StatefulWidget {
 
 class _TelaClienteState extends State<TelaCliente> {
   Widget build(BuildContext context) {
+    int indexLista = widget.indexOfId;
+    print(widget.indexOfId);
+    if (listaDeItens.invoices.isNotEmpty) {
+      indexLista = listaDeItens.invoices
+          .indexWhere((Invoice element) => element.id == widget.id);
+    }
+
     if (widget.clienteEdit != null) {
       txtControlCliente.text = widget.clienteEdit!.name;
       txtControlDoc.text = widget.clienteEdit!.doc;
@@ -45,15 +57,16 @@ class _TelaClienteState extends State<TelaCliente> {
       txtControlCidade.text = widget.clienteEdit!.clienteCidade!;
       txtControlTelefone.text = widget.clienteEdit!.clienteTelefone!;
     }
-    @override
     caixaTexto(TextEditingController txtControl, String texto,
         TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
       return Padding(
         padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
         child: TextFormField(
           inputFormatters: formatadorTexto,
-          onChanged: (text) {
-            setState(() {});
+          onChanged: (text) async {
+            setState(() {
+              print('teste');
+            });
           },
           keyboardType: tipoTeclado,
           controller: txtControl,
@@ -123,10 +136,7 @@ class _TelaClienteState extends State<TelaCliente> {
           elevation: 8,
           child: Icon(Icons.navigate_next),
           onPressed: () async {
-            int index = listaDeItens.invoices
-                .indexWhere((Invoice element) => element.id == widget.id);
-
-            listaDeItens.invoices[index].customer = Customer(
+            listaDeItens.invoices[indexLista].customer = Customer(
                 name: txtControlCliente.text.toUpperCase(),
                 doc: txtControlDoc.text,
                 inscEst: txtControlInscEst.text,
@@ -138,10 +148,10 @@ class _TelaClienteState extends State<TelaCliente> {
             if (widget.editing == true) {
               Navigator.pop(context);
             } else {
-              listaDeItens.invoices[index].items = <InvoiceItem>[];
-              listaDeItens.invoices[index].supplier = Supplier(
+              listaDeItens.invoices[indexLista].items = <InvoiceItem>[];
+              listaDeItens.invoices[indexLista].supplier = Supplier(
                   name: 'name', address: 'address', paymentInfo: 'paymentInfo');
-              listaDeItens.invoices[index].info = InvoiceInfo(
+              listaDeItens.invoices[indexLista].info = InvoiceInfo(
                   description: 'description',
                   number: 'number',
                   date: DateFormat('dd-MM-yyyy')
@@ -149,7 +159,7 @@ class _TelaClienteState extends State<TelaCliente> {
                       .toString(),
                   dueDate: 'dueDate');
 
-              await Navigator.push(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ItemAddPage(id: widget.id)));
