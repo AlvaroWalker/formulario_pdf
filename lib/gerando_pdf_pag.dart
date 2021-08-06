@@ -7,7 +7,10 @@ import 'variaveis.dart';
 
 class PaginaGerandoPdf extends StatefulWidget {
   final int index;
-  const PaginaGerandoPdf({Key? key, required this.index}) : super(key: key);
+  final bool jaPedido;
+  const PaginaGerandoPdf(
+      {Key? key, required this.index, required this.jaPedido})
+      : super(key: key);
 
   @override
   _PaginaGerandoPdfState createState() => _PaginaGerandoPdfState();
@@ -16,9 +19,10 @@ class PaginaGerandoPdf extends StatefulWidget {
 class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
   @override
   Widget build(BuildContext context) {
+    print(widget.jaPedido);
     Future.delayed(const Duration(milliseconds: 3000), () {
 // Here you can write your code
-      gerarPDF();
+      gerarPDF(widget.jaPedido);
     });
 
     return Stack(
@@ -59,13 +63,28 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
     );
   }
 
-  gerarPDF() async {
-    final pdfFile =
-        await PdfInvoiceApi.generate(listaDeItens.invoices[widget.index]);
+  gerarPDF(bool ped) async {
+    print('-----------');
+    print('-----------');
+    print('-----------');
+    print(ped);
+    print('-----------');
+    print('-----------');
+    print('-----------');
+    if (ped == false) {
+      final pdfFile = await PdfInvoiceApi.generate(
+          listaDeItens.invoices[widget.index], ped);
 
-    await PdfApi.openFile(pdfFile)
-        .then((value) => Navigator.popUntil(context, (route) => route.isFirst));
+      await PdfApi.openFile(pdfFile).then(
+          (value) => Navigator.popUntil(context, (route) => route.isFirst));
+    } else {
+      final pdfFile = await PdfInvoiceApi.generateOnlyPedido(
+          listaDeItens.invoices[widget.index], ped);
 
-    pdfGeneratedFile = pdfFile;
+      await PdfApi.openFile(pdfFile).then(
+          (value) => Navigator.popUntil(context, (route) => route.isFirst));
+    }
+
+    //pdfGeneratedFile = pdfFile;
   }
 }

@@ -267,14 +267,14 @@ class _ItemAddPageState extends State<ItemAddPage> {
               labelText: 'RELAÇÃO DE MATERIAL',
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
+                  // color: Color(0xFFFF7E00),
                   width: 1,
                 ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 borderSide: BorderSide(
-                  color: Color(0xFFFF7E00),
+                  //  color: Color(0xFFFF7E00),
                   width: 1,
                 ),
               ),
@@ -289,27 +289,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(12, 23, 12, 22),
               labelText: 'DESCRIÇÃO DO MATERIAL',
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                borderSide: BorderSide(
-                  //color: Color(0xFFFF7E00),
-                  width: 1,
-                ),
-              ),
             ),
           ),
         ),

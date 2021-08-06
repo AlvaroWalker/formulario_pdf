@@ -12,6 +12,8 @@ import 'variaveis.dart';
 
 InvoiceList listaPedidos = InvoiceList(invoices: []);
 
+InvoiceList listaOrcamento = InvoiceList(invoices: []);
+
 class TelaItensEnviados extends StatefulWidget {
   const TelaItensEnviados({Key? key}) : super(key: key);
 
@@ -27,9 +29,21 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
         listaPedidos.invoices.add(element);
       }
     });
+
+    listaDeItens.invoices.forEach((element) {
+      if (element.pedido == false) {
+        listaOrcamento.invoices.add(element);
+      }
+    });
   }
 
   Widget orcamento() {
+    listaOrcamento.invoices.clear();
+    listaDeItens.invoices.forEach((element) {
+      if (element.orcamento == true) {
+        listaOrcamento.invoices.add(element);
+      }
+    });
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -49,8 +63,8 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               color: Color.fromARGB(0, 0, 0, 0),
               shadowColor: Color.fromARGB(0, 0, 0, 0),
               child: Center(
-                  child: Text(listaDeItens.invoices.length != 0
-                      ? 'TOTAL EM ORÇAMENTOS: ${Utils.formatarValor(listaDeItens.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
+                  child: Text(listaOrcamento.invoices.length != 0
+                      ? 'TOTAL EM ORÇAMENTOS: ${Utils.formatarValor(listaOrcamento.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
                       : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
@@ -61,7 +75,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
-              itemCount: listaDeItens.invoices.length,
+              itemCount: listaOrcamento.invoices.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Card(
@@ -71,7 +85,6 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        pdfVisualizado = false;
                         await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -87,14 +100,14 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                       },
                       child: ListTile(
                         title: Text(
-                            'Cliente: ${listaDeItens.invoices[index].customer?.name}'),
+                            'Cliente: ${listaOrcamento.invoices[index].customer?.name}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Data: ${listaDeItens.invoices[index].info?.date}'),
+                                'Data: ${listaOrcamento.invoices[index].info?.date}'),
                             Text(
-                                'Valor Total: ${Utils.formatarValor(listaDeItens.invoices[index].valorTotal)}'),
+                                'Valor Total: ${Utils.formatarValor(listaOrcamento.invoices[index].valorTotal)}'),
                             // Text(
                             //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
@@ -102,19 +115,34 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         trailing: IconButton(
                           icon: Icon(
                             Icons.delete,
-                            //color: Colors.deepOrange,
+                            color: Palette.primary,
                           ),
                           onPressed: () {
-                            listaDeItens.invoices.removeAt(index);
-                            listaPedidos.invoices.clear();
+                            // listaDeItens.invoices.removeAt(listaDeItens.invoices
+                            //     .indexWhere((Invoice element) =>
+                            //         element.id ==
+                            //         listaOrcamento.invoices[index].id));
+
+                            //listaOrcamento.invoices.removeAt(index);
+                            listaDeItens
+                                .invoices[listaDeItens.invoices.indexWhere(
+                                    (Invoice element) =>
+                                        element.id ==
+                                        listaOrcamento.invoices[index].id)]
+                                .orcamento = false;
+
+                            listaOrcamento.invoices.removeAt(index);
+
+                            listaOrcamento.invoices.clear();
                             listaDeItens.invoices.forEach((element) {
                               if (element.pedido == true) {
-                                listaPedidos.invoices.add(element);
+                                listaOrcamento.invoices.add(element);
                               }
                             });
 
-                            salvarPedido();
-                            setState(() {});
+                            setState(() {
+                              salvarPedido();
+                            });
                           },
                         ),
                       ),
@@ -211,9 +239,10 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         trailing: IconButton(
                           icon: Icon(
                             Icons.delete,
-                            color: Colors.deepOrange,
+                            color: Palette.primary,
                           ),
                           onPressed: () {
+                            /*
                             listaDeItens.invoices.removeAt(listaDeItens.invoices
                                 .indexWhere((Invoice element) =>
                                     element.id ==
@@ -221,6 +250,14 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
                             listaPedidos.invoices.removeAt(index);
 
+                            
+*/
+                            listaDeItens
+                                .invoices[listaDeItens.invoices.indexWhere(
+                                    (Invoice element) =>
+                                        element.id ==
+                                        listaPedidos.invoices[index].id)]
+                                .pedido = false;
                             listaPedidos.invoices.clear();
                             listaDeItens.invoices.forEach((element) {
                               if (element.pedido == true) {

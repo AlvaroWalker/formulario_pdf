@@ -14,9 +14,11 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
 class PdfInvoiceApi {
-  static Future<File> generate(Invoice invoice) async {
+  static Future<File> generate(Invoice invoice, bool jaUmPedido) async {
     final pdf = Document();
     final pdf2 = Document();
+
+    print(jaUmPedido);
 
     final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
         .buffer
@@ -46,38 +48,39 @@ class PdfInvoiceApi {
         (await rootBundle.load('assets/orcamentoPdfTopPage2.jpg'))
             .buffer
             .asUint8List();
-
-    pdf.addPage(MultiPage(
-      pageTheme: PageTheme(
-          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 10),
-          pageFormat: PdfPageFormat.a4,
-          buildBackground: (Context context) {
-            return FullPage(
-                ignoreMargins: true, child: Image(MemoryImage(imagemFundo)));
-          }),
-      build: (Context context1) => [
-        //SizedBox(height: 1 * PdfPageFormat.cm),
-        buildHeader(invoice, orcamentoTopImage),
-        SizedBox(height: .5 * PdfPageFormat.cm),
-        //buildTitle(invoice),
-        buildInvoice(invoice, imagemCabecalho2, context1),
-        //Divider(),
-        buildTotal(invoice, false),
-        //buildObsText(invoice),
-      ],
-      header: (context) {
-        if (pdf.document.pdfPageList.pages.length > 9) {
-          return Container(
-              width: PdfPageFormat.a4.width / 4,
-              child: Image(MemoryImage(imagemCabecalho2)));
-        } else {
-          return Container();
-        }
-      },
-      footer: (context) {
-        return buildFooter(invoice, orcamentoBottomImage, context);
-      },
-    ));
+    if (jaUmPedido == false) {
+      pdf.addPage(MultiPage(
+        pageTheme: PageTheme(
+            margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 10),
+            pageFormat: PdfPageFormat.a4,
+            buildBackground: (Context context) {
+              return FullPage(
+                  ignoreMargins: true, child: Image(MemoryImage(imagemFundo)));
+            }),
+        build: (Context context1) => [
+          //SizedBox(height: 1 * PdfPageFormat.cm),
+          buildHeader(invoice, orcamentoTopImage),
+          SizedBox(height: .5 * PdfPageFormat.cm),
+          //buildTitle(invoice),
+          buildInvoice(invoice, imagemCabecalho2, context1),
+          //Divider(),
+          buildTotal(invoice, false),
+          //buildObsText(invoice),
+        ],
+        header: (context) {
+          if (pdf.document.pdfPageList.pages.length > 9) {
+            return Container(
+                width: PdfPageFormat.a4.width / 4,
+                child: Image(MemoryImage(imagemCabecalho2)));
+          } else {
+            return Container();
+          }
+        },
+        footer: (context) {
+          return buildFooter(invoice, orcamentoBottomImage, context);
+        },
+      ));
+    }
 
     if (invoice.pedido) {
       pdf2.addPage(MultiPage(
@@ -111,10 +114,90 @@ class PdfInvoiceApi {
             buildFooter2(invoice, pedidoBottomImage, context1),
       ));
     }
+    if (jaUmPedido) {
+      return PdfApi.saveDocument(
+        name: 'pdf_gerado2.pdf',
+        pdf: pdf2,
+      );
+    } else {
+      return PdfApi.saveDocument(
+          name: 'pdf_gerado.pdf',
+          name2: 'pdf_gerado2.pdf',
+          pdf: pdf,
+          pdf2: pdf2);
+    }
+  }
 
-    //PdfMerger.mergeMultiplePDF(paths: [], outputDirPath: outputDirPath)
+  static Future<File> generateOnlyPedido(
+      Invoice invoice, bool jaUmPedido) async {
+    final pdf2 = Document();
+
+    print('pedido');
+
+    final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
+        .buffer
+        .asUint8List();
+
+    final orcamentoTopImage =
+        (await rootBundle.load('assets/pdf/orcamento/orcamento_top.jpg'))
+            .buffer
+            .asUint8List();
+
+    final orcamentoBottomImage =
+        (await rootBundle.load('assets/pdf/orcamento/orcamento_bottom.jpg'))
+            .buffer
+            .asUint8List();
+
+    final pedidoTopImage =
+        (await rootBundle.load('assets/pdf/pedido/pedido_top.jpg'))
+            .buffer
+            .asUint8List();
+
+    final pedidoBottomImage =
+        (await rootBundle.load('assets/pdf/pedido/pedido_bottom.jpg'))
+            .buffer
+            .asUint8List();
+
+    final imagemCabecalho2 =
+        (await rootBundle.load('assets/orcamentoPdfTopPage2.jpg'))
+            .buffer
+            .asUint8List();
+
+    pdf2.addPage(MultiPage(
+      pageTheme: PageTheme(
+          margin: EdgeInsets.only(left: 70, right: 70, top: 30, bottom: 20),
+          pageFormat: PdfPageFormat.a4,
+          buildBackground: (Context context1) {
+            return FullPage(
+                ignoreMargins: true, child: Image(MemoryImage(imagemFundo)));
+          }),
+      build: (Context context1) => [
+        //SizedBox(height: 1 * PdfPageFormat.cm),
+        buildHeader(invoice, pedidoTopImage),
+        SizedBox(height: .5 * PdfPageFormat.cm),
+        //buildTitle(invoice),
+        buildInvoice(invoice, imagemCabecalho2, context1),
+        //Divider(),
+        buildTotal(invoice, true),
+        //buildObsText(invoice),
+      ],
+      header: (Context context1) {
+        if (context1.pageNumber > 9) {
+          return Container(
+              width: PdfPageFormat.a4.width / 4,
+              child: Image(MemoryImage(imagemCabecalho2)));
+        } else {
+          return Container();
+        }
+      },
+      footer: (Context context1) =>
+          buildFooter2(invoice, pedidoBottomImage, context1),
+    ));
+
     return PdfApi.saveDocument(
-        name: 'pdf_gerado.pdf', name2: 'pdf_gerado2.pdf', pdf: pdf, pdf2: pdf2);
+      name: 'pdf_gerado1.pdf',
+      pdf: pdf2,
+    );
   }
 
   static Widget buildHeader(Invoice invoice, Uint8List imgCabeca) => Column(
@@ -371,7 +454,7 @@ class PdfInvoiceApi {
                         height: 50,
                         width: 200,
                         decoration: BoxDecoration(
-                          color: corPdfClara,
+                          color: PdfColor.fromHex('#f2f2f21A'),
                           border: Border.all(color: corPdf, width: .5),
                           borderRadius: BorderRadius.all(Radius.circular(
                                   5.0) //         <--- border radius here

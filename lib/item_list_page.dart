@@ -8,6 +8,7 @@ import 'package:formulario_pdf/tela_cliente.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'theme/custom_theme.dart';
 import 'variaveis.dart';
 
 final real = Currency.create('Real', 2,
@@ -21,6 +22,8 @@ List itens = [];
 
 double textSize = .8;
 
+bool jaUmPedido = false;
+
 class ItemListPage extends StatefulWidget {
   final int indexOfItem;
   ItemListPage({Key? key, required this.indexOfItem}) : super(key: key);
@@ -33,9 +36,14 @@ class _ItemListPageState extends State<ItemListPage> {
     setState(() {});
   }
 
+  void initState() {
+    super.initState();
+  }
+
   Future<void> showMyDialog(
       BuildContext context, InvoiceItem item, int lsindex) async {
     //String dropdownValue = opcoes[1];
+
     final TextEditingController _controller1 = TextEditingController();
     final MoneyMaskedTextController _controller2 = MoneyMaskedTextController();
 
@@ -118,6 +126,8 @@ class _ItemListPageState extends State<ItemListPage> {
 
   @override
   Widget build(BuildContext context) {
+    jaUmPedido = false;
+
     if (listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.indexOfItem].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
@@ -125,12 +135,15 @@ class _ItemListPageState extends State<ItemListPage> {
     } else {
       valorTotal = 0;
     }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'REVISE SEU ORÇAMENTO',
+          listaDeItens.invoices[widget.indexOfItem].pedido == false
+              ? 'REVISE SEU ORÇAMENTO'
+              : 'REVISE SEU PEDIDO',
           textAlign: TextAlign.center,
         ),
       ),
@@ -216,7 +229,7 @@ class _ItemListPageState extends State<ItemListPage> {
                               trailing: IconButton(
                                 icon: Icon(
                                   Icons.delete,
-                                  //color: Colors.deepOrange,
+                                  color: Palette.primary,
                                 ),
                                 onPressed: () {
                                   listaDeItens
@@ -296,22 +309,23 @@ class _ItemListPageState extends State<ItemListPage> {
                     ),
                     Flexible(
                         child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TelaCliente(
-                                            id: listaDeItens
-                                                .invoices[widget.indexOfItem]
-                                                .id,
-                                            clienteEdit: listaDeItens
-                                                .invoices[widget.indexOfItem]
-                                                .customer,
-                                            editing: true,
-                                            indexOfId: widget.indexOfItem,
-                                          ))).then((value) => null);
-                            },
-                            icon: Icon(Icons.mode_edit_outline_outlined)))
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TelaCliente(
+                                      id: listaDeItens
+                                          .invoices[widget.indexOfItem].id,
+                                      clienteEdit: listaDeItens
+                                          .invoices[widget.indexOfItem]
+                                          .customer,
+                                      editing: true,
+                                      indexOfIdd: widget.indexOfItem,
+                                    ))).then((value) => null);
+                      },
+                      icon: Icon(Icons.mode_edit_outline_outlined),
+                      color: Palette.primary,
+                    ))
                   ],
                 ),
               ),
@@ -320,14 +334,18 @@ class _ItemListPageState extends State<ItemListPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Checkbox(
-                  value: criarPedido,
-                  onChanged: (value) {
-                    setState(() {
-                      criarPedido = !criarPedido;
-                    });
-                  }),
-              Text('ANEXAR PEDIDO AO ORÇAMENTO')
+              listaDeItens.invoices[widget.indexOfItem].pedido == false
+                  ? Checkbox(
+                      value: criarPedido,
+                      onChanged: (value) {
+                        setState(() {
+                          criarPedido = !criarPedido;
+                        });
+                      })
+                  : Text(''),
+              listaDeItens.invoices[widget.indexOfItem].pedido == false
+                  ? Text('ANEXAR PEDIDO AO ORÇAMENTO')
+                  : Text(''),
             ],
           )
         ],
@@ -338,8 +356,17 @@ class _ItemListPageState extends State<ItemListPage> {
         onPressed: () async {
           listaDeItens.invoices[widget.indexOfItem].valorTotal = valorTotal;
 
-          listaDeItens.invoices[widget.indexOfItem].pedido = criarPedido;
-          salvarPedido();
+          print(jaUmPedido);
+
+          if (listaDeItens.invoices[widget.indexOfItem].pedido == true) {
+            jaUmPedido = true;
+          }
+
+          if (listaDeItens.invoices[widget.indexOfItem].pedido == false) {
+            listaDeItens.invoices[widget.indexOfItem].pedido = criarPedido;
+          }
+
+          salvarPedido(jaUmPedido);
 
           //PdfApi.openFile(pdfFile);
         },
@@ -347,7 +374,7 @@ class _ItemListPageState extends State<ItemListPage> {
     );
   }
 
-  void salvarPedido() async {
+  void salvarPedido(bool ped) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     print(jsonEncode(listaDeItens.toJson()));
@@ -357,7 +384,7 @@ class _ItemListPageState extends State<ItemListPage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PaginaGerandoPdf(index: widget.indexOfItem)))
+                    PaginaGerandoPdf(index: widget.indexOfItem, jaPedido: ped)))
         .then((value) => setState(() {}));
   }
 

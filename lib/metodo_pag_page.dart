@@ -42,10 +42,10 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
   @override
   void initState() {
     super.initState();
-  }
+    txtControlPrazo.clear();
+    txtControlObs.clear();
+    dropDownValue = null;
 
-  @override
-  Widget build(BuildContext context) {
     if (listaDeItens.invoices[widget.indexOfItem].metPagamento != '') {
       dropDownValue = listaDeItens.invoices[widget.indexOfItem].metPagamento;
     }
@@ -57,6 +57,10 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
       txtControlPrazo.text =
           listaDeItens.invoices[widget.indexOfItem].prazoServico;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(

@@ -22,7 +22,7 @@ final txtControlTelefone = TextEditingController();
 
 class TelaCliente extends StatefulWidget {
   final int id;
-  final int indexOfId;
+  final int indexOfIdd;
   final bool? editing;
   final Customer? clienteEdit;
   const TelaCliente(
@@ -30,7 +30,7 @@ class TelaCliente extends StatefulWidget {
       required this.id,
       this.editing,
       this.clienteEdit,
-      required this.indexOfId})
+      required this.indexOfIdd})
       : super(key: key);
 
   @override
@@ -38,15 +38,21 @@ class TelaCliente extends StatefulWidget {
 }
 
 class _TelaClienteState extends State<TelaCliente> {
-  Widget build(BuildContext context) {
-    int indexLista = widget.indexOfId;
-    print(widget.indexOfId);
-    if (listaDeItens.invoices.isNotEmpty) {
-      indexLista = listaDeItens.invoices
-          .indexWhere((Invoice element) => element.id == widget.id);
-    }
+  @override
+  void initState() {
+    super.initState();
 
-    if (widget.clienteEdit != null) {
+    txtControlCliente.clear();
+    txtControlDoc.clear();
+    txtControlInscEst.clear();
+    txtControlRazaoSocial.clear();
+
+    txtControlEnd.clear();
+    txtControlBairro.clear();
+    txtControlCidade.clear();
+    txtControlTelefone.clear();
+
+    if (widget.clienteEdit != null && widget.editing == true) {
       txtControlCliente.text = widget.clienteEdit!.name;
       txtControlDoc.text = widget.clienteEdit!.doc;
       txtControlInscEst.text = widget.clienteEdit!.inscEst!;
@@ -57,16 +63,17 @@ class _TelaClienteState extends State<TelaCliente> {
       txtControlCidade.text = widget.clienteEdit!.clienteCidade!;
       txtControlTelefone.text = widget.clienteEdit!.clienteTelefone!;
     }
+  }
+
+  Widget build(BuildContext context) {
     caixaTexto(TextEditingController txtControl, String texto,
         TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
       return Padding(
         padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
         child: TextFormField(
           inputFormatters: formatadorTexto,
-          onChanged: (text) async {
-            setState(() {
-              print('teste');
-            });
+          onChanged: (text) {
+            setState(() {});
           },
           keyboardType: tipoTeclado,
           controller: txtControl,
@@ -135,29 +142,33 @@ class _TelaClienteState extends State<TelaCliente> {
         child: FloatingActionButton(
           elevation: 8,
           child: Icon(Icons.navigate_next),
-          onPressed: () async {
-            listaDeItens.invoices[indexLista].customer = Customer(
-                name: txtControlCliente.text.toUpperCase(),
+          onPressed: () {
+            print(listaDeItens.invoices.length);
+
+            listaDeItens.invoices[widget.indexOfIdd].customer = new Customer(
+                name: txtControlCliente.text,
                 doc: txtControlDoc.text,
                 inscEst: txtControlInscEst.text,
-                razaoSocial: txtControlRazaoSocial.text.toUpperCase(),
-                clienteEndereco: txtControlEnd.text.toUpperCase(),
-                clienteBairro: txtControlBairro.text.toUpperCase(),
-                clienteCidade: txtControlCidade.text.toUpperCase(),
+                razaoSocial: txtControlRazaoSocial.text,
+                clienteEndereco: txtControlEnd.text,
+                clienteBairro: txtControlBairro.text,
+                clienteCidade: txtControlCidade.text,
                 clienteTelefone: txtControlTelefone.text);
             if (widget.editing == true) {
               Navigator.pop(context);
-            } else {
-              listaDeItens.invoices[indexLista].items = <InvoiceItem>[];
-              listaDeItens.invoices[indexLista].supplier = Supplier(
+            } else if (widget.editing == false) {
+              listaDeItens.invoices[widget.indexOfIdd].items = <InvoiceItem>[];
+              listaDeItens.invoices[widget.indexOfIdd].supplier = Supplier(
                   name: 'name', address: 'address', paymentInfo: 'paymentInfo');
-              listaDeItens.invoices[indexLista].info = InvoiceInfo(
+              listaDeItens.invoices[widget.indexOfIdd].info = InvoiceInfo(
                   description: 'description',
                   number: 'number',
                   date: DateFormat('dd-MM-yyyy')
                       .format(DateTime.now())
                       .toString(),
                   dueDate: 'dueDate');
+
+              Navigator.pop(context);
 
               Navigator.push(
                   context,
