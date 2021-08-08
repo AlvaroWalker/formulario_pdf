@@ -138,16 +138,6 @@ class PdfInvoiceApi {
         .buffer
         .asUint8List();
 
-    final orcamentoTopImage =
-        (await rootBundle.load('assets/pdf/orcamento/orcamento_top.jpg'))
-            .buffer
-            .asUint8List();
-
-    final orcamentoBottomImage =
-        (await rootBundle.load('assets/pdf/orcamento/orcamento_bottom.jpg'))
-            .buffer
-            .asUint8List();
-
     final pedidoTopImage =
         (await rootBundle.load('assets/pdf/pedido/pedido_top.jpg'))
             .buffer
@@ -277,7 +267,7 @@ class PdfInvoiceApi {
               child: itemCabecalho(
                   'Endereço: ' + customer.clienteEndereco.toString()),
             ),
-            Flexible(flex: 2, child: itemCabecalho('Nº: 110'))
+            //Flexible(flex: 2, child: itemCabecalho('Nº: 110'))
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
