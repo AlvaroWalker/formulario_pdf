@@ -116,11 +116,13 @@ class PdfInvoiceApi {
     }
     if (jaUmPedido) {
       return PdfApi.saveDocument(
+        nomePdf: invoice.customer!.name,
         name: 'pdf_gerado2.pdf',
         pdf: pdf2,
       );
     } else {
       return PdfApi.saveDocument(
+          nomePdf: invoice.customer!.name,
           name: 'pdf_gerado.pdf',
           name2: 'pdf_gerado2.pdf',
           pdf: pdf,
@@ -137,16 +139,6 @@ class PdfInvoiceApi {
     final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
         .buffer
         .asUint8List();
-
-    final orcamentoTopImage =
-        (await rootBundle.load('assets/pdf/orcamento/orcamento_top.jpg'))
-            .buffer
-            .asUint8List();
-
-    final orcamentoBottomImage =
-        (await rootBundle.load('assets/pdf/orcamento/orcamento_bottom.jpg'))
-            .buffer
-            .asUint8List();
 
     final pedidoTopImage =
         (await rootBundle.load('assets/pdf/pedido/pedido_top.jpg'))
@@ -195,6 +187,7 @@ class PdfInvoiceApi {
     ));
 
     return PdfApi.saveDocument(
+      nomePdf: invoice.customer!.name,
       name: 'pdf_gerado1.pdf',
       pdf: pdf2,
     );
@@ -277,7 +270,6 @@ class PdfInvoiceApi {
               child: itemCabecalho(
                   'Endereço: ' + customer.clienteEndereco.toString()),
             ),
-            Flexible(flex: 2, child: itemCabecalho('Nº: 110'))
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
@@ -543,7 +535,32 @@ class PdfInvoiceApi {
     if (context.pagesCount == context.pageNumber) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Container(child: Image(MemoryImage(imagem)))],
+        children: [
+          Container(
+              height: 200,
+              child: Stack(alignment: Alignment.center, children: [
+                Image(MemoryImage(imagem)),
+                Align(
+                    alignment: Alignment(.9, -.58),
+                    child: Container(
+                      width: 180,
+                      height: 25,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(invoice.customer!.name,
+                                textScaleFactor: .8,
+                                style:
+                                    pw.TextStyle(color: PdfColor(.5, .5, .5))),
+                            Text(invoice.customer!.doc,
+                                textScaleFactor: .7,
+                                style: pw.TextStyle(
+                                    color: PdfColor(.5, .5, .5),
+                                    fontWeight: FontWeight.bold)),
+                          ]),
+                    ))
+              ]))
+        ],
       );
     } else
       return Text('');

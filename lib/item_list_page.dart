@@ -8,6 +8,8 @@ import 'package:formulario_pdf/tela_cliente.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
 import 'theme/custom_theme.dart';
 import 'variaveis.dart';
 
@@ -139,6 +141,7 @@ class _ItemListPageState extends State<ItemListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        //bottomOpacity: 0,
         elevation: 0,
         title: Text(
           listaDeItens.invoices[widget.indexOfItem].pedido == false
@@ -151,104 +154,27 @@ class _ItemListPageState extends State<ItemListPage> {
       body: Column(
         children: [
           Flexible(
-            child: listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty
-                ? ListView.separated(
-                    padding: const EdgeInsets.all(8),
-                    itemCount:
-                        listaDeItens.invoices[widget.indexOfItem].items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black26),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              showMyDialog(
-                                  context,
-                                  listaDeItens.invoices[widget.indexOfItem]
-                                      .items[index],
-                                  index);
-                              //print(index);
-                              setState(() {});
-                            },
-                            child: ListTile(
-                              title: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(listaDeItens.invoices[widget.indexOfItem]
-                                      .items[index].tipo
-                                      .toString()),
-                                  Text(listaDeItens.invoices[widget.indexOfItem]
-                                      .items[index].description
-                                      .toString()),
-                                ],
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
-                                  Text(
-                                    listaDeItens.invoices[widget.indexOfItem]
-                                                .items[index].unitPrice! !=
-                                            0
-                                        ? Money.from(
-                                                listaDeItens
-                                                    .invoices[
-                                                        widget.indexOfItem]
-                                                    .items[index]
-                                                    .unitPrice!
-                                                    .toDouble(),
-                                                real)
-                                            .toString()
-                                        : '',
-                                  ),
-                                  Text(listaDeItens.invoices[widget.indexOfItem]
-                                              .items[index].unitPrice! !=
-                                          0
-                                      ? Money.from(
-                                              listaDeItens
-                                                      .invoices[
-                                                          widget.indexOfItem]
-                                                      .items[index]
-                                                      .quantity! *
-                                                  listaDeItens
-                                                      .invoices[
-                                                          widget.indexOfItem]
-                                                      .items[index]
-                                                      .unitPrice!
-                                                      .toDouble(),
-                                              real)
-                                          .toString()
-                                      : ''),
-                                ],
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Palette.primary,
-                                ),
-                                onPressed: () {
-                                  listaDeItens
-                                      .invoices[widget.indexOfItem].items
-                                      .removeAt(index);
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                      height: 2,
-                    ),
-                  )
-                : Container(),
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment(0, .9),
+                  end: Alignment(0, 1),
+                  colors: <Color>[Colors.transparent, Colors.white],
+                ).createShader(bounds);
+              },
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    begin: Alignment(0, -.9),
+                    end: Alignment(0, -1),
+                    colors: <Color>[Colors.transparent, Colors.white],
+                  ).createShader(bounds);
+                },
+                child: listaAnimada(),
+                blendMode: BlendMode.dstOut,
+              ),
+              blendMode: BlendMode.dstOut,
+            ),
           ),
           Text(
             'TOTAL ORÇADO:  ${Money.from(valorTotal, real).toString()}',
@@ -378,7 +304,7 @@ class _ItemListPageState extends State<ItemListPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     print(jsonEncode(listaDeItens.toJson()));
-    prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
+    await prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
 
     Navigator.push(
             context,
@@ -404,6 +330,203 @@ class _ItemListPageState extends State<ItemListPage> {
           actions: <Widget>[],
         );
       },
+    );
+  }
+
+  listaItensWidget() {
+    return listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty
+        ? ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: listaDeItens.invoices[widget.indexOfItem].items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      showMyDialog(
+                          context,
+                          listaDeItens
+                              .invoices[widget.indexOfItem].items[index],
+                          index);
+                      //print(index);
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(listaDeItens
+                              .invoices[widget.indexOfItem].items[index].tipo
+                              .toString()),
+                          Text(listaDeItens.invoices[widget.indexOfItem]
+                              .items[index].description
+                              .toString()),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
+                          Text(
+                            listaDeItens.invoices[widget.indexOfItem]
+                                        .items[index].unitPrice! !=
+                                    0
+                                ? Money.from(
+                                        listaDeItens
+                                            .invoices[widget.indexOfItem]
+                                            .items[index]
+                                            .unitPrice!
+                                            .toDouble(),
+                                        real)
+                                    .toString()
+                                : '',
+                          ),
+                          Text(listaDeItens.invoices[widget.indexOfItem]
+                                      .items[index].unitPrice! !=
+                                  0
+                              ? Money.from(
+                                      listaDeItens.invoices[widget.indexOfItem]
+                                              .items[index].quantity! *
+                                          listaDeItens
+                                              .invoices[widget.indexOfItem]
+                                              .items[index]
+                                              .unitPrice!
+                                              .toDouble(),
+                                      real)
+                                  .toString()
+                              : ''),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Palette.primary,
+                        ),
+                        onPressed: () {
+                          listaDeItens.invoices[widget.indexOfItem].items
+                              .removeAt(index);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(
+              height: 2,
+            ),
+          )
+        : Container();
+  }
+
+  listaAnimada() {
+    return AnimationLimiter(
+      child: ListView.builder(
+        padding: EdgeInsets.all(8),
+        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        itemCount: listaDeItens.invoices[widget.indexOfItem].items.length,
+        itemBuilder: (BuildContext c, int i) {
+          return AnimationConfiguration.staggeredList(
+            position: i,
+            delay: Duration(milliseconds: 500),
+            child: SlideAnimation(
+              duration: Duration(milliseconds: 1500),
+              curve: Curves.fastLinearToSlowEaseIn,
+              horizontalOffset: 0,
+              verticalOffset: 500.0,
+              child: FlipAnimation(
+                duration: Duration(milliseconds: 1500),
+                curve: Curves.fastLinearToSlowEaseIn,
+                flipAxis: FlipAxis.y,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      showMyDialog(
+                          context,
+                          listaDeItens.invoices[widget.indexOfItem].items[i],
+                          i);
+                      //print(index);
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(listaDeItens
+                              .invoices[widget.indexOfItem].items[i].tipo
+                              .toString()),
+                          Text(listaDeItens
+                              .invoices[widget.indexOfItem].items[i].description
+                              .toString()),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[i].quantity}'),
+                          Text(
+                            listaDeItens.invoices[widget.indexOfItem].items[i]
+                                        .unitPrice! !=
+                                    0
+                                ? Money.from(
+                                        listaDeItens
+                                            .invoices[widget.indexOfItem]
+                                            .items[i]
+                                            .unitPrice!
+                                            .toDouble(),
+                                        real)
+                                    .toString()
+                                : '',
+                          ),
+                          Text(listaDeItens.invoices[widget.indexOfItem]
+                                      .items[i].unitPrice! !=
+                                  0
+                              ? Money.from(
+                                      listaDeItens.invoices[widget.indexOfItem]
+                                              .items[i].quantity! *
+                                          listaDeItens
+                                              .invoices[widget.indexOfItem]
+                                              .items[i]
+                                              .unitPrice!
+                                              .toDouble(),
+                                      real)
+                                  .toString()
+                              : ''),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Palette.primary,
+                        ),
+                        onPressed: () {
+                          listaDeItens.invoices[widget.indexOfItem].items
+                              .removeAt(i);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

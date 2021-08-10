@@ -7,18 +7,22 @@ import 'package:pdf/widgets.dart';
 import 'package:pdf_merger/pdf_merger.dart';
 
 class PdfApi {
-  static Future<File> saveDocument({
-    required String name,
-    String? name2,
-    required Document pdf,
-    Document? pdf2,
-  }) async {
+  static Future<File> saveDocument(
+      {required String name,
+      String? name2,
+      required Document pdf,
+      Document? pdf2,
+      required String nomePdf}) async {
     final bytes = await pdf.save();
     final bytes2 = await pdf2?.save();
 
+    final String nomeOrc = '$nomePdf a1.pdf';
+
+    final String nomePed = '$nomePdf a2.pdf';
+
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/$name');
-    final file2 = File('${dir.path}/$name2');
+    final file = File('${dir.path}/$nomeOrc');
+    final file2 = File('${dir.path}/$nomePed');
 
     await file.writeAsBytes(bytes);
     if (pdf2 != null) {
@@ -26,11 +30,12 @@ class PdfApi {
 
       await PdfMerger.mergeMultiplePDF(
           paths: [file.path, file2.path],
-          outputDirPath: '${dir.path}/final.pdf');
+          outputDirPath: '${dir.path}/$nomePdf.pdf');
       await file2.delete();
-      return File('${dir.path}/final.pdf');
+      await file.delete();
+      return File('${dir.path}/$nomePdf.pdf');
     } else {
-      return File('${dir.path}/$name');
+      return File('${dir.path}/$nomeOrc');
     }
   }
 

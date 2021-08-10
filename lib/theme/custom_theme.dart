@@ -11,7 +11,7 @@ final ThemeData tema = ThemeData(
 );
 
 class Palette {
-  static const Color primary = Color(0xFFeead0e);
+  static const Color primary = Color(0xFFc28a29);
 }
 
 class CustomTheme {
