@@ -133,6 +133,12 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
                             listaOrcamento.invoices.removeAt(index);
 
+                            if (listaDeItens.invoices[index].orcamento ==
+                                    false &&
+                                listaDeItens.invoices[index].pedido == false) {
+                              listaDeItens.invoices.removeAt(index);
+                            }
+
                             listaOrcamento.invoices.clear();
                             listaDeItens.invoices.forEach((element) {
                               if (element.pedido == true) {
@@ -252,6 +258,12 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
                             
 */
+
+                            if (listaDeItens.invoices[index].orcamento ==
+                                    false &&
+                                listaDeItens.invoices[index].pedido == false) {
+                              listaDeItens.invoices.removeAt(index);
+                            }
                             listaDeItens
                                 .invoices[listaDeItens.invoices.indexWhere(
                                     (Invoice element) =>
