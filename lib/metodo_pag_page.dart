@@ -11,13 +11,19 @@ import 'item_list_page.dart';
 import 'resumo.dart';
 
 List<String> condicaoPagamento = [
-  "A VISTA",
-  "A PRAZO",
+  "PIX",
+  "DÉBITO",
+  "CRÉDITO",
+  "BOLETO",
   "CARTAO 2X",
   "CARTAO 3X",
   "CARTAO 4X",
   "CARTAO 5X",
   "CARTAO 6X",
+  "CARTAO 7X",
+  "CARTAO 8X",
+  "CARTAO 9X",
+  "CARTAO 10X",
   "A COMBINAR",
 ];
 
