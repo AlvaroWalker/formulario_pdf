@@ -592,7 +592,7 @@ class PdfInvoiceApi {
                         textAlign: TextAlign.right,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
                 Align(
-                    alignment: Alignment(.9, -.75),
+                    alignment: Alignment(.9, -.95),
                     child: Container(
                       width: 180,
                       height: 25,
