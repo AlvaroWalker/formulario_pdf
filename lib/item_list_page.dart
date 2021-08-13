@@ -46,12 +46,14 @@ class _ItemListPageState extends State<ItemListPage> {
       BuildContext context, InvoiceItem item, int lsindex) async {
     //String dropdownValue = opcoes[1];
 
-    final TextEditingController _controller1 = TextEditingController();
-    final MoneyMaskedTextController _controller2 = MoneyMaskedTextController();
+    final _controller1 = TextEditingController();
+    final _controller2 = MoneyMaskedTextController();
 
     _controller1.text = item.quantity.toString();
 
-    _controller2.text = item.unitPrice.toString();
+    //_controller2.text = item.unitPrice.toString();
+
+    _controller2.updateValue(item.unitPrice);
 
     return await showDialog(
       context: context,
@@ -132,7 +134,7 @@ class _ItemListPageState extends State<ItemListPage> {
 
     if (listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[widget.indexOfItem].items
-          .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
+          .map((item) => item.unitPrice! * item.quantity!)
           .reduce((item1, item2) => item1 + item2);
     } else {
       valorTotal = 0;
@@ -453,6 +455,8 @@ class _ItemListPageState extends State<ItemListPage> {
                   ),
                   child: InkWell(
                     onTap: () async {
+                      print(listaDeItens
+                          .invoices[widget.indexOfItem].items[i].unitPrice!);
                       showMyDialog(
                           context,
                           listaDeItens.invoices[widget.indexOfItem].items[i],
@@ -486,8 +490,7 @@ class _ItemListPageState extends State<ItemListPage> {
                                         listaDeItens
                                             .invoices[widget.indexOfItem]
                                             .items[i]
-                                            .unitPrice!
-                                            .toDouble(),
+                                            .unitPrice!,
                                         real)
                                     .toString()
                                 : '',
@@ -501,8 +504,7 @@ class _ItemListPageState extends State<ItemListPage> {
                                           listaDeItens
                                               .invoices[widget.indexOfItem]
                                               .items[i]
-                                              .unitPrice!
-                                              .toDouble(),
+                                              .unitPrice!,
                                       real)
                                   .toString()
                               : ''),

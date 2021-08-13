@@ -80,34 +80,6 @@ List<String> descricaoServico = [
   "WAGO",
 ];
 
-List<double> precoServico = [
-  1,
-  5,
-  7,
-  8,
-  9,
-  5,
-  8,
-  7,
-  4,
-  5,
-  8,
-  6,
-  2,
-  5,
-  8,
-  4,
-  7,
-  5,
-  1,
-  2,
-  5,
-  8,
-  7,
-  4,
-  2
-];
-
 class DescricaoServico {
   String descricao;
   double valorServ = 0;
@@ -117,12 +89,6 @@ class DescricaoServico {
     this.valorServ = 0,
   });
 }
-
-final itemsss = List<DescricaoServico>.generate(
-    descricaoServico.length,
-    (i) => DescricaoServico(
-        descricao: descricaoServico[i],
-        valorServ: precoServico.length > i ? precoServico[i] : 0));
 
 List<String> tipoServico = [
   "ACOMPANHAMENTO",
@@ -205,7 +171,6 @@ class _ItemAddPageState extends State<ItemAddPage> {
   final txtControlDescricao = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    print(itemsss);
     int index = listaDeItens.invoices
         .indexWhere((Invoice element) => element.id == widget.id);
 

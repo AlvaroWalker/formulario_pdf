@@ -88,7 +88,6 @@ class _TelaInicioState extends State<TelaInicio> {
                                 shape: StadiumBorder(),
                               ),
                               onPressed: () async {
-                                print(DateTime.now());
                                 int indexOfId = 0;
                                 novoId = 0;
                                 if (listaDeItens.invoices.isEmpty) {
@@ -101,7 +100,7 @@ class _TelaInicioState extends State<TelaInicio> {
                                   novoId++;
 
                                   //  print(idRepetido);
-                                  idRepetido = true;
+                                  //idRepetido = true;
                                 }
 
                                 listaDeItens.invoices.add(Invoice(
@@ -114,7 +113,13 @@ class _TelaInicioState extends State<TelaInicio> {
 
                                 idNovoPedido = indexOfId;
 
-                                print(listaDeItens.invoices.length);
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.customer?.name == null &&
+                                    element.id != novoId);
+
+                                listaDeItens.invoices.forEach((element) {
+                                  //print(element.id);
+                                });
 
                                 await Navigator.push(
                                     context,
@@ -177,6 +182,10 @@ class _TelaInicioState extends State<TelaInicio> {
                                 //  print(listaDeItens.invoices
                                 //      .indexWhere((Invoice element) => element.id == novoId));
 
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.customer?.name == null &&
+                                    element.id != novoId);
+
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -224,6 +233,7 @@ class _TelaInicioState extends State<TelaInicio> {
                                 listaDeItens.invoices.removeWhere((element) =>
                                     element.customer?.name == null);
 
+                                //listaDeItens.invoices.clear();
                                 await Navigator.push(
                                     context,
                                     MaterialPageRoute(

@@ -92,9 +92,14 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                                       id: listaDeItens.invoices.indexWhere(
                                           (Invoice element) =>
                                               element.id ==
-                                              listaDeItens.invoices[index].id),
-                                      orcamentoEditar:
-                                          listaDeItens.invoices[index],
+                                              listaOrcamento
+                                                  .invoices[index].id),
+                                      orcamentoEditar: listaDeItens.invoices[
+                                          listaDeItens.invoices.indexWhere(
+                                              (Invoice element) =>
+                                                  element.id ==
+                                                  listaOrcamento
+                                                      .invoices[index].id)],
                                     )));
                         setState(() {});
                       },
@@ -126,7 +131,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             //listaOrcamento.invoices.removeAt(index);
                             listaDeItens
                                 .invoices[listaDeItens.invoices.indexWhere(
-                                    (Invoice element) =>
+                                    (element) =>
                                         element.id ==
                                         listaOrcamento.invoices[index].id)]
                                 .orcamento = false;
@@ -136,7 +141,10 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             if (listaDeItens.invoices[index].orcamento ==
                                     false &&
                                 listaDeItens.invoices[index].pedido == false) {
-                              listaDeItens.invoices.removeAt(index);
+                              listaDeItens.invoices.removeAt(
+                                  listaDeItens.invoices.indexWhere((element) =>
+                                      element.id ==
+                                      listaOrcamento.invoices[index].id));
                             }
 
                             listaOrcamento.invoices.clear();
@@ -222,9 +230,13 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                                       id: listaDeItens.invoices.indexWhere(
                                           (Invoice element) =>
                                               element.id ==
-                                              listaDeItens.invoices[index].id),
-                                      orcamentoEditar:
-                                          listaDeItens.invoices[index],
+                                              listaPedidos.invoices[index].id),
+                                      orcamentoEditar: listaDeItens.invoices[
+                                          listaDeItens.invoices.indexWhere(
+                                              (element) =>
+                                                  element.id ==
+                                                  listaPedidos
+                                                      .invoices[index].id)],
                                     )));
                         setState(() {});
                       },
@@ -262,11 +274,14 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             if (listaDeItens.invoices[index].orcamento ==
                                     false &&
                                 listaDeItens.invoices[index].pedido == false) {
-                              listaDeItens.invoices.removeAt(index);
+                              listaDeItens.invoices.removeAt(
+                                  listaDeItens.invoices.indexWhere((element) =>
+                                      element.id ==
+                                      listaPedidos.invoices[index].id));
                             }
                             listaDeItens
                                 .invoices[listaDeItens.invoices.indexWhere(
-                                    (Invoice element) =>
+                                    (element) =>
                                         element.id ==
                                         listaPedidos.invoices[index].id)]
                                 .pedido = false;
