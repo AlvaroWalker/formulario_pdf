@@ -7,6 +7,7 @@ import 'model/invoice.dart';
 double valorTotal = 0;
 
 List<String> descricaoServico = [
+<<<<<<< Updated upstream
   "Tomada",
   "Chuveiro",
   "Ar Condicionado",
@@ -15,13 +16,152 @@ List<String> descricaoServico = [
   "Bomba",
   "Quadro de Instalação",
   "Hidrante"
+=======
+  "AR CONDICIONADO",
+  "ATERRAMENTO",
+  "AUMENTO DE CARGA",
+  "BOMBA DE POÇO",
+  "BOMBA HIDRÁULICA",
+  "BOMBA SAPO",
+  "CABEAMENTO",
+  "CAIXA DE PADRÃO",
+  "CAIXA DE PASSAGEM",
+  "CANALETA",
+  "CANELINHA",
+  "CHAVE",
+  "CHUVEIRO ",
+  "CLIMATIZADOR ",
+  "COMPRESSOR",
+  "COMPRESSOR",
+  "CONTATORA",
+  "CONTROLADORA",
+  "CORRENTE",
+  "DISJUNTOR",
+  "ELETRO CALHA",
+  "ELETRODUTO",
+  "EQUIPAMENTOS",
+  "EXAUSTOR",
+  "FUSÍVEIS",
+  "GEORREFENCIADO ",
+  "HASTES",
+  "HIDRANTE",
+  "HIDRANTE",
+  "INTERFONE",
+  "INTERRUPTOR 3 TECLAS",
+  "INTERRUPTOR COM TOMADA",
+  "INTERRUPTOR DUPLO COM TOMADA",
+  "INSTALAÇÃO DE PADRÃO",
+  "INSTALAÇÃO DE PADRÃO BI-FASE",
+  "INSTALAÇÃO DE PADRÃO MONO",
+  "INSTALAÇÃO DE PADRÃO TRI-FASE",
+  "INSTALAÇÃO DE QUADRO DE DISTRIBUIÇÃO",
+  "INSTALAÇÃO EQUIPAMENTOS",
+  "LAMPADA DE POSTE",
+  "LOCAL",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA DE EMBUTIR",
+  "LUMINÁRIA DE EMERGÊNCIA",
+  "LUMINÁRIA DE SOBREPOR",
+  "LUMINÁRIA DICRÓICA",
+  "LUMINÁRIA",
+  "LUMINÁRIA",
+  "MÁQUINA",
+  "MOTOR",
+  "PADRÃO ",
+  "PAINEL DE COMANDO",
+  "PAINEL",
+  "PARA-RAIOS",
+  "PORTÃO ELETRÔNICO",
+  "POSTE CONCRETO 10m",
+  "POSTE CONCRETO 11m",
+  "POSTE CONCRETO 6m",
+  "POSTE CONCRETO 7m",
+  "POSTE CONCRETO 8m",
+  "POSTE CONCRETO 9m",
+  "POSTE DE PADRÃO COM CAIXA",
+  "PROJETO ELÉTROTÉCNICO",
+  "PROJETO TÉCNICO",
+  "PROJETOR",
+  "QUADRO DE COMANDO",
+  "QUADRO DE DISTRIBUIÇÃO",
+  "QUADRO DE DISTRIBUIÇÃO INDIVIDUAL",
+  "QUADRO DE MEDIÇÃO AGRUPADO",
+  "REATOR DE POSTE",
+  "REDE ALTA TENSÃO",
+  "REDE BIFÁSICA",
+  "REDE DE INTERNET",
+  "REDE MONOFÁSICA",
+  "REDE SEM FIO",
+  "REDE TRIFÁSICA",
+  "REFLETOR",
+  "RELÉ CÍCLICO",
+  "RELÉ DE TEMPO",
+  "RELÉ FALTA DE FASE",
+  "RELÉ FOTO CÉLULA",
+  "RELÉ",
+  "ROTEADOR",
+  "SIRENE",
+  "SPDA",
+  "SUPER-POSTE",
+  "TENSÃO",
+  "TERMINAIS",
+  "TOMADA TRIFÁSICA",
+  "TOMADA",
+  "TRANSFORMADOR",
+  "TRITURADOR",
+  "TUBULAÇÃO ELÉTRICA",
+  "TUBULAÇÃO HIDRÁULICA",
+  "TUBULAÇÃO",
+  "TURBINA",
+  "VALA ATERRAMENTO",
+  "VALETA",
+  "VENTILADOR DE TETO",
+  "VENTILADOR PAREDE",
+  "VERIFICAÇÃO DE INSTALAÇÃO ELÉTRICA",
+>>>>>>> Stashed changes
 ];
 
 List<String> tipoServico = [
+<<<<<<< Updated upstream
   "Instalação",
   "Troca",
   "Medição",
   "Conferencia",
+=======
+  'ACOMPANHAMENTO',
+  'ADEQUAÇÃO',
+  'AFERIÇÃO',
+  'AMARRAÇÃO',
+  'APLICAÇÃO',
+  'AUTOMATIZAÇÃO',
+  'CARGA DE GÁS',
+  'COBERTURA',
+  'CONFIGURAÇÃO',
+  'CONSERTO',
+  'CONSULTORIA',
+  'DESENTUPIMENTO',
+  'DESLOCAMENTO',
+  'FIXAÇÃO',
+  'INFRA-ESTRUTURA',
+  'INSTALAÇÃO',
+  'LEVANTAMENTO',
+  'LIMPEZA',
+  'MATERIAL',
+  'MEDIÇÃO',
+  'MONTAGEM',
+  'MUDANÇA',
+  'PASSAGEM',
+  'PERFURAÇÃO',
+  'REBOBINAGEM',
+  'REGULAGEM',
+  'REMOÇÃO',
+  'REPARO',
+  'SERVIÇO',
+  'SUBSTITUIÇÃO',
+  'SUPORTE',
+  'TALISCAMENTO',
+  'VISTORIA',
+>>>>>>> Stashed changes
 ];
 
 int? _radioValue = 0;
@@ -225,6 +365,7 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(15),
                         ),
+<<<<<<< Updated upstream
                         onPressed: () {
                           itens.add(InvoiceItem(
                               tipo: _radioValue == 0
@@ -237,6 +378,69 @@ class _ItemAdd_PageState extends State<ItemAdd_Page> {
                               quantity: int.parse(txtControlQuantidade.text),
                               unitPrice:
                                   double.parse(txtControlPrecoUnidade.text)));
+=======
+                        onPressed: () async {
+                          print('Apertou orcamento: $abriuOrcamento');
+                          if (_radioValue == 0) {
+                            if (txtControlTipo.text.isNotEmpty &&
+                                txtControlDescricao.text.isNotEmpty) {
+                              listaDeItens.invoices[index].items.add(
+                                  new InvoiceItem(
+                                      tipo: _radioValue == 0
+                                          ? txtControlTipo.text
+                                              .toString()
+                                              .toUpperCase()
+                                          : 'REL. DE MATERIAL',
+                                      description: _radioValue == 0
+                                          ? txtControlDescricao.text
+                                              .toUpperCase()
+                                          : txtControlDescricao.text
+                                              .toUpperCase(),
+                                      unidade: dropdownValue3,
+                                      date: DateTime.now()
+                                          .toString()
+                                          .toUpperCase(),
+                                      quantity: double.parse(
+                                          txtControlQuantidade.text),
+                                      unitPrice: (_radioValue == 1 &&
+                                              txtControlPrecoUnidade
+                                                  .text.isEmpty)
+                                          ? 0
+                                          : txtControlPrecoUnidade
+                                              .numberValue));
+                            }
+                          } else {
+                            listaDeItens.invoices[index].items.add(
+                                new InvoiceItem(
+                                    tipo: _radioValue == 0
+                                        ? txtControlTipo.text
+                                            .toString()
+                                            .toUpperCase()
+                                        : 'REL. DE MATERIAL',
+                                    description: _radioValue == 0
+                                        ? txtControlDescricao.text.toUpperCase()
+                                        : txtControlDescricao.text
+                                            .toUpperCase(),
+                                    unidade: dropdownValue3,
+                                    date:
+                                        DateTime.now().toString().toUpperCase(),
+                                    quantity:
+                                        double.parse(txtControlQuantidade.text),
+                                    unitPrice: (_radioValue == 1 &&
+                                            txtControlPrecoUnidade.text.isEmpty)
+                                        ? 0
+                                        : txtControlPrecoUnidade.numberValue));
+                          }
+
+                          dropdownValue = null;
+                          dropdownValue2 = null;
+                          dropdownValue3 = unidadeServico[4];
+                          txtControlDescricao.clear();
+                          txtControlPrecoUnidade.clear();
+                          txtControlQuantidade.clear();
+                          txtControlTipo.clear();
+                          FocusScope.of(context).requestFocus(new FocusNode());
+>>>>>>> Stashed changes
                           setState(() {});
                         },
                         child: Icon(Icons.add)),

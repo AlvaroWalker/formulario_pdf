@@ -9,6 +9,11 @@ import 'utils.dart';
 
 double valorTotal = 0;
 
+<<<<<<< Updated upstream
+=======
+bool criarPedido = true;
+
+>>>>>>> Stashed changes
 List itens = [];
 
 class ItemAddPage extends StatefulWidget {
@@ -26,6 +31,14 @@ class _ItemAddPageState extends State<ItemAddPage> {
     setState(() {});
   }
 
+<<<<<<< Updated upstream
+=======
+  void initState() {
+    super.initState();
+    criarPedido = true;
+  }
+
+>>>>>>> Stashed changes
   Future<void> showMyDialog(
       BuildContext context, InvoiceItem item, int lsindex) async {
     InvoiceItem newitem = item;
@@ -213,6 +226,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
               ),
             ),
           )),
+<<<<<<< Updated upstream
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -234,6 +248,171 @@ class _ItemAddPageState extends State<ItemAddPage> {
                 customer: Customer(
                   name: widget.cliente.name,
                   doc: widget.cliente.doc,
+=======
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              listaDeItens.invoices[widget.indexOfItem].pedido == false ||
+                      abriuPedido == false
+                  ? Checkbox(
+                      value: criarPedido,
+                      onChanged: (value) {
+                        setState(() {
+                          criarPedido = !criarPedido;
+                          botaoPedido = criarPedido;
+                          print(botaoPedido);
+                        });
+                      })
+                  : Text(''),
+              listaDeItens.invoices[widget.indexOfItem].pedido == false ||
+                      abriuPedido == false
+                  ? Text('ANEXAR PEDIDO AO ORÇAMENTO')
+                  : Text(''),
+            ],
+          )
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text('SALVAR E ENVIAR'),
+        onPressed: () async {
+          print('Apertou orcamento: $abriuOrcamento');
+          botaoPedido = criarPedido;
+          listaDeItens.invoices[widget.indexOfItem].valorTotal = valorTotal;
+
+          if (listaDeItens.invoices[widget.indexOfItem].pedido == true) {
+            // jaUmPedido = true;
+          }
+
+          if (listaDeItens.invoices[widget.indexOfItem].pedido == false) {
+            listaDeItens.invoices[widget.indexOfItem].pedido = criarPedido;
+          }
+
+          salvarPedido(jaUmPedido);
+
+          //PdfApi.openFile(pdfFile);
+        },
+      ),
+    );
+  }
+
+  void salvarPedido(bool ped) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    print(jsonEncode(listaDeItens.toJson()));
+    await prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
+
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PaginaGerandoPdf(index: widget.indexOfItem, jaPedido: ped)))
+        .then((value) => setState(() {}));
+  }
+
+  showWaitDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Gerando PDF'),
+              ],
+            ),
+          ),
+          actions: <Widget>[],
+        );
+      },
+    );
+  }
+
+  listaItensWidget() {
+    return listaDeItens.invoices[widget.indexOfItem].items.isNotEmpty
+        ? ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: listaDeItens.invoices[widget.indexOfItem].items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      showMyDialog(
+                          context,
+                          listaDeItens
+                              .invoices[widget.indexOfItem].items[index],
+                          index);
+                      //print(index);
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(listaDeItens
+                              .invoices[widget.indexOfItem].items[index].tipo
+                              .toString()),
+                          Text(listaDeItens.invoices[widget.indexOfItem]
+                              .items[index].description
+                              .toString()),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Quantidade: ${listaDeItens.invoices[widget.indexOfItem].items[index].quantity}'),
+                          Text(
+                            listaDeItens.invoices[widget.indexOfItem]
+                                        .items[index].unitPrice! !=
+                                    0
+                                ? Money.from(
+                                        listaDeItens
+                                            .invoices[widget.indexOfItem]
+                                            .items[index]
+                                            .unitPrice!
+                                            .toDouble(),
+                                        real)
+                                    .toString()
+                                : '',
+                          ),
+                          Text(listaDeItens.invoices[widget.indexOfItem]
+                                      .items[index].unitPrice! !=
+                                  0
+                              ? Money.from(
+                                      listaDeItens.invoices[widget.indexOfItem]
+                                              .items[index].quantity! *
+                                          listaDeItens
+                                              .invoices[widget.indexOfItem]
+                                              .items[index]
+                                              .unitPrice!
+                                              .toDouble(),
+                                      real)
+                                  .toString()
+                              : ''),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Palette.primary,
+                        ),
+                        onPressed: () {
+                          listaDeItens.invoices[widget.indexOfItem].items
+                              .removeAt(index);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ),
+>>>>>>> Stashed changes
                 ),
                 info: InvoiceInfo(
                   date: date,

@@ -113,4 +113,215 @@ class TelaInicio extends StatelessWidget {
       ],
     );
   }
+<<<<<<< Updated upstream
+=======
+
+  botaoOrcamento() async {}
+
+  botaoPedido() async {}
+
+  botoesMenu() {
+    return AnimationLimiter(
+        child: AnimationLimiter(
+            child: AnimationConfiguration.staggeredList(
+                position: 1,
+                child: SlideAnimation(
+                    delay: Duration(milliseconds: 500),
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          //crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              height: 200,
+                            ),
+                            SizedBox(
+                              height: 100,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 4,
+                                fixedSize: Size(
+                                    MediaQuery.of(context).size.width * .6, 55),
+                                onPrimary: Colors.black87,
+                                primary: Color.fromARGB(255, 255, 255, 255),
+                                shape: StadiumBorder(),
+                              ),
+                              onPressed: () async {
+                                int indexOfId = 0;
+                                novoId = 0;
+                                if (listaDeItens.invoices.isEmpty) {
+                                  listaDeItens = InvoiceList(invoices: []);
+                                }
+
+                                while (listaDeItens.invoices.any(
+                                    (Invoice element) =>
+                                        element.id == novoId)) {
+                                  novoId++;
+
+                                  //  print(idRepetido);
+                                  //idRepetido = true;
+                                }
+
+                                listaDeItens.invoices.add(Invoice(
+                                    id: novoId, items: <InvoiceItem>[]));
+
+                                indexOfId = listaDeItens.invoices.indexWhere(
+                                    (Invoice element) => element.id == novoId);
+
+                                //print(indexOfId.toString() + novoId.toString());
+
+                                idNovoPedido = indexOfId;
+
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.customer?.name == null &&
+                                    element.id != novoId);
+
+                                listaDeItens.invoices.forEach((element) {
+                                  //print(element.id);
+                                });
+                                abriuOrcamento = false;
+                                abriuPedido = false;
+
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TelaCliente(
+                                              id: novoId,
+                                              editing: false,
+                                              indexOfIdd: indexOfId,
+                                            )));
+                              },
+                              child: Text(
+                                'ORÇAMENTO',
+                                style: TextStyle(
+                                    //color: Color.fromARGB(255, 255, 255, 255),
+                                    fontSize: 20),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 4,
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * .6,
+                                      55),
+                                  onPrimary: Colors.black87,
+                                  primary: Color.fromARGB(255, 255, 255, 255),
+                                  shape: StadiumBorder(),
+                                  minimumSize: Size(80, 50)),
+                              onPressed: () {
+                                int indexOfId = 0;
+                                novoId = 0;
+                                if (listaDeItens.invoices.isEmpty) {
+                                  listaDeItens = InvoiceList(invoices: []);
+                                }
+
+                                while (listaDeItens.invoices.any(
+                                    (Invoice element) =>
+                                        element.id == novoId)) {
+                                  novoId++;
+
+                                  //   print(idRepetido);
+                                  idRepetido = true;
+                                }
+
+                                listaDeItens.invoices.add(Invoice(
+                                    id: novoId,
+                                    orcamento: false,
+                                    pedido: true,
+                                    items: <InvoiceItem>[]));
+
+                                indexOfId = listaDeItens.invoices.indexWhere(
+                                    (Invoice element) => element.id == novoId);
+
+                                //    print(indexOfId.toString() + novoId.toString());
+
+                                idNovoPedido = indexOfId;
+
+                                //  print(listaDeItens.invoices
+                                //      .indexWhere((Invoice element) => element.id == novoId));
+
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.customer?.name == null &&
+                                    element.id != novoId);
+                                abriuOrcamento = false;
+                                abriuPedido = true;
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TelaCliente(
+                                            id: novoId,
+                                            editing: false,
+                                            indexOfIdd: listaDeItens.invoices
+                                                .indexWhere((Invoice element) =>
+                                                    element.id == novoId))));
+                              },
+                              child: Text(
+                                'PEDIDO',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Divider(
+                              thickness: 3,
+                              color: Colors.transparent,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  //elevation: 4,
+                                  shadowColor: Colors.transparent,
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * .6,
+                                      55),
+
+                                  //onPrimary: Colors.black87,
+                                  primary: Color.fromARGB(0, 0, 0, 0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      side: BorderSide(
+                                          color: Colors.white, width: 2)),
+                                  minimumSize: Size(80, 50)),
+                              onPressed: () async {
+                                if (listaDeItens.invoices.isEmpty) {
+                                  listaDeItens = InvoiceList(invoices: []);
+                                }
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.customer?.name == null);
+
+                                listaDeItens.invoices.removeWhere((element) =>
+                                    element.orcamento == false &&
+                                    element.pedido == false);
+
+                                //listaDeItens.invoices.clear();
+
+                                abriuOrcamento = false;
+                                abriuPedido = false;
+
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TelaItensEnviados()));
+                              },
+                              child: Text(
+                                'MEUS ENVIOS',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )))));
+  }
+>>>>>>> Stashed changes
 }
