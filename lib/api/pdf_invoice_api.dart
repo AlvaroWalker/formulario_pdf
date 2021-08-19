@@ -4,11 +4,8 @@ import 'package:formulario_pdf/model/customer.dart';
 import 'package:formulario_pdf/model/invoice.dart';
 import 'package:formulario_pdf/model/supplier.dart';
 import 'package:formulario_pdf/utils.dart';
-<<<<<<< Updated upstream
-=======
 import 'package:formulario_pdf/variaveis.dart';
 import 'package:intl/intl.dart';
->>>>>>> Stashed changes
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
@@ -16,8 +13,6 @@ import 'package:pdf/widgets.dart';
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
     final pdf = Document();
-<<<<<<< Updated upstream
-=======
     final pdf2 = Document();
 
     final imagemFundo = (await rootBundle.load('assets/orcamentoPag1.jpg'))
@@ -153,7 +148,6 @@ class PdfInvoiceApi {
         (await rootBundle.load('assets/orcamentoPdfTopPage2.jpg'))
             .buffer
             .asUint8List();
->>>>>>> Stashed changes
 
     pdf.addPage(MultiPage(
       build: (context) => [

@@ -7,16 +7,6 @@ import 'model/invoice.dart';
 double valorTotal = 0;
 
 List<String> descricaoServico = [
-<<<<<<< Updated upstream
-  "Tomada",
-  "Chuveiro",
-  "Ar Condicionado",
-  "Interruptor",
-  "Compressor",
-  "Bomba",
-  "Quadro de Instalação",
-  "Hidrante"
-=======
   "AR CONDICIONADO",
   "ATERRAMENTO",
   "AUMENTO DE CARGA",
@@ -118,7 +108,6 @@ List<String> descricaoServico = [
   "VENTILADOR DE TETO",
   "VENTILADOR PAREDE",
   "VERIFICAÇÃO DE INSTALAÇÃO ELÉTRICA",
->>>>>>> Stashed changes
 ];
 
 List<String> tipoServico = [

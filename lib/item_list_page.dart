@@ -9,11 +9,8 @@ import 'utils.dart';
 
 double valorTotal = 0;
 
-<<<<<<< Updated upstream
-=======
 bool criarPedido = true;
 
->>>>>>> Stashed changes
 List itens = [];
 
 class ItemAddPage extends StatefulWidget {
@@ -31,14 +28,11 @@ class _ItemAddPageState extends State<ItemAddPage> {
     setState(() {});
   }
 
-<<<<<<< Updated upstream
-=======
   void initState() {
     super.initState();
     criarPedido = true;
   }
 
->>>>>>> Stashed changes
   Future<void> showMyDialog(
       BuildContext context, InvoiceItem item, int lsindex) async {
     InvoiceItem newitem = item;

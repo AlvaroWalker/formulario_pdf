@@ -10,9 +10,6 @@ class TelaItensEnviados extends StatefulWidget {
 }
 
 class _TelaItensEnviadosState extends State<TelaItensEnviados> {
-<<<<<<< Updated upstream
-  @override
-=======
   void initState() {
     super.initState();
     listaDeItens.invoices.forEach((element) {
@@ -28,7 +25,6 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
     });
   }
 
->>>>>>> Stashed changes
   Widget orcamento() {
     return Container(
       alignment: Alignment.center,
