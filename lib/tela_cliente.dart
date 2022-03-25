@@ -1,143 +1,222 @@
+import 'package:brasil_fields/brasil_fields.dart';
+import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:souza_autocenter/model/supplier.dart';
+import 'package:souza_autocenter/variaveis.dart';
+import 'package:intl/intl.dart';
 
 import 'model/customer.dart';
 
 import 'item_add_page.dart';
+import 'model/invoice.dart';
+
+final txtControlCliente = TextEditingController();
+final txtControlDoc = TextEditingController();
+final tctControlVeiculo = TextEditingController();
+final txtControlRazaoSocial = TextEditingController();
+
+final txtControlEnd = TextEditingController();
+final txtControlBairro = TextEditingController();
+final txtControlCidade = TextEditingController();
+final txtControlTelefone = TextEditingController();
 
 class TelaCliente extends StatefulWidget {
-  const TelaCliente({Key? key}) : super(key: key);
+  final int id;
+  final int indexOfIdd;
+  final bool? editing;
+  final Customer? clienteEdit;
+  const TelaCliente(
+      {Key? key,
+      required this.id,
+      this.editing = false,
+      this.clienteEdit,
+      required this.indexOfIdd})
+      : super(key: key);
 
   @override
   _TelaClienteState createState() => _TelaClienteState();
 }
 
 class _TelaClienteState extends State<TelaCliente> {
-  Widget build(BuildContext context) {
-    final txtControlCliente = TextEditingController();
-    final txtControlDoc = TextEditingController();
-    final txtControlInscEst = TextEditingController();
-    final txtControlRazaoSocial = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
 
-    final txtControlEnd = TextEditingController();
-    final txtControlBairro = TextEditingController();
-    final txtControlCidade = TextEditingController();
-    final txtControlTelefone = TextEditingController();
-    @override
-    void dispose() {
-      // Clean up the controller when the widget is disposed.
-      txtControlCliente.dispose();
-      txtControlDoc.dispose();
-      super.dispose();
+    txtControlCliente.clear();
+    txtControlDoc.clear();
+    tctControlVeiculo.clear();
+    txtControlRazaoSocial.clear();
+
+    txtControlEnd.clear();
+    txtControlBairro.clear();
+    txtControlCidade.clear();
+    txtControlTelefone.clear();
+
+    if (widget.clienteEdit != null && widget.editing == true) {
+      txtControlCliente.text = widget.clienteEdit!.name;
+      txtControlDoc.text = widget.clienteEdit!.doc;
+      tctControlVeiculo.text = widget.clienteEdit!.veiculo!;
+      txtControlRazaoSocial.text = widget.clienteEdit!.razaoSocial!;
+
+      txtControlEnd.text = widget.clienteEdit!.clienteEndereco!;
+      txtControlBairro.text = widget.clienteEdit!.clienteBairro!;
+      txtControlCidade.text = widget.clienteEdit!.clienteCidade!;
+      txtControlTelefone.text = widget.clienteEdit!.clienteTelefone!;
+    }
+  }
+
+  Widget build(BuildContext context) {
+    caixaTexto(TextEditingController txtControl, String texto,
+        TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+        child: TextFormField(
+          onEditingComplete: () => FocusScope.of(context).nextFocus(),
+          inputFormatters: formatadorTexto,
+          onChanged: (text) {
+            setState(() {});
+          },
+          keyboardType: tipoTeclado,
+          controller: txtControl,
+          obscureText: false,
+          decoration: InputDecoration(labelText: texto),
+          style: TextStyle(
+            fontFamily: 'Poppins',
+          ),
+          textAlign: TextAlign.start,
+        ),
+      );
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 210, 210, 210),
+      backgroundColor: Color.fromARGB(255, 242, 241, 237),
       appBar: AppBar(
         backgroundColor: Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
-        elevation: 0, // <-- ELEVATION ZEROED
-        title: Text(
-          'INSIRA OS DADOS DO CLIENTE',
-          style: TextStyle(color: Colors.black54),
-        ),
+        elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          onPressed: Navigator.of(context).pop,
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.red,
+            size: 30,
+          ),
+        ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(2.5),
         //fit: FlexFit.tight,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlCliente,
-              decoration: InputDecoration(
-                  labelText: 'Cliente:', border: OutlineInputBorder()),
+          Align(
+            alignment: Alignment(-1, 0),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(15, 10, 10, 20),
+              child: Text(
+                '1 - INSIRA OS DADOS DO CLIENTE',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 17,
+                  color: Colors.red,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlDoc,
-              decoration: InputDecoration(
-                  labelText: 'CPF/CNPJ:', border: OutlineInputBorder()),
-            ),
+          caixaTexto(txtControlCliente, 'Cliente: ', TextInputType.name,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(tctControlVeiculo, 'Veículo: ', TextInputType.text,
+              [UpperCaseTextFormatter()]),
+          caixaTexto(txtControlTelefone, 'Telefone: ', TextInputType.phone, [
+            FilteringTextInputFormatter.digitsOnly,
+            TelefoneInputFormatter()
+          ]),
+          Divider(
+            height: 25,
+            thickness: 1,
+            indent: 25,
+            endIndent: 25,
+            color: Colors.red,
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlInscEst,
-              decoration: InputDecoration(
-                  labelText: 'INSC. EST.:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlRazaoSocial,
-              decoration: InputDecoration(
-                  labelText: 'RAZÃO SOCIAL:', border: OutlineInputBorder()),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlEnd,
-              decoration: InputDecoration(
-                  labelText: 'ENDEREÇO:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlBairro,
-              decoration: InputDecoration(
-                  labelText: 'BAIRRO:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlCidade,
-              decoration: InputDecoration(
-                  labelText: 'CIDADE:', border: OutlineInputBorder()),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextFormField(
-              controller: txtControlTelefone,
-              decoration: InputDecoration(
-                  labelText: 'TELEFONE:', border: OutlineInputBorder()),
-            ),
-          ),
+          ExpandChild(
+              expandArrowStyle: ExpandArrowStyle.both,
+              expandedHint: 'mostrar menos',
+              collapsedHint: 'mostrar mais',
+              child: Column(
+                children: [
+                  caixaTexto(
+                      txtControlDoc, 'CPF/CNPJ: ', TextInputType.number, [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CpfOuCnpjFormatter()
+                  ]),
+                  caixaTexto(txtControlRazaoSocial, 'Razão Social: ',
+                      TextInputType.text, [UpperCaseTextFormatter()]),
+                  caixaTexto(txtControlEnd, 'Endereço: ', TextInputType.text,
+                      [UpperCaseTextFormatter()]),
+                  caixaTexto(txtControlBairro, 'Bairro: ', TextInputType.text,
+                      [UpperCaseTextFormatter()]),
+                  caixaTexto(txtControlCidade, 'Cidade UF: ',
+                      TextInputType.text, [UpperCaseTextFormatter()]),
+                ],
+              )),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Visibility(
-        //visible: MediaQuery.of(context).viewInsets.bottom == 0,
+        visible: txtControlCliente.text.isNotEmpty,
         child: FloatingActionButton(
-          child: Icon(Icons.navigate_next),
-          onPressed: () async {
-            Customer clientes = new Customer(
+          elevation: 8,
+          child: Icon(
+            Icons.navigate_next,
+            color: Colors.white,
+            size: 50,
+          ),
+          onPressed: () {
+            print(listaDeItens.invoices.length);
+
+            listaDeItens.invoices[widget.indexOfIdd].customer = new Customer(
                 name: txtControlCliente.text,
                 doc: txtControlDoc.text,
-                inscEst: txtControlInscEst.text,
+                veiculo: tctControlVeiculo.text,
                 razaoSocial: txtControlRazaoSocial.text,
                 clienteEndereco: txtControlEnd.text,
                 clienteBairro: txtControlBairro.text,
                 clienteCidade: txtControlCidade.text,
                 clienteTelefone: txtControlTelefone.text);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ItemAdd_Page(
-                          cliente: clientes,
-                        )));
+            if (widget.editing == true) {
+              Navigator.pop(context);
+            } else if (widget.editing == false) {
+              listaDeItens.invoices[widget.indexOfIdd].items = <InvoiceItem>[];
+              listaDeItens.invoices[widget.indexOfIdd].supplier = Supplier(
+                  name: 'name', address: 'address', paymentInfo: 'paymentInfo');
+              listaDeItens.invoices[widget.indexOfIdd].info = InvoiceInfo(
+                  description: 'description',
+                  number: 'number',
+                  date: DateFormat('dd-MM-yyyy')
+                      .format(DateTime.now())
+                      .toString(),
+                  dueDate: 'dueDate');
+
+              Navigator.pop(context);
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ItemAddPage(id: widget.id)));
+            }
           },
         ),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

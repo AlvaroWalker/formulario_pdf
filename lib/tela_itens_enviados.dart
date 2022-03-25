@@ -1,6 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-int? _radioValue = 0;
+import 'package:flutter/material.dart';
+import 'package:souza_autocenter/model/invoicelist.dart';
+import 'package:souza_autocenter/theme/custom_theme.dart';
+import 'package:souza_autocenter/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'item_add_page.dart';
+import 'variaveis.dart';
+
+InvoiceList listaPedidos = InvoiceList(invoices: []);
+
+InvoiceList listaOrcamento = InvoiceList(invoices: []);
 
 class TelaItensEnviados extends StatefulWidget {
   const TelaItensEnviados({Key? key}) : super(key: key);
@@ -26,6 +37,12 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
   }
 
   Widget orcamento() {
+    listaOrcamento.invoices.clear();
+    listaDeItens.invoices.forEach((element) {
+      if (element.orcamento == true) {
+        listaOrcamento.invoices.add(element);
+      }
+    });
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -44,15 +61,16 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               ),
               color: Color.fromARGB(0, 0, 0, 0),
               shadowColor: Color.fromARGB(0, 0, 0, 0),
-              child: Center(child: Text('TOTAL EM ORÇAMENTO: R\$ 15.190,00')),
+              child: Center(
+                  child: Text(listaOrcamento.invoices.length != 0
+                      ? 'TOTAL EM ORÇAMENTOS: ${Utils.formatarValor(listaOrcamento.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
+                      : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
           Divider(
             indent: 20,
             endIndent: 20,
           ),
-<<<<<<< Updated upstream
-=======
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
@@ -72,14 +90,10 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ItemAddPage(
-                                      id: listaDeItens.invoices.indexWhere(
-                                          (Invoice element) =>
-                                              element.id ==
-                                              listaOrcamento
-                                                  .invoices[index].id),
+                                      id: listaOrcamento.invoices[index].id,
                                       orcamentoEditar: listaDeItens.invoices[
                                           listaDeItens.invoices.indexWhere(
-                                              (Invoice element) =>
+                                              (element) =>
                                                   element.id ==
                                                   listaOrcamento
                                                       .invoices[index].id)],
@@ -87,54 +101,133 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         setState(() {});
                       },
                       child: ListTile(
+                        contentPadding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
                         title: Text(
                             'Cliente: ${listaOrcamento.invoices[index].customer?.name}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                                'Veículo: ${listaOrcamento.invoices[index].customer?.veiculo}'),
+                            Text(
                                 'Data: ${listaOrcamento.invoices[index].info?.date}'),
                             Text(
                                 'Valor Total: ${Utils.formatarValor(listaOrcamento.invoices[index].valorTotal)}'),
-                            // Text(
-                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Palette.primary,
-                          ),
-                          onPressed: () {
-                            listaDeItens
-                                .invoices[listaDeItens.invoices.indexWhere(
-                                    (element) =>
-                                        element.id ==
-                                        listaOrcamento.invoices[index].id)]
-                                .orcamento = false;
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.red,
+                              ),
+                              onPressed: () async {
+                                abriuOrcamento = true;
 
-                            //listaOrcamento.invoices.removeAt(index);
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ItemAddPage(
+                                              id: listaOrcamento
+                                                  .invoices[index].id,
+                                              orcamentoEditar: listaDeItens
+                                                      .invoices[
+                                                  listaDeItens.invoices
+                                                      .indexWhere((element) =>
+                                                          element.id ==
+                                                          listaOrcamento
+                                                              .invoices[index]
+                                                              .id)],
+                                            )));
+                                setState(() {});
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () async {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return AlertDialog(
+                                        title: Text('Apagar Orçamento?'),
+                                        content: Text(
+                                            'Deseja apagar este Orçamento?'),
+                                        actions: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Não'),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    listaDeItens
+                                                        .invoices[listaDeItens
+                                                            .invoices
+                                                            .indexWhere((element) =>
+                                                                element.id ==
+                                                                listaOrcamento
+                                                                    .invoices[
+                                                                        index]
+                                                                    .id)]
+                                                        .orcamento = false;
 
-                            if (listaDeItens.invoices[index].orcamento ==
-                                    false &&
-                                listaDeItens.invoices[index].pedido == false) {
-                              listaDeItens.invoices.removeAt(
-                                  listaDeItens.invoices.indexWhere((element) =>
-                                      element.id ==
-                                      listaOrcamento.invoices[index].id));
-                            }
+                                                    if (listaDeItens
+                                                                .invoices[index]
+                                                                .orcamento ==
+                                                            false &&
+                                                        listaDeItens
+                                                                .invoices[index]
+                                                                .pedido ==
+                                                            false) {
+                                                      listaDeItens.invoices
+                                                          .removeAt(listaDeItens
+                                                              .invoices
+                                                              .indexWhere((element) =>
+                                                                  element.id ==
+                                                                  listaOrcamento
+                                                                      .invoices[
+                                                                          index]
+                                                                      .id));
+                                                    }
 
-                            listaOrcamento.invoices.clear();
-                            listaDeItens.invoices.forEach((element) {
-                              if (element.orcamento == true) {
-                                listaOrcamento.invoices.add(element);
-                              }
-                            });
+                                                    listaOrcamento.invoices
+                                                        .clear();
+                                                    listaDeItens.invoices
+                                                        .forEach((element) {
+                                                      if (element.orcamento ==
+                                                          true) {
+                                                        listaOrcamento.invoices
+                                                            .add(element);
+                                                      }
+                                                    });
 
-                            setState(() {
-                              salvarPedido();
-                            });
-                          },
+                                                    Navigator.pop(context);
+                                                    setState(() {});
+                                                  },
+                                                  child: Text('Sim'))
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    });
+
+                                setState(() {
+                                  salvarPedido();
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -147,13 +240,18 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               ),
             ),
           )
->>>>>>> Stashed changes
         ],
       ),
     );
   }
 
   Widget pedido() {
+    listaPedidos.invoices.clear();
+    listaDeItens.invoices.forEach((element) {
+      if (element.pedido == true) {
+        listaPedidos.invoices.add(element);
+      }
+    });
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -172,15 +270,16 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               ),
               color: Color.fromARGB(0, 0, 0, 0),
               shadowColor: Color.fromARGB(0, 0, 0, 0),
-              child: Center(child: Text('TOTAL EM PEDIDOS: R\$ 15.190,00')),
+              child: Center(
+                  child: Text(listaPedidos.invoices.length != 0
+                      ? 'TOTAL EM PEDIDOS: ${Utils.formatarValor(listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
+                      : 'NENHUM PEDIDO REGISTRADO')),
             ),
           ),
           Divider(
             indent: 20,
             endIndent: 20,
           ),
-<<<<<<< Updated upstream
-=======
           Flexible(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
@@ -201,10 +300,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ItemAddPage(
-                                      id: listaDeItens.invoices.indexWhere(
-                                          (Invoice element) =>
-                                              element.id ==
-                                              listaPedidos.invoices[index].id),
+                                      id: listaPedidos.invoices[index].id,
                                       orcamentoEditar: listaDeItens.invoices[
                                           listaDeItens.invoices.indexWhere(
                                               (element) =>
@@ -215,62 +311,131 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
                         setState(() {});
                       },
                       child: ListTile(
+                        contentPadding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
                         title: Text(
                             'Cliente: ${listaPedidos.invoices[index].customer?.name}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                                'Veículo: ${listaPedidos.invoices[index].customer?.veiculo}'),
+                            Text(
                                 'Data: ${listaPedidos.invoices[index].info?.date}'),
                             Text(
                                 'Valor Total: ${Utils.formatarValor(listaPedidos.invoices[index].valorTotal)}'),
-                            // Text(
-                            //      'Preço Total: R\$ ${widget.lista.items?[index].quantity * widget.lista.items[index].unitPrice}'),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Palette.primary,
-                          ),
-                          onPressed: () {
-                            /*
-                            listaDeItens.invoices.removeAt(listaDeItens.invoices
-                                .indexWhere((Invoice element) =>
-                                    element.id ==
-                                    listaPedidos.invoices[index].id));
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.red,
+                              ),
+                              onPressed: () async {
+                                abriuOrcamento = true;
 
-                            listaPedidos.invoices.removeAt(index);
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ItemAddPage(
+                                              id: listaOrcamento
+                                                  .invoices[index].id,
+                                              orcamentoEditar: listaDeItens
+                                                      .invoices[
+                                                  listaDeItens.invoices
+                                                      .indexWhere((element) =>
+                                                          element.id ==
+                                                          listaPedidos
+                                                              .invoices[index]
+                                                              .id)],
+                                            )));
+                                setState(() {});
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return AlertDialog(
+                                        title: Text('Apagar Pedido?'),
+                                        content:
+                                            Text('Deseja excluir este Pedido?'),
+                                        actions: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Não')),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    listaDeItens
+                                                        .invoices[listaDeItens
+                                                            .invoices
+                                                            .indexWhere((element) =>
+                                                                element.id ==
+                                                                listaPedidos
+                                                                    .invoices[
+                                                                        index]
+                                                                    .id)]
+                                                        .pedido = false;
 
-                            
-*/
-                            listaDeItens
-                                .invoices[listaDeItens.invoices.indexWhere(
-                                    (element) =>
-                                        element.id ==
-                                        listaPedidos.invoices[index].id)]
-                                .pedido = false;
+                                                    if (listaDeItens
+                                                                .invoices[index]
+                                                                .orcamento ==
+                                                            false &&
+                                                        listaDeItens
+                                                                .invoices[index]
+                                                                .pedido ==
+                                                            false) {
+                                                      listaDeItens.invoices
+                                                          .removeAt(listaDeItens
+                                                              .invoices
+                                                              .indexWhere((element) =>
+                                                                  element.id ==
+                                                                  listaPedidos
+                                                                      .invoices[
+                                                                          index]
+                                                                      .id));
+                                                    }
 
-                            if (listaDeItens.invoices[index].orcamento ==
-                                    false &&
-                                listaDeItens.invoices[index].pedido == false) {
-                              listaDeItens.invoices.removeAt(
-                                  listaDeItens.invoices.indexWhere((element) =>
-                                      element.id ==
-                                      listaPedidos.invoices[index].id));
-                            }
+                                                    listaPedidos.invoices
+                                                        .clear();
+                                                    listaDeItens.invoices
+                                                        .forEach((element) {
+                                                      if (element.pedido ==
+                                                          true) {
+                                                        listaPedidos.invoices
+                                                            .add(element);
+                                                      }
+                                                    });
+                                                    Navigator.pop(context);
+                                                    setState(() {});
+                                                  },
+                                                  child: Text('Sim'))
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    });
 
-                            listaPedidos.invoices.clear();
-                            listaDeItens.invoices.forEach((element) {
-                              if (element.pedido == true) {
-                                listaPedidos.invoices.add(element);
-                              }
-                            });
-
-                            setState(() {
-                              salvarPedido();
-                            });
-                          },
+                                setState(() {
+                                  salvarPedido();
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -283,7 +448,6 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               ),
             ),
           )
->>>>>>> Stashed changes
         ],
       ),
     );
@@ -291,57 +455,33 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.transparent,
+      backgroundColor: Color.fromARGB(255, 242, 241, 237),
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            foregroundColor: CustomTheme.lightTheme.colorScheme.secondary,
             elevation: 0,
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Radio(
-                  value: 0,
-                  groupValue: _radioValue,
-                  onChanged: (int? value) {
-                    _radioValue = value;
-                    setState(() {});
-                  },
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: Navigator.of(context).pop,
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.red,
+                size: 30,
+              ),
+            ),
+            bottom: TabBar(
+              indicatorColor: Colors.red,
+              labelColor: CustomTheme.lightTheme.colorScheme.secondary,
+              tabs: [
+                Tab(
+                  text: 'ORÇAMENTOS',
                 ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'ORÇAMENTOS\nGERADOS',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 15),
-                  ),
-                ),
-                Radio(
-                  value: 1,
-                  groupValue: _radioValue,
-                  onChanged: (int? value) {
-                    _radioValue = value;
-                    setState(() {});
-                  },
-                ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'PEDIDOS\nGERADOS',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 15),
-                  ),
+                Tab(
+                  text: 'PEDIDOS',
                 ),
               ],
-<<<<<<< Updated upstream
-            )),
-        backgroundColor: Color.fromARGB(255, 210, 210, 210),
-        body: AnimatedCrossFade(
-          duration: const Duration(milliseconds: 250),
-          firstChild: orcamento(),
-          secondChild: pedido(),
-          crossFadeState: _radioValue == 0
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-        ));
-=======
             ),
             title: const Text(''),
           ),
@@ -360,6 +500,5 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
->>>>>>> Stashed changes
   }
 }

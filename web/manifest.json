@@ -1,6 +1,6 @@
 {
-    "name": "formulario_pdf",
-    "short_name": "formulario_pdf",
+    "name": "orcamento_pedido",
+    "short_name": "orcamento_pedido",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
