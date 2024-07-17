@@ -39,43 +39,43 @@ class Invoice {
     metPagamento = json['metPagamento'];
     prazoServico = json['prazoServico'];
     info = json['InvoiceInfo'] != null
-        ? new InvoiceInfo.fromJson(json['InvoiceInfo'])
+        ? InvoiceInfo.fromJson(json['InvoiceInfo'])
         : null;
     supplier = json['Supplier'] != null
-        ? new Supplier.fromJson(json['Supplier'])
+        ? Supplier.fromJson(json['Supplier'])
         : null;
     customer = json['Customer'] != null
-        ? new Customer.fromJson(json['Customer'])
+        ? Customer.fromJson(json['Customer'])
         : null;
     if (json['InvoiceItem'] != null) {
       items = <InvoiceItem>[];
       json['InvoiceItem'].forEach((v) {
-        items.add(new InvoiceItem.fromJson(v));
+        items.add(InvoiceItem.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
 
-    data['orcamento'] = this.orcamento;
-    data['pedido'] = this.pedido;
+    data['orcamento'] = orcamento;
+    data['pedido'] = pedido;
 
-    data['valorTotal'] = this.valorTotal;
-    data['metPagamento'] = this.metPagamento;
-    data['observacoesPedido'] = this.observacoesPedido;
-    data['prazoServico'] = this.prazoServico;
-    if (this.info != null) {
-      data['InvoiceInfo'] = this.info?.toJson();
+    data['valorTotal'] = valorTotal;
+    data['metPagamento'] = metPagamento;
+    data['observacoesPedido'] = observacoesPedido;
+    data['prazoServico'] = prazoServico;
+    if (info != null) {
+      data['InvoiceInfo'] = info?.toJson();
     }
-    if (this.supplier != null) {
-      data['Supplier'] = this.supplier?.toJson();
+    if (supplier != null) {
+      data['Supplier'] = supplier?.toJson();
     }
-    if (this.customer != null) {
-      data['Customer'] = this.customer?.toJson();
+    if (customer != null) {
+      data['Customer'] = customer?.toJson();
     }
-    data['InvoiceItem'] = this.items.map((v) => v.toJson()).toList();
+    data['InvoiceItem'] = items.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -100,11 +100,11 @@ class InvoiceInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['description'] = this.description;
-    data['number'] = this.number;
-    data['date'] = this.date;
-    data['dueDate'] = this.dueDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['description'] = description;
+    data['number'] = number;
+    data['date'] = date;
+    data['dueDate'] = dueDate;
     return data;
   }
 }
@@ -135,13 +135,13 @@ class InvoiceItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['tipo'] = this.tipo;
-    data['description'] = this.description;
-    data['unidade'] = this.unidade;
-    data['date'] = this.date;
-    data['quantity'] = this.quantity;
-    data['unitPrice'] = this.unitPrice;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['tipo'] = tipo;
+    data['description'] = description;
+    data['unidade'] = unidade;
+    data['date'] = date;
+    data['quantity'] = quantity;
+    data['unitPrice'] = unitPrice;
     return data;
   }
 }

@@ -8,12 +8,8 @@ import 'package:souza_autocenter/model/invoicelist.dart';
 import 'package:souza_autocenter/tela_itens_enviados.dart';
 import 'package:souza_autocenter/variaveis.dart';
 
-import 'package:url_launcher/url_launcher.dart';
-
 import 'tela_cliente.dart';
 
-//InvoiceList? listaDeItens;
-const _url = 'https://issdigitalsod.com.br/nfse/';
 int listSize = 0;
 int novoId = 0;
 bool idRepetido = true;
@@ -24,7 +20,7 @@ class TelaInicio extends StatefulWidget {
   const TelaInicio({Key? key}) : super(key: key);
 
   @override
-  _TelaInicioState createState() => _TelaInicioState();
+  State<TelaInicio> createState() => _TelaInicioState();
 }
 
 class _TelaInicioState extends State<TelaInicio> {
@@ -34,7 +30,7 @@ class _TelaInicioState extends State<TelaInicio> {
       // <-- STACK AS THE SCAFFOLD PARENT
       children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image:
                   AssetImage('assets/imagens/menu.jpg'), // <-- BACKGROUND IMAGE
@@ -56,17 +52,17 @@ class _TelaInicioState extends State<TelaInicio> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TelaInicio()),
+                    MaterialPageRoute(builder: (context) => const TelaInicio()),
                   );
                 }),
 
-            title: Text(''),
+            title: const Text(''),
             backgroundColor:
                 Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
             // <-- ELEVATION ZEROED
           ),
           body: Padding(
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: Column(
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -88,7 +84,7 @@ class _TelaInicioState extends State<TelaInicio> {
             child: AnimationConfiguration.staggeredList(
                 position: 1,
                 child: SlideAnimation(
-                    delay: Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 500),
                     child: Stack(
                       children: [
                         Column(
@@ -96,16 +92,16 @@ class _TelaInicioState extends State<TelaInicio> {
                           //crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Container(
-                              height: (MediaQuery.of(context).size.height / 4),
+                              height: (MediaQuery.sizeOf(context).height / 4),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black87,
+                                backgroundColor: Colors.white,
                                 elevation: 4,
                                 fixedSize: Size(
-                                    MediaQuery.of(context).size.width * .6, 55),
-                                onPrimary: Colors.black87,
-                                primary: Colors.white,
-                                shape: StadiumBorder(),
+                                    MediaQuery.sizeOf(context).width * .6, 55),
+                                shape: const StadiumBorder(),
                               ),
                               onPressed: () async {
                                 int indexOfId = 0;
@@ -137,9 +133,6 @@ class _TelaInicioState extends State<TelaInicio> {
                                     element.customer?.name == null &&
                                     element.id != novoId);
 
-                                listaDeItens.invoices.forEach((element) {
-                                  //print(element.id);
-                                });
                                 abriuOrcamento = false;
                                 abriuPedido = false;
 
@@ -152,25 +145,25 @@ class _TelaInicioState extends State<TelaInicio> {
                                               indexOfIdd: indexOfId,
                                             )));
                               },
-                              child: Text(
+                              child: const Text(
                                 'NOVO ORÇAMENTO',
                                 style:
                                     TextStyle(fontSize: 17, color: Colors.grey),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 23,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.black87,
+                                  backgroundColor: Colors.white,
                                   elevation: 4,
                                   fixedSize: Size(
-                                      MediaQuery.of(context).size.width * .6,
+                                      MediaQuery.sizeOf(context).width * .6,
                                       55),
-                                  onPrimary: Colors.black87,
-                                  primary: Colors.white,
-                                  shape: StadiumBorder(),
-                                  minimumSize: Size(80, 50)),
+                                  shape: const StadiumBorder(),
+                                  minimumSize: const Size(80, 50)),
                               onPressed: () {
                                 int indexOfId = 0;
                                 novoId = 0;
@@ -218,32 +211,31 @@ class _TelaInicioState extends State<TelaInicio> {
                                                 .indexWhere((Invoice element) =>
                                                     element.id == novoId))));
                               },
-                              child: Text(
+                              child: const Text(
                                 'NOVO PEDIDO',
                                 style:
                                     TextStyle(fontSize: 17, color: Colors.grey),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 23,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   //elevation: 4,
                                   shadowColor: Colors.transparent,
+                                  backgroundColor:
+                                      const Color.fromARGB(0, 255, 102, 0),
                                   fixedSize: Size(
-                                      MediaQuery.of(context).size.width * .6,
+                                      MediaQuery.sizeOf(context).width * .6,
                                       55),
-
-                                  //onPrimary: Colors.black87,
-                                  primary: Color.fromARGB(0, 255, 102, 0),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           //color: Palette.primary, width: 2)),
                                           color: Colors.red,
                                           width: 2)),
-                                  minimumSize: Size(80, 50)),
+                                  minimumSize: const Size(80, 50)),
                               onPressed: () async {
                                 if (listaDeItens.invoices.isEmpty) {
                                   listaDeItens = InvoiceList(invoices: []);
@@ -266,9 +258,9 @@ class _TelaInicioState extends State<TelaInicio> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            TelaItensEnviados()));
+                                            const TelaItensEnviados()));
                               },
-                              child: Text(
+                              child: const Text(
                                 'MEUS ENVIOS',
                                 style: TextStyle(
                                     //color: Palette.primary, fontSize: 18),
@@ -276,11 +268,11 @@ class _TelaInicioState extends State<TelaInicio> {
                                     fontSize: 18),
                               ),
                             ),
-                            Divider(
+                            const Divider(
                               indent: 20,
                               endIndent: 30,
                             ),
-                            Divider(
+                            const Divider(
                               indent: 20,
                               endIndent: 30,
                             ),
@@ -288,23 +280,24 @@ class _TelaInicioState extends State<TelaInicio> {
                               icon:
                                   Image.asset('assets/imagens/icon_whats.png'),
                               onPressed: () async {
+                                /*
                                 await canLaunch(_url)
                                     ? await launch(_url)
-                                    : throw 'Could not launch $_url';
+                                    : throw 'Could not launch $_url';*/
                               },
-                              label: Text('EMITIR NOTA FISCAL'),
+                              label: const Text('EMITIR NOTA FISCAL'),
                               style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.all(15),
+                                  foregroundColor: Colors.grey,
+                                  backgroundColor: Colors.white,
+                                  padding: const EdgeInsets.all(15),
                                   elevation: 4,
                                   fixedSize: Size(
-                                      MediaQuery.of(context).size.width * .6,
+                                      MediaQuery.sizeOf(context).width * .6,
                                       55),
-                                  onPrimary: Colors.grey,
-                                  primary: Colors.white,
-                                  shape: StadiumBorder(),
-                                  minimumSize: Size(80, 50)),
+                                  shape: const StadiumBorder(),
+                                  minimumSize: const Size(80, 50)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 23,
                             ),
                           ],

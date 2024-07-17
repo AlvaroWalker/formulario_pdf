@@ -1306,7 +1306,7 @@ class ItemAddPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ItemAddPageState createState() => _ItemAddPageState();
+  State<ItemAddPage> createState() => _ItemAddPageState();
 }
 
 class _ItemAddPageState extends State<ItemAddPage> {
@@ -1333,7 +1333,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
     int index = listaDeItens.invoices
         .indexWhere((Invoice element) => element.id == widget.id);
 
-    if (listaDeItens.invoices[index].items.length != 0) {
+    if (listaDeItens.invoices[index].items.isNotEmpty) {
       valorTotal = listaDeItens.invoices[index].items
           .map((item) => item.unitPrice!.toDouble() * item.quantity!.toDouble())
           .reduce((item1, item2) => item1 + item2);
@@ -1347,7 +1347,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
           padding: const EdgeInsets.all(6.0),
           child: TypeAheadFormField(
             errorBuilder: (context, error) => Text('$error',
-                style: TextStyle(color: Theme.of(context).errorColor)),
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
             debounceDuration: const Duration(milliseconds: 500),
             hideOnEmpty: true,
             hideOnLoading: true,
@@ -1393,7 +1393,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
           padding: const EdgeInsets.all(6.0),
           child: TypeAheadFormField(
             errorBuilder: (context, error) => Text('$error',
-                style: TextStyle(color: Theme.of(context).errorColor)),
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
             debounceDuration: const Duration(milliseconds: 500),
             hideOnEmpty: true,
             hideOnLoading: true,
@@ -1585,7 +1585,7 @@ class _ItemAddPageState extends State<ItemAddPage> {
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 242, 241, 237),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: ListView(
           padding: const EdgeInsets.all(0.0),
@@ -1658,12 +1658,12 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         setState(() {
                           dropdownValue3 = value.toString();
 
-                          FocusScope.of(context).requestFocus(new FocusNode());
+                          FocusScope.of(context).requestFocus(FocusNode());
                         });
                       },
                       items: unidadeServico
                           .map((cityTitle) => DropdownMenuItem(
-                              value: cityTitle, child: Text("$cityTitle")))
+                              value: cityTitle, child: Text(cityTitle)))
                           .toList(),
                     ),
                   )),
@@ -1701,24 +1701,20 @@ class _ItemAddPageState extends State<ItemAddPage> {
                                         : txtControlPrecoUnidade.numberValue));
                           }
                         } else {
-                          listaDeItens.invoices[index].items.add(
-                              new InvoiceItem(
-                                  tipo: _radioValue == 0
-                                      ? txtControlTipo.text
-                                          .toString()
-                                          .toUpperCase()
-                                      : 'REL. DE PEÇAS',
-                                  description: _radioValue == 0
-                                      ? txtControlDescricao.text.toUpperCase()
-                                      : txtControlDescricao.text.toUpperCase(),
-                                  unidade: dropdownValue3,
-                                  date: DateTime.now().toString().toUpperCase(),
-                                  quantity:
-                                      double.parse(txtControlQuantidade.text),
-                                  unitPrice: (_radioValue == 1 &&
-                                          txtControlPrecoUnidade.text.isEmpty)
-                                      ? 0
-                                      : txtControlPrecoUnidade.numberValue));
+                          listaDeItens.invoices[index].items.add(InvoiceItem(
+                              tipo: _radioValue == 0
+                                  ? txtControlTipo.text.toString().toUpperCase()
+                                  : 'REL. DE PEÇAS',
+                              description: _radioValue == 0
+                                  ? txtControlDescricao.text.toUpperCase()
+                                  : txtControlDescricao.text.toUpperCase(),
+                              unidade: dropdownValue3,
+                              date: DateTime.now().toString().toUpperCase(),
+                              quantity: double.parse(txtControlQuantidade.text),
+                              unitPrice: (_radioValue == 1 &&
+                                      txtControlPrecoUnidade.text.isEmpty)
+                                  ? 0
+                                  : txtControlPrecoUnidade.numberValue));
                         }
 
                         dropdownValue = null;
@@ -1730,10 +1726,10 @@ class _ItemAddPageState extends State<ItemAddPage> {
                         txtControlQuantidade.clear();
                         txtControlTipo.clear();
 
-                        FocusScope.of(context).requestFocus(new FocusNode());
+                        FocusScope.of(context).requestFocus(FocusNode());
                         setState(() {});
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         color: Colors.white,
                         size: 35,
@@ -1743,8 +1739,8 @@ class _ItemAddPageState extends State<ItemAddPage> {
                 ],
               ),
             ),
-            Divider(color: Colors.red),
-            Align(
+            const Divider(color: Colors.red),
+            const Align(
               alignment: Alignment.center,
               child: Text(
                 'RESUMO',

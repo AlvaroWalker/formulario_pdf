@@ -25,7 +25,7 @@ class CustomTheme {
         primarySwatch: generateMaterialColor(Palette.primary),
         scaffoldBackgroundColor: Colors.white,
         fontFamily: GoogleFonts.lexendDeca().fontFamily, //3
-        textTheme: TextTheme(),
+        textTheme: const TextTheme(),
         buttonTheme: ButtonThemeData(
           // 4
           shape:
@@ -33,7 +33,7 @@ class CustomTheme {
 
           //buttonColor: Palette.primary,
         ),
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
           //fillColor: Colors.blue,
           border: OutlineInputBorder(
             borderSide: BorderSide(

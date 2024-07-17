@@ -11,6 +11,7 @@ import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:souza_autocenter/utils.dart';
 
 import 'theme/custom_theme.dart';
 import 'variaveis.dart';
@@ -32,7 +33,7 @@ class ItemListPage extends StatefulWidget {
   final int indexOfItem;
   ItemListPage({Key? key, required this.indexOfItem}) : super(key: key);
   @override
-  _ItemListPageState createState() => _ItemListPageState();
+  State<ItemListPage> createState() => _ItemListPageState();
 }
 
 class _ItemListPageState extends State<ItemListPage> {
@@ -49,14 +50,14 @@ class _ItemListPageState extends State<ItemListPage> {
       BuildContext context, InvoiceItem item, int lsindex) async {
     //String dropdownValue = opcoes[1];
 
-    final _controller1 = TextEditingController();
-    final _controller2 = MoneyMaskedTextController();
+    final controller1 = TextEditingController();
+    final controller2 = MoneyMaskedTextController();
 
-    _controller1.text = item.quantity.toString();
+    controller1.text = item.quantity.toString();
 
     //_controller2.text = item.unitPrice.toString();
 
-    _controller2.updateValue(item.unitPrice);
+    controller2.updateValue(item.unitPrice);
 
     return await showDialog(
       context: context,
@@ -67,13 +68,7 @@ class _ItemListPageState extends State<ItemListPage> {
             title: Column(
               children: [
                 Text(
-                  item.tipo.toString() +
-                      ' --> ' +
-                      (item.description.toString() +
-                          ' --> ' +
-                          listaDeItens
-                              .invoices[widget.indexOfItem].customer!.veiculo
-                              .toString()),
+                  '${item.tipo} --> ${item.description} --> ${listaDeItens.invoices[widget.indexOfItem].customer!.veiculo}',
                 ),
               ],
             ),
@@ -83,7 +78,7 @@ class _ItemListPageState extends State<ItemListPage> {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                        controller: _controller1,
+                        controller: controller1,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                             labelText: 'Quantidade',
@@ -93,7 +88,7 @@ class _ItemListPageState extends State<ItemListPage> {
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
-                      controller: _controller2,
+                      controller: controller2,
                       decoration: const InputDecoration(
                           prefixText: 'R\$ ',
                           labelText: 'Preço',
@@ -123,8 +118,8 @@ class _ItemListPageState extends State<ItemListPage> {
                               .items[lsindex].unidade,
                           date: listaDeItens
                               .invoices[widget.indexOfItem].items[lsindex].date,
-                          quantity: double.parse(_controller1.text),
-                          unitPrice: _controller2.numberValue)
+                          quantity: double.parse(controller1.text),
+                          unitPrice: controller2.numberValue)
                     ]);
                     //print(_controller1.text);
                     atualiza();
@@ -196,6 +191,7 @@ class _ItemListPageState extends State<ItemListPage> {
                   colors: <Color>[Colors.transparent, Colors.white],
                 ).createShader(bounds);
               },
+              blendMode: BlendMode.dstOut,
               child: ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
@@ -207,12 +203,11 @@ class _ItemListPageState extends State<ItemListPage> {
                 child: listaAnimada(),
                 blendMode: BlendMode.dstOut,
               ),
-              blendMode: BlendMode.dstOut,
             ),
           ),
           Divider(color: Colors.red),
           Text(
-            'TOTAL ORÇADO:  ${Money.fromWithCurrency(valorTotal, real).toString()}',
+            'TOTAL ORÇADO:  ${Utils.formatarValor(valorTotal)}',
             style: TextStyle(
               fontFamily: 'Poppins',
               color: Colors.red,
@@ -221,8 +216,8 @@ class _ItemListPageState extends State<ItemListPage> {
           ),
           Flexible(
               child: Container(
-            width: MediaQuery.of(context).size.width - 16,
-            height: MediaQuery.of(context).size.height / 4,
+            width: MediaQuery.sizeOf(context).width - 16,
+            height: MediaQuery.sizeOf(context).height / 4,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -356,12 +351,13 @@ class _ItemListPageState extends State<ItemListPage> {
     print(jsonEncode(listaDeItens.toJson()));
     await prefs.setString('teste1', jsonEncode(listaDeItens.toJson()));
 
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    PaginaGerandoPdf(index: widget.indexOfItem, jaPedido: ped)))
-        .then((value) => setState(() {}));
+    proximaTela(ped);
+  }
+
+  void proximaTela(bool ped) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return PaginaGerandoPdf(index: widget.indexOfItem, jaPedido: ped);
+    })).then((value) => setState(() {}));
   }
 
   showWaitDialog() async {
@@ -441,29 +437,23 @@ Text(
                             listaDeItens.invoices[widget.indexOfItem]
                                         .items[index].unitPrice! !=
                                     0
-                                ? Money.fromWithCurrency(
-                                        listaDeItens
-                                            .invoices[widget.indexOfItem]
-                                            .items[index]
-                                            .unitPrice!
-                                            .toDouble(),
-                                        real)
-                                    .toString()
+                                ? Utils.formatarValor(
+                                    listaDeItens.invoices[widget.indexOfItem]
+                                        .items[index].unitPrice!
+                                        .toDouble(),
+                                  )
                                 : '',
                           ),
                           Text(listaDeItens.invoices[widget.indexOfItem]
                                       .items[index].unitPrice! !=
                                   0
-                              ? Money.fromWithCurrency(
+                              ? Utils.formatarValor(
+                                  listaDeItens.invoices[widget.indexOfItem]
+                                          .items[index].quantity! *
                                       listaDeItens.invoices[widget.indexOfItem]
-                                              .items[index].quantity! *
-                                          listaDeItens
-                                              .invoices[widget.indexOfItem]
-                                              .items[index]
-                                              .unitPrice!
-                                              .toDouble(),
-                                      real)
-                                  .toString()
+                                          .items[index].unitPrice!
+                                          .toDouble(),
+                                )
                               : ''),
                         ],
                       ),
@@ -535,17 +525,7 @@ Text(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            listaDeItens
-                                    .invoices[widget.indexOfItem].items[i].tipo
-                                    .toString() +
-                                ' --> ' +
-                                (listaDeItens.invoices[widget.indexOfItem]
-                                        .items[i].description
-                                        .toString() +
-                                    ' --> ' +
-                                    (listaDeItens.invoices[widget.indexOfItem]
-                                        .customer!.veiculo
-                                        .toString())),
+                            '${listaDeItens.invoices[widget.indexOfItem].items[i].tipo} --> ${listaDeItens.invoices[widget.indexOfItem].items[i].description} --> ${listaDeItens.invoices[widget.indexOfItem].customer!.veiculo}',
                           ),
                         ],
                       ),
@@ -558,27 +538,21 @@ Text(
                             listaDeItens.invoices[widget.indexOfItem].items[i]
                                         .unitPrice! !=
                                     0
-                                ? Money.fromWithCurrency(
-                                        listaDeItens
-                                            .invoices[widget.indexOfItem]
-                                            .items[i]
-                                            .unitPrice!,
-                                        real)
-                                    .toString()
+                                ? Utils.formatarValor(
+                                    listaDeItens.invoices[widget.indexOfItem]
+                                        .items[i].unitPrice!,
+                                  )
                                 : '',
                           ),
                           Text(listaDeItens.invoices[widget.indexOfItem]
                                       .items[i].unitPrice! !=
                                   0
-                              ? Money.fromWithCurrency(
+                              ? Utils.formatarValor(
+                                  listaDeItens.invoices[widget.indexOfItem]
+                                          .items[i].quantity! *
                                       listaDeItens.invoices[widget.indexOfItem]
-                                              .items[i].quantity! *
-                                          listaDeItens
-                                              .invoices[widget.indexOfItem]
-                                              .items[i]
-                                              .unitPrice!,
-                                      real)
-                                  .toString()
+                                          .items[i].unitPrice!,
+                                )
                               : ''),
                         ],
                       ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SearchListWidget extends StatefulWidget {
+  const SearchListWidget({Key? key}) : super(key: key);
+
   @override
-  _SearchListWidgetState createState() => _SearchListWidgetState();
+  State<SearchListWidget> createState() => _SearchListWidgetState();
 }
 
 class _SearchListWidgetState extends State<SearchListWidget> {
@@ -23,7 +25,7 @@ class _SearchListWidgetState extends State<SearchListWidget> {
       children: <Widget>[
         TextField(
           controller: editingController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: "Search",
             hintText: "Search",
             prefixIcon: Icon(Icons.search),
@@ -42,7 +44,7 @@ class _SearchListWidgetState extends State<SearchListWidget> {
             itemCount: showItemList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text('${showItemList[index]}'),
+                title: Text(showItemList[index]),
               );
             },
           ),
@@ -56,11 +58,11 @@ class _SearchListWidgetState extends State<SearchListWidget> {
     searchList.addAll(initList);
     if (query.isNotEmpty) {
       List<String> resultListData = <String>[];
-      searchList.forEach((item) {
+      for (var item in searchList) {
         if (item.contains(query)) {
           resultListData.add(item);
         }
-      });
+      }
       setState(() {
         showItemList.clear();
         showItemList.addAll(resultListData);

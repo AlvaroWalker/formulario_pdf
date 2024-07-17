@@ -9,15 +9,15 @@ class InvoiceList {
     if (json['invoice'] != null) {
       invoices = <Invoice>[];
       json['invoice'].forEach((v) {
-        invoices.add(new Invoice.fromJson(v));
+        invoices.add(Invoice.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['invoice'] = this.invoices.map((v) => v.toJson()).toList();
+    data['invoice'] = invoices.map((v) => v.toJson()).toList();
 
     return data;
   }

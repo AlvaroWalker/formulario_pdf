@@ -17,57 +17,59 @@ class TelaItensEnviados extends StatefulWidget {
   const TelaItensEnviados({Key? key}) : super(key: key);
 
   @override
-  _TelaItensEnviadosState createState() => _TelaItensEnviadosState();
+  State<TelaItensEnviados> createState() => _TelaItensEnviadosState();
 }
 
 class _TelaItensEnviadosState extends State<TelaItensEnviados> {
+  @override
   void initState() {
     super.initState();
-    listaDeItens.invoices.forEach((element) {
+    for (var element in listaDeItens.invoices) {
       if (element.pedido == true) {
         listaPedidos.invoices.add(element);
       }
-    });
+    }
 
-    listaDeItens.invoices.forEach((element) {
+    for (var element in listaDeItens.invoices) {
       if (element.orcamento == true) {
         listaOrcamento.invoices.add(element);
       }
-    });
+    }
   }
 
   Widget orcamento() {
     listaOrcamento.invoices.clear();
-    listaDeItens.invoices.forEach((element) {
+    for (var element in listaDeItens.invoices) {
       if (element.orcamento == true) {
         listaOrcamento.invoices.add(element);
       }
-    });
+    }
+    listaOrcamento.invoices = listaOrcamento.invoices.reversed.toList();
     return Container(
       alignment: Alignment.center,
       child: Column(
         children: [
-          Divider(
+          const Divider(
             indent: 20,
             endIndent: 20,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width - 20,
-            height: MediaQuery.of(context).size.height / 15,
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width - 20,
+            height: MediaQuery.sizeOf(context).height / 15,
             child: Card(
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black26),
+                side: const BorderSide(color: Colors.black26),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              color: Color.fromARGB(0, 0, 0, 0),
-              shadowColor: Color.fromARGB(0, 0, 0, 0),
+              color: const Color.fromARGB(0, 0, 0, 0),
+              shadowColor: const Color.fromARGB(0, 0, 0, 0),
               child: Center(
-                  child: Text(listaOrcamento.invoices.length != 0
+                  child: Text(listaOrcamento.invoices.isNotEmpty
                       ? 'TOTAL EM ORÇAMENTOS: ${Utils.formatarValor(listaOrcamento.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
                       : 'NENHUM ORÇAMENTO REGISTRADO')),
             ),
           ),
-          Divider(
+          const Divider(
             indent: 20,
             endIndent: 20,
           ),
@@ -76,159 +78,159 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               padding: const EdgeInsets.all(8),
               itemCount: listaOrcamento.invoices.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black26),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        abriuOrcamento = true;
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      abriuOrcamento = true;
 
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ItemAddPage(
-                                      id: listaOrcamento.invoices[index].id,
-                                      orcamentoEditar: listaDeItens.invoices[
-                                          listaDeItens.invoices.indexWhere(
-                                              (element) =>
-                                                  element.id ==
-                                                  listaOrcamento
-                                                      .invoices[index].id)],
-                                    )));
-                        setState(() {});
-                      },
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
-                        title: Text(
-                            'Cliente: ${listaOrcamento.invoices[index].customer?.name}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Veículo: ${listaOrcamento.invoices[index].customer?.veiculo}'),
-                            Text(
-                                'Data: ${listaOrcamento.invoices[index].info?.date}'),
-                            Text(
-                                'Valor Total: ${Utils.formatarValor(listaOrcamento.invoices[index].valorTotal)}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.red,
-                              ),
-                              onPressed: () async {
-                                abriuOrcamento = true;
-
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ItemAddPage(
-                                              id: listaOrcamento
-                                                  .invoices[index].id,
-                                              orcamentoEditar: listaDeItens
-                                                      .invoices[
-                                                  listaDeItens.invoices
-                                                      .indexWhere((element) =>
-                                                          element.id ==
-                                                          listaOrcamento
-                                                              .invoices[index]
-                                                              .id)],
-                                            )));
-                                setState(() {});
-                              },
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ItemAddPage(
+                                    id: listaOrcamento.invoices[index].id,
+                                    orcamentoEditar: listaDeItens.invoices[
+                                        listaDeItens.invoices.indexWhere(
+                                            (element) =>
+                                                element.id ==
+                                                listaOrcamento
+                                                    .invoices[index].id)],
+                                  )));
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.only(
+                          left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
+                      title: Text(
+                          'Cliente: ${listaOrcamento.invoices[index].customer?.name}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Veículo: ${listaOrcamento.invoices[index].customer?.veiculo}'),
+                          Text(
+                              'Data: ${listaOrcamento.invoices[index].info?.date}'),
+                          Text(
+                              'Valor Total: ${Utils.formatarValor(listaOrcamento.invoices[index].valorTotal)}'),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.red,
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              onPressed: () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (ctx) {
-                                      return AlertDialog(
-                                        title: Text('Apagar Orçamento?'),
-                                        content: Text(
-                                            'Deseja apagar este Orçamento?'),
-                                        actions: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              TextButton(
+                            onPressed: () async {
+                              abriuOrcamento = true;
+
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ItemAddPage(
+                                            id: listaOrcamento
+                                                .invoices[index].id,
+                                            orcamentoEditar:
+                                                listaDeItens.invoices[
+                                                    listaDeItens.invoices
+                                                        .indexWhere((element) =>
+                                                            element.id ==
+                                                            listaOrcamento
+                                                                .invoices[index]
+                                                                .id)],
+                                          )));
+                              setState(() {});
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return AlertDialog(
+                                      title: const Text('Apagar Orçamento?'),
+                                      content: const Text(
+                                          'Deseja apagar este Orçamento?'),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Não'),
+                                            ),
+                                            TextButton(
                                                 onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('Não'),
-                                              ),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    listaDeItens
-                                                        .invoices[listaDeItens
+                                                  listaDeItens
+                                                      .invoices[listaDeItens
+                                                          .invoices
+                                                          .indexWhere(
+                                                              (element) =>
+                                                                  element.id ==
+                                                                  listaOrcamento
+                                                                      .invoices[
+                                                                          index]
+                                                                      .id)]
+                                                      .orcamento = false;
+
+                                                  if (listaDeItens
+                                                              .invoices[index]
+                                                              .orcamento ==
+                                                          false &&
+                                                      listaDeItens
+                                                              .invoices[index]
+                                                              .pedido ==
+                                                          false) {
+                                                    listaDeItens.invoices
+                                                        .removeAt(listaDeItens
                                                             .invoices
                                                             .indexWhere((element) =>
                                                                 element.id ==
                                                                 listaOrcamento
                                                                     .invoices[
                                                                         index]
-                                                                    .id)]
-                                                        .orcamento = false;
+                                                                    .id));
+                                                  }
 
-                                                    if (listaDeItens
-                                                                .invoices[index]
-                                                                .orcamento ==
-                                                            false &&
-                                                        listaDeItens
-                                                                .invoices[index]
-                                                                .pedido ==
-                                                            false) {
-                                                      listaDeItens.invoices
-                                                          .removeAt(listaDeItens
-                                                              .invoices
-                                                              .indexWhere((element) =>
-                                                                  element.id ==
-                                                                  listaOrcamento
-                                                                      .invoices[
-                                                                          index]
-                                                                      .id));
+                                                  listaOrcamento.invoices
+                                                      .clear();
+                                                  for (var element
+                                                      in listaDeItens
+                                                          .invoices) {
+                                                    if (element.orcamento ==
+                                                        true) {
+                                                      listaOrcamento.invoices
+                                                          .add(element);
                                                     }
+                                                  }
 
-                                                    listaOrcamento.invoices
-                                                        .clear();
-                                                    listaDeItens.invoices
-                                                        .forEach((element) {
-                                                      if (element.orcamento ==
-                                                          true) {
-                                                        listaOrcamento.invoices
-                                                            .add(element);
-                                                      }
-                                                    });
+                                                  Navigator.pop(context);
+                                                  setState(() {});
+                                                },
+                                                child: const Text('Sim'))
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
 
-                                                    Navigator.pop(context);
-                                                    setState(() {});
-                                                  },
-                                                  child: Text('Sim'))
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    });
-
-                                setState(() {
-                                  salvarPedido();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                              setState(() {
+                                salvarPedido();
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -247,36 +249,37 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
 
   Widget pedido() {
     listaPedidos.invoices.clear();
-    listaDeItens.invoices.forEach((element) {
+    for (var element in listaDeItens.invoices) {
       if (element.pedido == true) {
         listaPedidos.invoices.add(element);
       }
-    });
+    }
+    listaPedidos.invoices = listaPedidos.invoices.reversed.toList();
     return Container(
       alignment: Alignment.center,
       child: Column(
         children: [
-          Divider(
+          const Divider(
             indent: 20,
             endIndent: 20,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width - 20,
-            height: MediaQuery.of(context).size.height / 15,
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width - 20,
+            height: MediaQuery.sizeOf(context).height / 15,
             child: Card(
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black26),
+                side: const BorderSide(color: Colors.black26),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              color: Color.fromARGB(0, 0, 0, 0),
-              shadowColor: Color.fromARGB(0, 0, 0, 0),
+              color: const Color.fromARGB(0, 0, 0, 0),
+              shadowColor: const Color.fromARGB(0, 0, 0, 0),
               child: Center(
-                  child: Text(listaPedidos.invoices.length != 0
+                  child: Text(listaPedidos.invoices.isNotEmpty
                       ? 'TOTAL EM PEDIDOS: ${Utils.formatarValor(listaPedidos.invoices.map((item) => item.valorTotal.toDouble()).reduce((item1, item2) => item1 + item2))}'
                       : 'NENHUM PEDIDO REGISTRADO')),
             ),
           ),
-          Divider(
+          const Divider(
             indent: 20,
             endIndent: 20,
           ),
@@ -285,158 +288,156 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
               padding: const EdgeInsets.all(8),
               itemCount: listaPedidos.invoices.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black26),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        abriuPedido = true;
-                        print(abriuPedido);
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      abriuPedido = true;
 
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ItemAddPage(
-                                      id: listaPedidos.invoices[index].id,
-                                      orcamentoEditar: listaDeItens.invoices[
-                                          listaDeItens.invoices.indexWhere(
-                                              (element) =>
-                                                  element.id ==
-                                                  listaPedidos
-                                                      .invoices[index].id)],
-                                    )));
-                        setState(() {});
-                      },
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
-                        title: Text(
-                            'Cliente: ${listaPedidos.invoices[index].customer?.name}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Veículo: ${listaPedidos.invoices[index].customer?.veiculo}'),
-                            Text(
-                                'Data: ${listaPedidos.invoices[index].info?.date}'),
-                            Text(
-                                'Valor Total: ${Utils.formatarValor(listaPedidos.invoices[index].valorTotal)}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.red,
-                              ),
-                              onPressed: () async {
-                                abriuOrcamento = true;
-
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ItemAddPage(
-                                              id: listaOrcamento
-                                                  .invoices[index].id,
-                                              orcamentoEditar: listaDeItens
-                                                      .invoices[
-                                                  listaDeItens.invoices
-                                                      .indexWhere((element) =>
-                                                          element.id ==
-                                                          listaPedidos
-                                                              .invoices[index]
-                                                              .id)],
-                                            )));
-                                setState(() {});
-                              },
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ItemAddPage(
+                                    id: listaPedidos.invoices[index].id,
+                                    orcamentoEditar: listaDeItens.invoices[
+                                        listaDeItens.invoices.indexWhere(
+                                            (element) =>
+                                                element.id ==
+                                                listaPedidos
+                                                    .invoices[index].id)],
+                                  )));
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.only(
+                          left: 10.0, top: 10.0, right: 10.0, bottom: 10.0),
+                      title: Text(
+                          'Cliente: ${listaPedidos.invoices[index].customer?.name}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Veículo: ${listaPedidos.invoices[index].customer?.veiculo}'),
+                          Text(
+                              'Data: ${listaPedidos.invoices[index].info?.date}'),
+                          Text(
+                              'Valor Total: ${Utils.formatarValor(listaPedidos.invoices[index].valorTotal)}'),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.red,
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (ctx) {
-                                      return AlertDialog(
-                                        title: Text('Apagar Pedido?'),
-                                        content:
-                                            Text('Deseja excluir este Pedido?'),
-                                        actions: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text('Não')),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    listaDeItens
-                                                        .invoices[listaDeItens
+                            onPressed: () async {
+                              abriuOrcamento = true;
+
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ItemAddPage(
+                                            id: listaOrcamento
+                                                .invoices[index].id,
+                                            orcamentoEditar:
+                                                listaDeItens.invoices[
+                                                    listaDeItens.invoices
+                                                        .indexWhere((element) =>
+                                                            element.id ==
+                                                            listaPedidos
+                                                                .invoices[index]
+                                                                .id)],
+                                          )));
+                              setState(() {});
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return AlertDialog(
+                                      title: const Text('Apagar Pedido?'),
+                                      content: const Text(
+                                          'Deseja excluir este Pedido?'),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Não')),
+                                            TextButton(
+                                                onPressed: () {
+                                                  listaDeItens
+                                                      .invoices[listaDeItens
+                                                          .invoices
+                                                          .indexWhere(
+                                                              (element) =>
+                                                                  element.id ==
+                                                                  listaPedidos
+                                                                      .invoices[
+                                                                          index]
+                                                                      .id)]
+                                                      .pedido = false;
+
+                                                  if (listaDeItens
+                                                              .invoices[index]
+                                                              .orcamento ==
+                                                          false &&
+                                                      listaDeItens
+                                                              .invoices[index]
+                                                              .pedido ==
+                                                          false) {
+                                                    listaDeItens.invoices
+                                                        .removeAt(listaDeItens
                                                             .invoices
                                                             .indexWhere((element) =>
                                                                 element.id ==
                                                                 listaPedidos
                                                                     .invoices[
                                                                         index]
-                                                                    .id)]
-                                                        .pedido = false;
+                                                                    .id));
+                                                  }
 
-                                                    if (listaDeItens
-                                                                .invoices[index]
-                                                                .orcamento ==
-                                                            false &&
-                                                        listaDeItens
-                                                                .invoices[index]
-                                                                .pedido ==
-                                                            false) {
-                                                      listaDeItens.invoices
-                                                          .removeAt(listaDeItens
-                                                              .invoices
-                                                              .indexWhere((element) =>
-                                                                  element.id ==
-                                                                  listaPedidos
-                                                                      .invoices[
-                                                                          index]
-                                                                      .id));
+                                                  listaPedidos.invoices.clear();
+                                                  for (var element
+                                                      in listaDeItens
+                                                          .invoices) {
+                                                    if (element.pedido ==
+                                                        true) {
+                                                      listaPedidos.invoices
+                                                          .add(element);
                                                     }
+                                                  }
+                                                  Navigator.pop(context);
+                                                  setState(() {});
+                                                },
+                                                child: const Text('Sim'))
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
 
-                                                    listaPedidos.invoices
-                                                        .clear();
-                                                    listaDeItens.invoices
-                                                        .forEach((element) {
-                                                      if (element.pedido ==
-                                                          true) {
-                                                        listaPedidos.invoices
-                                                            .add(element);
-                                                      }
-                                                    });
-                                                    Navigator.pop(context);
-                                                    setState(() {});
-                                                  },
-                                                  child: Text('Sim'))
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    });
-
-                                setState(() {
-                                  salvarPedido();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                              setState(() {
+                                salvarPedido();
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -453,9 +454,10 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 242, 241, 237),
+      backgroundColor: const Color.fromARGB(255, 242, 241, 237),
       body: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -474,7 +476,7 @@ class _TelaItensEnviadosState extends State<TelaItensEnviados> {
             bottom: TabBar(
               indicatorColor: Colors.red,
               labelColor: CustomTheme.lightTheme.colorScheme.secondary,
-              tabs: [
+              tabs: const [
                 Tab(
                   text: 'ORÇAMENTOS',
                 ),

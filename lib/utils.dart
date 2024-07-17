@@ -6,6 +6,6 @@ final real = Currency.create('Real', 2,
 
 class Utils {
   static formatarValor(double valor) =>
-      Money.fromWithCurrency(valor, real).toString();
+      Money.fromNumWithCurrency(valor, real).toString();
   static formatDate(DateTime date) => DateFormat.yMd().format(date);
 }

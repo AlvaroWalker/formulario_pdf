@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:money2/money2.dart';
 
+import 'utils.dart';
 import 'variaveis.dart';
 
 final real = Currency.create('Real', 2,
@@ -17,10 +18,10 @@ const double fontSize = 10;
 
 class ResumoWidget extends StatefulWidget {
   final int index;
-  ResumoWidget({Key? key, required this.index}) : super(key: key);
+  const ResumoWidget({Key? key, required this.index}) : super(key: key);
 
   @override
-  _ResumoWidgetState createState() => _ResumoWidgetState();
+  State<ResumoWidget> createState() => _ResumoWidgetState();
 }
 
 class _ResumoWidgetState extends State<ResumoWidget> {
@@ -39,7 +40,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
       //return
 
       if (a.tipo == 'REL. DE PEÇAS') {
-        String mat = 'ZZZZZZZZZZZZ' + a.tipo!;
+        String mat = 'ZZZZZZZZZZZZ${a.tipo!}';
         return mat.compareTo(b.tipo.toString());
       } else {
         //String mat = 'ZZZZZZZZZZZZ' + b.tipo!;
@@ -48,11 +49,11 @@ class _ResumoWidgetState extends State<ResumoWidget> {
     });
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: Color(0xFFFFFFFF),
-        shadowColor: Color.fromARGB(255, 237, 224, 237),
+        color: const Color(0xFFFFFFFF),
+        shadowColor: const Color.fromARGB(255, 237, 224, 237),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -66,12 +67,12 @@ class _ResumoWidgetState extends State<ResumoWidget> {
               padding: const EdgeInsets.only(top: 15),
               child: criarTabela(),
             ),
-            Divider(color: Colors.red),
-            Align(
+            const Divider(color: Colors.red),
+            const Align(
               alignment: Alignment(-0.7, 0),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,7 +87,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           softWrap: false,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 10,
                           ),
@@ -96,7 +97,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           softWrap: false,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 10,
                           ),
@@ -107,9 +108,9 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                   Text(
                     //'R\$ $valorTotal',
 
-                    Money.fromWithCurrency(valorTotal, real).toString(),
+                    Utils.formatarValor(valorTotal),
 
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -127,7 +128,10 @@ class _ResumoWidgetState extends State<ResumoWidget> {
   Widget criarTabela() {
     if (listaDeItens.invoices[widget.index].items.isNotEmpty) {
       return Table(
-        columnWidths: {0: FractionColumnWidth(.1), 2: FractionColumnWidth(.4)},
+        columnWidths: const {
+          0: FractionColumnWidth(.1),
+          2: FractionColumnWidth(.4)
+        },
         //border: TableBorder.all(),
         children: [
           for (var items in listaDeItens.invoices[widget.index].items)
@@ -144,7 +148,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             softWrap: false,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: fontSize,
                             ),
@@ -163,7 +167,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           softWrap: false,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: fontSize,
                             //fontWeight: FontWeight.bold
@@ -182,7 +186,7 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: fontSize,
                               ),
@@ -197,20 +201,19 @@ class _ResumoWidgetState extends State<ResumoWidget> {
                         padding: const EdgeInsets.all(3.0),
                         child: items.unitPrice!.toDouble() != 0
                             ? Text(
-                                Money.fromWithCurrency(
-                                        (items.unitPrice!.toDouble() *
-                                            items.quantity!.toDouble()),
-                                        real)
-                                    .toString(),
+                                Utils.formatarValor(
+                                  (items.unitPrice!.toDouble() *
+                                      items.quantity!.toDouble()),
+                                ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 softWrap: false,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: fontSize,
                                 ),
                               )
-                            : Text('PEÇAS',
+                            : const Text('PEÇAS',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 softWrap: false,
@@ -225,6 +228,6 @@ class _ResumoWidgetState extends State<ResumoWidget> {
         ],
       );
     }
-    return Text('LISTA VAZIA');
+    return const Text('LISTA VAZIA');
   }
 }

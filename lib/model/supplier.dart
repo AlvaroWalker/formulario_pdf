@@ -15,10 +15,10 @@ class Supplier {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['adress'] = this.address;
-    data['paymentInfo'] = this.paymentInfo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['adress'] = address;
+    data['paymentInfo'] = paymentInfo;
     return data;
   }
 }

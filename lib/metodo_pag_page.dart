@@ -34,10 +34,11 @@ final txtControlObs = TextEditingController();
 
 class CondPagamentoWidget extends StatefulWidget {
   final int indexOfItem;
-  CondPagamentoWidget({Key? key, required this.indexOfItem}) : super(key: key);
+  const CondPagamentoWidget({Key? key, required this.indexOfItem})
+      : super(key: key);
 
   @override
-  _CondPagamentoWidgetState createState() => _CondPagamentoWidgetState();
+  State<CondPagamentoWidget> createState() => _CondPagamentoWidgetState();
 }
 
 class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
@@ -71,7 +72,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
-        actions: [],
+        actions: const [],
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
@@ -83,7 +84,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
           ),
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 242, 241, 237),
+      backgroundColor: const Color.fromARGB(255, 242, 241, 237),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
         onPressed: () async {
@@ -103,7 +104,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                       ))).then((value) => setState(() {}));
         },
         elevation: 8,
-        child: Icon(
+        child: const Icon(
           Icons.navigate_next,
           color: Colors.white,
           size: 50,
@@ -113,7 +114,7 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
         children: [
           Column(
             children: [
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(20, 5, 10, 10),
@@ -128,11 +129,11 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                   ),
                 ),
               ),
-              Divider(color: Colors.red),
+              const Divider(color: Colors.red),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 17, 20, 5),
+                padding: const EdgeInsets.fromLTRB(20, 17, 20, 5),
                 child: DropdownButtonFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(15, 17, 8, 17),
                       filled: false,
                       fillColor: Colors.white,
@@ -145,16 +146,16 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                   },
                   items: condicaoPagamento
                       .map((cityTitle) => DropdownMenuItem(
-                          value: cityTitle, child: Text("$cityTitle")))
+                          value: cityTitle, child: Text(cityTitle)))
                       .toList(),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: TextFormField(
                   inputFormatters: [UpperCaseTextFormatter()],
                   controller: txtControlPrazo,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     filled: false,
                     fillColor: Colors.white,
                     contentPadding: EdgeInsets.fromLTRB(15, 17, 8, 17),
@@ -163,25 +164,25 @@ class _CondPagamentoWidgetState extends State<CondPagamentoWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: TextFormField(
                   inputFormatters: [UpperCaseTextFormatter()],
                   controller: txtControlObs,
                   obscureText: false,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     //contentPadding: EdgeInsets.fromLTRB(15, 17, 8, 17),
                     labelText: 'Observações Gerais',
                     filled: false,
                     fillColor: Colors.white,
                   ),
-                  style: TextStyle(),
+                  style: const TextStyle(),
                   maxLines: 9,
                   //maxLength: 500,
                   keyboardType: TextInputType.multiline,
                 ),
               ),
-              Divider(color: Colors.red),
-              Align(
+              const Divider(color: Colors.red),
+              const Align(
                 alignment: Alignment.center,
                 child: Text(
                   'RESUMO',

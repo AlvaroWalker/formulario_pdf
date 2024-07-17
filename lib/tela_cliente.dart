@@ -35,7 +35,7 @@ class TelaCliente extends StatefulWidget {
       : super(key: key);
 
   @override
-  _TelaClienteState createState() => _TelaClienteState();
+  State<TelaCliente> createState() => _TelaClienteState();
 }
 
 class _TelaClienteState extends State<TelaCliente> {
@@ -66,11 +66,12 @@ class _TelaClienteState extends State<TelaCliente> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     caixaTexto(TextEditingController txtControl, String texto,
         TextInputType tipoTeclado, List<TextInputFormatter> formatadorTexto) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+        padding: const EdgeInsets.fromLTRB(20, 6, 20, 6),
         child: TextFormField(
           onEditingComplete: () => FocusScope.of(context).nextFocus(),
           inputFormatters: formatadorTexto,
@@ -81,7 +82,7 @@ class _TelaClienteState extends State<TelaCliente> {
           controller: txtControl,
           obscureText: false,
           decoration: InputDecoration(labelText: texto),
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Poppins',
           ),
           textAlign: TextAlign.start,
@@ -90,7 +91,7 @@ class _TelaClienteState extends State<TelaCliente> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 242, 241, 237),
+      backgroundColor: const Color.fromARGB(255, 242, 241, 237),
       appBar: AppBar(
         backgroundColor: Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
         elevation: 0,
@@ -108,7 +109,7 @@ class _TelaClienteState extends State<TelaCliente> {
         padding: const EdgeInsets.all(2.5),
         //fit: FlexFit.tight,
         children: [
-          Align(
+          const Align(
             alignment: Alignment(-1, 0),
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 10, 10, 20),
@@ -131,7 +132,7 @@ class _TelaClienteState extends State<TelaCliente> {
             FilteringTextInputFormatter.digitsOnly,
             TelefoneInputFormatter()
           ]),
-          Divider(
+          const Divider(
             height: 25,
             thickness: 1,
             indent: 25,
@@ -139,9 +140,9 @@ class _TelaClienteState extends State<TelaCliente> {
             color: Colors.red,
           ),
           ExpandChild(
-              expandArrowStyle: ExpandArrowStyle.both,
-              expandedHint: 'mostrar menos',
-              collapsedHint: 'mostrar mais',
+              expandIndicatorStyle: ExpandIndicatorStyle.both,
+              indicatorExpandedHint: 'mostrar menos',
+              indicatorCollapsedHint: 'mostrar mais',
               child: Column(
                 children: [
                   caixaTexto(
@@ -165,15 +166,13 @@ class _TelaClienteState extends State<TelaCliente> {
         visible: txtControlCliente.text.isNotEmpty,
         child: FloatingActionButton(
           elevation: 8,
-          child: Icon(
+          child: const Icon(
             Icons.navigate_next,
             color: Colors.white,
             size: 50,
           ),
           onPressed: () {
-            print(listaDeItens.invoices.length);
-
-            listaDeItens.invoices[widget.indexOfIdd].customer = new Customer(
+            listaDeItens.invoices[widget.indexOfIdd].customer = Customer(
                 name: txtControlCliente.text,
                 doc: txtControlDoc.text,
                 veiculo: tctControlVeiculo.text,

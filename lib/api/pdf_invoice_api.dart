@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 import 'package:souza_autocenter/model/customer.dart';
 import 'package:souza_autocenter/model/invoice.dart';
@@ -160,56 +158,51 @@ class PdfInvoiceApi {
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Flexible(
               flex: 10,
-              child: itemCabecalho('Cliente: ' + customer!.name),
+              child: itemCabecalho('Cliente: ${customer!.name}'),
             ),
             Flexible(
               flex: 4,
               child: itemCabecalho(
-                  'Data: ' + DateFormat('dd/MM/yyyy').format(DateTime.now())),
+                  'Data: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}'),
             ),
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Flexible(
               flex: 10,
-              child: itemCabecalho('Veículo ' + customer.veiculo.toString()),
+              child: itemCabecalho('Veículo ${customer.veiculo}'),
             ),
             Flexible(
               flex: 8,
-              child: itemCabecalho(
-                  'Telefone: ' + customer.clienteTelefone.toString()),
+              child: itemCabecalho('Telefone: ${customer.clienteTelefone}'),
             ),
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Flexible(
               flex: 10,
-              child: itemCabecalho(
-                  'Razão Social: ' + customer.razaoSocial.toString()),
+              child: itemCabecalho('Razão Social: ${customer.razaoSocial}'),
             ),
             Flexible(
               flex: 5,
-              child: itemCabecalho('CPF/CNPJ: ' + customer.doc),
+              child: itemCabecalho('CPF/CNPJ: ${customer.doc}'),
             ),
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Flexible(
               flex: 10,
-              child: itemCabecalho(
-                  'Endereço: ' + customer.clienteEndereco.toString()),
+              child: itemCabecalho('Endereço: ${customer.clienteEndereco}'),
             ),
           ]),
           SizedBox(height: 1),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Flexible(
                 flex: 8,
-                child: itemCabecalho(
-                    'Bairro: ' + customer.clienteBairro.toString())),
+                child: itemCabecalho('Bairro: ${customer.clienteBairro}')),
             Flexible(
               flex: 11,
-              child:
-                  itemCabecalho('Cidade: ' + customer.clienteCidade.toString()),
+              child: itemCabecalho('Cidade: ${customer.clienteCidade}'),
             ),
           ]),
         ],
@@ -314,7 +307,7 @@ class PdfInvoiceApi {
             Radius.circular(5.0) //         <--- border radius here
             ),
       ),
-      child: Table.fromTextArray(
+      child: TableHelper.fromTextArray(
         headers: headers,
         data: data,
         cellPadding:
@@ -388,8 +381,8 @@ class PdfInvoiceApi {
                         child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                                'Observações: \n\n' +
-                                    '${invoice.observacoesPedido}',
+                                'Observações: \n\n'
+                                '${invoice.observacoesPedido}',
                                 style: const TextStyle(fontSize: 6))),
                       ),
                     ])),
@@ -492,8 +485,8 @@ class PdfInvoiceApi {
                         child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                                'Observações: \n\n' +
-                                    '${invoice.observacoesPedido}',
+                                'Observações: \n\n'
+                                '${invoice.observacoesPedido}',
                                 style: const TextStyle(fontSize: 6))),
                       ),
                     ])),

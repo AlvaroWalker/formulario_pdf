@@ -24,7 +24,7 @@ class PaginaGerandoPdf extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PaginaGerandoPdfState createState() => _PaginaGerandoPdfState();
+  State<PaginaGerandoPdf> createState() => _PaginaGerandoPdfState();
 }
 
 class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
@@ -59,7 +59,6 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
             floatingActionButton: Visibility(
                 visible: criouPDF,
                 child: FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 255, 127, 0),
                   onPressed: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
@@ -75,27 +74,28 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
               leading: IconButton(
                   icon: const Icon(
                     Icons.home_filled,
-                    color: Colors.red,
                     size: 37,
                   ),
                   onPressed: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TelaInicio()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TelaInicio()));
                   }),
 
-              title: Text(''),
+              title: const Text(''),
               backgroundColor:
                   Colors.transparent, // <-- APPBAR WITH TRANSPARENT BG
               // <-- ELEVATION ZEROED
             ),
             body: Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Container(
-                    color: Color.fromARGB(50, 255, 255, 255),
-                    width: MediaQuery.of(context).size.width / 2,
+                    color: const Color.fromARGB(50, 255, 255, 255),
+                    width: MediaQuery.sizeOf(context).width / 2,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -111,7 +111,7 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
                                   });
                                 },
                               ),
-                              Text('ORÇAMENTO')
+                              const Text('ORÇAMENTO')
                             ],
                           ),
                         ),
@@ -127,7 +127,7 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
                                   });
                                 },
                               ),
-                              Text('PEDIDO')
+                              const Text('PEDIDO')
                             ],
                           ),
                         ),
@@ -141,13 +141,8 @@ class _PaginaGerandoPdfState extends State<PaginaGerandoPdf> {
                                       orcamentoSelecionado, datas);
                                 }
                               },
-                              child: Text('CRIAR PDF')),
+                              child: const Text('CRIAR PDF')),
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              print(MediaQuery.of(context).size.width);
-                            },
-                            child: Text('asdasdasd'))
                       ],
                     ),
                   ),

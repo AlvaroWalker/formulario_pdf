@@ -33,16 +33,16 @@ class Customer {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['doc'] = this.doc;
-    data['veiculo'] = this.veiculo;
-    data['razaoSocial'] = this.razaoSocial;
-    data['clienteEndereco'] = this.clienteEndereco;
-    data['clienteBairro'] = this.clienteBairro;
-    data['clienteCidade'] = this.clienteCidade;
-    data['clienteEstado'] = this.clienteEstado;
-    data['clienteTelefone'] = this.clienteTelefone;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['doc'] = doc;
+    data['veiculo'] = veiculo;
+    data['razaoSocial'] = razaoSocial;
+    data['clienteEndereco'] = clienteEndereco;
+    data['clienteBairro'] = clienteBairro;
+    data['clienteCidade'] = clienteCidade;
+    data['clienteEstado'] = clienteEstado;
+    data['clienteTelefone'] = clienteTelefone;
     return data;
   }
 }
